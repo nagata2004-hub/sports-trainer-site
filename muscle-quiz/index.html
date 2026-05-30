@@ -1,0 +1,717 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="筋肉カード">
+<meta name="theme-color" content="#1a1a18">
+<link rel="manifest" href="manifest.json">
+<link rel="apple-touch-icon" href="icons/icon-192.png">
+<title>肩・上腕 筋肉カード</title>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent;}
+:root{
+  --bg:#f5f4f0;--surface:#fff;--surface2:#eceae3;
+  --t1:#18181a;--t2:#6b6a63;--t3:#aaa99f;
+  --border:rgba(0,0,0,0.09);
+  --green:#1D9E75;--green-bg:#e1f5ee;
+  --red:#D85A30;--red-bg:#faece7;
+  --r:18px;--rsm:12px;
+  --safe-top:env(safe-area-inset-top,0px);
+  --safe-bot:env(safe-area-inset-bottom,0px);
+}
+@media(prefers-color-scheme:dark){
+  :root{--bg:#18181a;--surface:#232321;--surface2:#2c2c29;--t1:#f0efe8;--t2:#a8a79e;--t3:#6b6a63;--border:rgba(255,255,255,0.09);--green-bg:#04342c;--red-bg:#4a1b0c;}
+}
+html,body{height:100%;overflow:hidden;}
+body{font-family:-apple-system,BlinkMacSystemFont,"Hiragino Sans","Noto Sans JP",sans-serif;background:var(--bg);color:var(--t1);display:flex;flex-direction:column;padding-top:var(--safe-top);}
+.hdr{flex-shrink:0;display:flex;align-items:center;justify-content:space-between;padding:14px 20px 12px;background:var(--surface);border-bottom:0.5px solid var(--border);}
+.hdr-title{font-size:17px;font-weight:700;}
+.screen{display:none;flex-direction:column;flex:1;overflow:hidden;}
+.screen.active{display:flex;}
+.menu-scroll{flex:1;overflow-y:auto;-webkit-overflow-scrolling:touch;padding:20px 16px;display:flex;flex-direction:column;gap:22px;}
+.sec-lbl{font-size:11px;color:var(--t3);text-transform:uppercase;letter-spacing:.08em;margin-bottom:8px;}
+.chip-row{display:flex;flex-wrap:wrap;gap:8px;}
+.chip{padding:8px 16px;border-radius:99px;border:0.5px solid var(--border);background:var(--surface);color:var(--t2);font-size:14px;cursor:pointer;transition:background .12s,color .12s;}
+.chip.on{background:var(--t1);color:var(--bg);border-color:transparent;}
+.menu-footer{flex-shrink:0;padding:14px 16px calc(14px + var(--safe-bot));background:var(--surface);border-top:0.5px solid var(--border);}
+.start-btn{width:100%;padding:17px;background:var(--t1);color:var(--bg);border:none;border-radius:var(--r);font-size:17px;font-weight:700;cursor:pointer;}
+.start-btn:active{opacity:.75;}
+.stat-row{display:flex;gap:10px;}
+.stat-card{flex:1;background:var(--surface);border:0.5px solid var(--border);border-radius:var(--rsm);padding:12px;text-align:center;}
+.stat-card .num{font-size:22px;font-weight:700;}
+.stat-card .lbl{font-size:11px;color:var(--t2);margin-top:2px;}
+.quiz-hdr{flex-shrink:0;padding:10px 16px;display:flex;align-items:center;gap:12px;background:var(--surface);border-bottom:0.5px solid var(--border);}
+.q-cnt{font-size:13px;color:var(--t2);white-space:nowrap;}
+.prog-wrap{flex:1;height:4px;background:var(--surface2);border-radius:99px;overflow:hidden;}
+.prog-fill{height:100%;background:var(--green);border-radius:99px;transition:width .3s;}
+.quiz-body{flex:1;display:flex;flex-direction:column;padding:12px 14px;gap:10px;min-height:0;}
+.card-wrap{flex:1;perspective:1200px;cursor:pointer;min-height:0;}
+.card-inner{width:100%;height:100%;position:relative;transform-style:preserve-3d;transition:transform .42s cubic-bezier(.4,0,.2,1);}
+.card-inner.flipped{transform:rotateY(180deg);}
+.card-face{position:absolute;inset:0;backface-visibility:hidden;-webkit-backface-visibility:hidden;background:var(--surface);border:0.5px solid var(--border);border-radius:var(--r);display:flex;flex-direction:column;align-items:center;justify-content:center;padding:20px 18px;text-align:center;gap:10px;overflow:hidden;}
+.card-back-face{transform:rotateY(180deg);justify-content:flex-start;align-items:stretch;padding:0;gap:0;overflow:hidden;}
+.c-tag{font-size:11px;color:var(--t3);text-transform:uppercase;letter-spacing:.07em;}
+.c-name{font-size:clamp(18px,5.5vw,26px);font-weight:700;line-height:1.3;}
+.c-grp{font-size:12px;padding:4px 13px;border-radius:99px;background:var(--surface2);color:var(--t2);}
+.c-hint{font-size:12px;color:var(--t3);}
+.b-svg-wrap{flex:0 0 48%;min-height:0;overflow:hidden;background:var(--surface2);border-radius:var(--r) var(--r) 0 0;display:flex;align-items:center;justify-content:center;}
+.b-svg-wrap svg{width:100%;height:100%;display:block;}
+.b-loading{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;width:100%;height:100%;}
+.spinner{width:26px;height:26px;border:3px solid var(--border);border-top-color:var(--green);border-radius:50%;animation:spin .8s linear infinite;}
+@keyframes spin{to{transform:rotate(360deg);}}
+.b-loading-text{font-size:12px;color:var(--t3);}
+.b-err{font-size:11px;color:var(--red);text-align:center;padding:16px;line-height:1.6;}
+.b-data{flex:1;min-height:0;padding:10px 12px;display:flex;flex-direction:column;gap:7px;overflow-y:auto;-webkit-overflow-scrolling:touch;}
+.b-item{background:var(--surface2);border-radius:var(--rsm);padding:9px 12px;}
+.b-item.hl{background:var(--green-bg);border:1.5px solid var(--green);}
+.b-lbl{font-size:10px;color:var(--t3);text-transform:uppercase;letter-spacing:.06em;margin-bottom:3px;}
+.b-val{font-size:13px;line-height:1.55;color:var(--t1);}
+.b-item.hl .b-val{color:var(--green);font-weight:600;}
+.ans-row{flex-shrink:0;display:flex;gap:10px;}
+.ans-btn{flex:1;padding:15px 8px;border-radius:var(--r);font-size:15px;font-weight:700;cursor:pointer;border:1.5px solid;transition:transform .1s,opacity .1s;}
+.ans-btn:active{transform:scale(.96);opacity:.82;}
+.btn-ng{background:var(--red-bg);color:var(--red);border-color:var(--red);}
+.btn-ok{background:var(--green-bg);color:var(--green);border-color:var(--green);}
+.ans-row.hidden{visibility:hidden;}
+.quiz-footer{flex-shrink:0;padding:0 14px calc(10px + var(--safe-bot));}
+.back-btn{width:100%;padding:11px;background:none;border:0.5px solid var(--border);border-radius:var(--rsm);font-size:13px;color:var(--t2);cursor:pointer;}
+.back-btn:active{opacity:.6;}
+.result-body{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:24px 20px;gap:20px;text-align:center;}
+.ring-wrap{position:relative;width:140px;height:140px;}
+.ring-wrap svg{position:absolute;top:0;left:0;transform:rotate(-90deg);}
+.ring-center{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;}
+.ring-pct{font-size:32px;font-weight:700;}
+.ring-sub{font-size:12px;color:var(--t2);}
+.result-msg{font-size:15px;color:var(--t2);line-height:1.7;max-width:260px;}
+.result-footer{flex-shrink:0;padding:14px 16px calc(14px + var(--safe-bot));display:flex;flex-direction:column;gap:10px;}
+.res-btn{width:100%;padding:16px;border-radius:var(--r);font-size:16px;font-weight:600;cursor:pointer;border:0.5px solid var(--border);background:var(--surface);color:var(--t1);}
+.res-btn:active{opacity:.7;}
+.res-btn.primary{background:var(--t1);color:var(--bg);border-color:transparent;}
+</style>
+<script>
+const SVGS={"三角筋（鎖骨部）":`<svg viewBox="0 0 280 270" xmlns="http://www.w3.org/2000/svg">
+
+<path d="M30,45 Q80,35 130,50 L135,58 Q85,45 35,55 Z" fill="#dbc9a8" stroke="#9e7d5a" stroke-width="1.5" stroke-linejoin="round" />
+<path d="M80,60 Q100,40 130,50 L160,55 Q180,58 185,80 L180,160 Q175,180 160,185 L140,190 Q120,190 110,175 L90,150 Q75,130 72,100 Z" fill="#dbc9a8" stroke="#9e7d5a" stroke-width="1.5" stroke-linejoin="round" />
+<path d="M155,80 Q165,75 175,85 L185,200 Q185,220 175,240 L165,250 Q155,252 150,240 L148,200 Z" fill="#dbc9a8" stroke="#9e7d5a" stroke-width="1.5" stroke-linejoin="round" />
+<path d="M80,50 Q100,38 130,48 L165,90 Q150,95 140,100 L110,85 Q90,72 80,50Z" fill="#c0392b" fill-opacity="0.82" stroke="#7b241c" stroke-width="1" />
+<line x1="90" y1="70" x2="155" y2="95" stroke="#e88080" stroke-width="0.7"/>
+<line x1="105" y1="62" x2="160" y2="93" stroke="#e88080" stroke-width="0.7"/>
+<line x1="120" y1="58" x2="162" y2="92" stroke="#e88080" stroke-width="0.7"/>
+<circle cx="60" cy="50" r="5" fill="#2471a3" stroke="white" stroke-width="1.5"/> <circle cx="165" cy="100" r="5" fill="#1e8449" stroke="white" stroke-width="1.5"/>
+<text x="140" y="248" text-anchor="middle" font-size="11" fill="#333" font-family="sans-serif">三角筋（鎖骨部）</text>
+<circle cx="10" cy="258" r="4" fill="#2471a3"/><text x="16" y="262" font-size="8" fill="#333" font-family="sans-serif">起始</text>
+<circle cx="50" cy="258" r="4" fill="#1e8449"/><text x="56" y="262" font-size="8" fill="#333" font-family="sans-serif">停止</text>
+</svg>`,
+"三角筋（肩峰部）":`<svg viewBox="0 0 280 270" xmlns="http://www.w3.org/2000/svg">
+
+<path d="M30,45 Q80,35 130,50 L135,58 Q85,45 35,55 Z" fill="#dbc9a8" stroke="#9e7d5a" stroke-width="1.5" stroke-linejoin="round" />
+<path d="M80,60 Q100,40 130,50 L160,55 Q180,58 185,80 L180,160 Q175,180 160,185 L140,190 Q120,190 110,175 L90,150 Q75,130 72,100 Z" fill="#dbc9a8" stroke="#9e7d5a" stroke-width="1.5" stroke-linejoin="round" />
+<path d="M155,80 Q165,75 175,85 L185,200 Q185,220 175,240 L165,250 Q155,252 150,240 L148,200 Z" fill="#dbc9a8" stroke="#9e7d5a" stroke-width="1.5" stroke-linejoin="round" />
+<path d="M118,42 Q135,35 150,42 L172,92 Q160,98 148,105 L130,98 Q118,88 112,65 Z" fill="#c0392b" fill-opacity="0.82" stroke="#7b241c" stroke-width="1" />
+<line x1="125" y1="55" x2="162" y2="95" stroke="#e88080" stroke-width="0.7"/>
+<line x1="135" y1="50" x2="165" y2="93" stroke="#e88080" stroke-width="0.7"/>
+<circle cx="132" cy="40" r="5" fill="#2471a3" stroke="white" stroke-width="1.5"/> <circle cx="166" cy="100" r="5" fill="#1e8449" stroke="white" stroke-width="1.5"/>
+<text x="140" y="248" text-anchor="middle" font-size="11" fill="#333" font-family="sans-serif">三角筋（肩峰部）</text>
+<circle cx="10" cy="258" r="4" fill="#2471a3"/><text x="16" y="262" font-size="8" fill="#333" font-family="sans-serif">起始</text>
+<circle cx="50" cy="258" r="4" fill="#1e8449"/><text x="56" y="262" font-size="8" fill="#333" font-family="sans-serif">停止</text>
+</svg>`,
+"三角筋（肩甲棘部）":`<svg viewBox="0 0 280 270" xmlns="http://www.w3.org/2000/svg">
+
+<path d="M75,65 Q100,55 160,62 L162,70 Q105,64 78,75 Z" fill="#dbc9a8" stroke="#9e7d5a" stroke-width="1.5" stroke-linejoin="round" />
+<path d="M80,60 Q100,40 130,50 L160,55 Q180,58 185,80 L180,160 Q175,180 160,185 L140,190 Q120,190 110,175 L90,150 Q75,130 72,100 Z" fill="#dbc9a8" stroke="#9e7d5a" stroke-width="1.5" stroke-linejoin="round" />
+<path d="M155,80 Q165,75 175,85 L185,200 Q185,220 175,240 L165,250 Q155,252 150,240 L148,200 Z" fill="#dbc9a8" stroke="#9e7d5a" stroke-width="1.5" stroke-linejoin="round" />
+<path d="M82,68 Q110,62 155,68 L170,98 Q158,106 148,108 L120,100 Q95,85 82,68Z" fill="#c0392b" fill-opacity="0.82" stroke="#7b241c" stroke-width="1" />
+<line x1="95" y1="72" x2="158" y2="100" stroke="#e88080" stroke-width="0.7"/>
+<line x1="115" y1="70" x2="160" y2="98" stroke="#e88080" stroke-width="0.7"/>
+<line x1="135" y1="68" x2="163" y2="97" stroke="#e88080" stroke-width="0.7"/>
+<circle cx="80" cy="68" r="5" fill="#2471a3" stroke="white" stroke-width="1.5"/> <circle cx="168" cy="103" r="5" fill="#1e8449" stroke="white" stroke-width="1.5"/>
+<text x="140" y="248" text-anchor="middle" font-size="11" fill="#333" font-family="sans-serif">三角筋（肩甲棘部）</text>
+<circle cx="10" cy="258" r="4" fill="#2471a3"/><text x="16" y="262" font-size="8" fill="#333" font-family="sans-serif">起始</text>
+<circle cx="50" cy="258" r="4" fill="#1e8449"/><text x="56" y="262" font-size="8" fill="#333" font-family="sans-serif">停止</text>
+</svg>`,
+"棘上筋":`<svg viewBox="0 0 280 270" xmlns="http://www.w3.org/2000/svg">
+
+<path d="M75,55 Q110,38 155,48 L162,58 Q118,48 80,65 Z" fill="#dbc9a8" stroke="#9e7d5a" stroke-width="1.5" stroke-linejoin="round" />
+<path d="M80,60 Q100,40 130,50 L160,55 Q180,58 185,80 L180,160 Q175,180 160,185 L140,190 Q120,190 110,175 L90,150 Q75,130 72,100 Z" fill="#dbc9a8" stroke="#9e7d5a" stroke-width="1.5" stroke-linejoin="round" />
+<path d="M155,80 Q165,75 175,85 L185,200 Q185,220 175,240 L165,250 Q155,252 150,240 L148,200 Z" fill="#dbc9a8" stroke="#9e7d5a" stroke-width="1.5" stroke-linejoin="round" />
+<path d="M82,52 Q112,40 155,48 L160,62 Q130,58 100,65 Q88,62 82,52Z" fill="#c0392b" fill-opacity="0.82" stroke="#7b241c" stroke-width="1" />
+<line x1="95" y1="53" x2="152" y2="55" stroke="#e88080" stroke-width="0.7"/>
+<line x1="108" y1="50" x2="154" y2="53" stroke="#e88080" stroke-width="0.7"/>
+<circle cx="88" cy="52" r="5" fill="#2471a3" stroke="white" stroke-width="1.5"/> <circle cx="162" cy="60" r="5" fill="#1e8449" stroke="white" stroke-width="1.5"/>
+<text x="140" y="248" text-anchor="middle" font-size="11" fill="#333" font-family="sans-serif">棘上筋</text>
+<circle cx="10" cy="258" r="4" fill="#2471a3"/><text x="16" y="262" font-size="8" fill="#333" font-family="sans-serif">起始</text>
+<circle cx="50" cy="258" r="4" fill="#1e8449"/><text x="56" y="262" font-size="8" fill="#333" font-family="sans-serif">停止</text>
+</svg>`,
+"棘下筋":`<svg viewBox="0 0 280 270" xmlns="http://www.w3.org/2000/svg">
+
+<path d="M80,60 Q100,40 130,50 L160,55 Q180,58 185,80 L180,160 Q175,180 160,185 L140,190 Q120,190 110,175 L90,150 Q75,130 72,100 Z" fill="#dbc9a8" stroke="#9e7d5a" stroke-width="1.5" stroke-linejoin="round" />
+<path d="M155,80 Q165,75 175,85 L185,200 Q185,220 175,240 L165,250 Q155,252 150,240 L148,200 Z" fill="#dbc9a8" stroke="#9e7d5a" stroke-width="1.5" stroke-linejoin="round" />
+<path d="M85,95 Q110,88 145,92 L165,110 Q158,122 148,125 L118,118 Q95,108 85,95Z" fill="#c0392b" fill-opacity="0.82" stroke="#7b241c" stroke-width="1" />
+<line x1="100" y1="98" x2="158" y2="115" stroke="#e88080" stroke-width="0.7"/>
+<line x1="115" y1="94" x2="160" y2="112" stroke="#e88080" stroke-width="0.7"/>
+<circle cx="88" cy="96" r="5" fill="#2471a3" stroke="white" stroke-width="1.5"/> <circle cx="165" cy="112" r="5" fill="#1e8449" stroke="white" stroke-width="1.5"/>
+<text x="140" y="248" text-anchor="middle" font-size="11" fill="#333" font-family="sans-serif">棘下筋</text>
+<circle cx="10" cy="258" r="4" fill="#2471a3"/><text x="16" y="262" font-size="8" fill="#333" font-family="sans-serif">起始</text>
+<circle cx="50" cy="258" r="4" fill="#1e8449"/><text x="56" y="262" font-size="8" fill="#333" font-family="sans-serif">停止</text>
+</svg>`,
+"小円筋":`<svg viewBox="0 0 280 270" xmlns="http://www.w3.org/2000/svg">
+
+<path d="M80,60 Q100,40 130,50 L160,55 Q180,58 185,80 L180,160 Q175,180 160,185 L140,190 Q120,190 110,175 L90,150 Q75,130 72,100 Z" fill="#dbc9a8" stroke="#9e7d5a" stroke-width="1.5" stroke-linejoin="round" />
+<path d="M155,80 Q165,75 175,85 L185,200 Q185,220 175,240 L165,250 Q155,252 150,240 L148,200 Z" fill="#dbc9a8" stroke="#9e7d5a" stroke-width="1.5" stroke-linejoin="round" />
+<path d="M100,125 Q120,118 145,122 L162,138 Q155,148 148,150 L125,145 Q108,138 100,125Z" fill="#c0392b" fill-opacity="0.82" stroke="#7b241c" stroke-width="1" />
+<line x1="110" y1="128" x2="157" y2="142" stroke="#e88080" stroke-width="0.7"/>
+<line x1="122" y1="124" x2="159" y2="140" stroke="#e88080" stroke-width="0.7"/>
+<circle cx="102" cy="126" r="5" fill="#2471a3" stroke="white" stroke-width="1.5"/> <circle cx="162" cy="140" r="5" fill="#1e8449" stroke="white" stroke-width="1.5"/>
+<text x="140" y="248" text-anchor="middle" font-size="11" fill="#333" font-family="sans-serif">小円筋</text>
+<circle cx="10" cy="258" r="4" fill="#2471a3"/><text x="16" y="262" font-size="8" fill="#333" font-family="sans-serif">起始</text>
+<circle cx="50" cy="258" r="4" fill="#1e8449"/><text x="56" y="262" font-size="8" fill="#333" font-family="sans-serif">停止</text>
+</svg>`,
+"肩甲下筋":`<svg viewBox="0 0 280 270" xmlns="http://www.w3.org/2000/svg">
+
+<path d="M80,60 Q100,40 130,50 L160,55 Q180,58 185,80 L180,160 Q175,180 160,185 L140,190 Q120,190 110,175 L90,150 Q75,130 72,100 Z" fill="#dbc9a8" stroke="#9e7d5a" stroke-width="1.5" stroke-linejoin="round" />
+<path d="M155,80 Q165,75 175,85 L185,200 Q185,220 175,240 L165,250 Q155,252 150,240 L148,200 Z" fill="#dbc9a8" stroke="#9e7d5a" stroke-width="1.5" stroke-linejoin="round" />
+<path d="M78,75 Q95,68 130,72 L148,90 Q142,100 135,102 L108,98 Q85,88 78,75Z" fill="#c0392b" fill-opacity="0.82" stroke="#7b241c" stroke-width="1" />
+<line x1="88" y1="78" x2="142" y2="95" stroke="#e88080" stroke-width="0.7"/>
+<line x1="100" y1="74" x2="144" y2="93" stroke="#e88080" stroke-width="0.7"/>
+<line x1="115" y1="72" x2="146" y2="91" stroke="#e88080" stroke-width="0.7"/>
+<circle cx="80" cy="76" r="5" fill="#2471a3" stroke="white" stroke-width="1.5"/> <circle cx="150" cy="92" r="5" fill="#1e8449" stroke="white" stroke-width="1.5"/>
+<text x="140" y="248" text-anchor="middle" font-size="11" fill="#333" font-family="sans-serif">肩甲下筋</text>
+<circle cx="10" cy="258" r="4" fill="#2471a3"/><text x="16" y="262" font-size="8" fill="#333" font-family="sans-serif">起始</text>
+<circle cx="50" cy="258" r="4" fill="#1e8449"/><text x="56" y="262" font-size="8" fill="#333" font-family="sans-serif">停止</text>
+</svg>`,
+"大胸筋（鎖骨部）":`<svg viewBox="0 0 280 270" xmlns="http://www.w3.org/2000/svg">
+
+<path d="M30,45 Q80,35 130,50 L135,58 Q85,45 35,55 Z" fill="#dbc9a8" stroke="#9e7d5a" stroke-width="1.5" stroke-linejoin="round" />
+<path d="M60,50 L60,160 Q80,180 100,175 L95,50 Z" fill="#dbc9a8" stroke="#9e7d5a" stroke-width="1.5" stroke-linejoin="round" />
+<path d="M155,80 Q165,75 175,85 L185,200 Q185,220 175,240 L165,250 Q155,252 150,240 L148,200 Z" fill="#dbc9a8" stroke="#9e7d5a" stroke-width="1.5" stroke-linejoin="round" />
+<path d="M45,52 Q80,42 128,50 L155,90 Q145,95 138,92 L100,70 Q65,62 45,60 Z" fill="#c0392b" fill-opacity="0.82" stroke="#7b241c" stroke-width="1" />
+<line x1="60" y1="55" x2="148" y2="91" stroke="#e88080" stroke-width="0.7"/>
+<line x1="85" y1="52" x2="152" y2="90" stroke="#e88080" stroke-width="0.7"/>
+<circle cx="45" cy="55" r="5" fill="#2471a3" stroke="white" stroke-width="1.5"/> <circle cx="155" cy="90" r="5" fill="#1e8449" stroke="white" stroke-width="1.5"/>
+<text x="140" y="248" text-anchor="middle" font-size="11" fill="#333" font-family="sans-serif">大胸筋（鎖骨部）</text>
+<circle cx="10" cy="258" r="4" fill="#2471a3"/><text x="16" y="262" font-size="8" fill="#333" font-family="sans-serif">起始</text>
+<circle cx="50" cy="258" r="4" fill="#1e8449"/><text x="56" y="262" font-size="8" fill="#333" font-family="sans-serif">停止</text>
+</svg>`,
+"大胸筋（胸肋部）":`<svg viewBox="0 0 280 270" xmlns="http://www.w3.org/2000/svg">
+
+<path d="M55,50 L55,180 Q75,200 95,195 L90,50 Z" fill="#dbc9a8" stroke="#9e7d5a" stroke-width="1.5" stroke-linejoin="round" />
+<path d="M155,80 Q165,75 175,85 L185,200 Q185,220 175,240 L165,250 Q155,252 150,240 L148,200 Z" fill="#dbc9a8" stroke="#9e7d5a" stroke-width="1.5" stroke-linejoin="round" />
+<path d="M45,65 Q60,60 90,68 L90,155 Q70,152 50,145 Q42,130 42,100 Q42,80 45,65Z" fill="#c0392b" fill-opacity="0.82" stroke="#7b241c" stroke-width="1" />
+<path d="M52,80 L88,82" stroke="#e88080" stroke-width="0.7" fill="none"/>
+<path d="M50,100 L88,102" stroke="#e88080" stroke-width="0.7" fill="none"/>
+<path d="M48,120 L88,122" stroke="#e88080" stroke-width="0.7" fill="none"/>
+<circle cx="48" cy="68" r="5" fill="#2471a3" stroke="white" stroke-width="1.5"/> <circle cx="155" cy="100" r="5" fill="#1e8449" stroke="white" stroke-width="1.5"/>
+<text x="140" y="248" text-anchor="middle" font-size="11" fill="#333" font-family="sans-serif">大胸筋（胸肋部）</text>
+<circle cx="10" cy="258" r="4" fill="#2471a3"/><text x="16" y="262" font-size="8" fill="#333" font-family="sans-serif">起始</text>
+<circle cx="50" cy="258" r="4" fill="#1e8449"/><text x="56" y="262" font-size="8" fill="#333" font-family="sans-serif">停止</text>
+</svg>`,
+"大胸筋（腹部）":`<svg viewBox="0 0 280 270" xmlns="http://www.w3.org/2000/svg">
+
+<path d="M55,130 L55,220 Q75,240 95,230 L90,130 Z" fill="#dbc9a8" stroke="#9e7d5a" stroke-width="1.5" stroke-linejoin="round" />
+<path d="M155,80 Q165,75 175,85 L185,200 Q185,220 175,240 L165,250 Q155,252 150,240 L148,200 Z" fill="#dbc9a8" stroke="#9e7d5a" stroke-width="1.5" stroke-linejoin="round" />
+<path d="M45,145 Q65,140 88,148 L88,210 Q70,208 50,198 Q42,180 44,160 Z" fill="#c0392b" fill-opacity="0.82" stroke="#7b241c" stroke-width="1" />
+<line x1="52" y1="160" x2="87" y2="162" stroke="#e88080" stroke-width="0.7"/>
+<line x1="50" y1="178" x2="87" y2="180" stroke="#e88080" stroke-width="0.7"/>
+<circle cx="46" cy="148" r="5" fill="#2471a3" stroke="white" stroke-width="1.5"/> <circle cx="155" cy="120" r="5" fill="#1e8449" stroke="white" stroke-width="1.5"/>
+<text x="140" y="248" text-anchor="middle" font-size="11" fill="#333" font-family="sans-serif">大胸筋（腹部）</text>
+<circle cx="10" cy="258" r="4" fill="#2471a3"/><text x="16" y="262" font-size="8" fill="#333" font-family="sans-serif">起始</text>
+<circle cx="50" cy="258" r="4" fill="#1e8449"/><text x="56" y="262" font-size="8" fill="#333" font-family="sans-serif">停止</text>
+</svg>`,
+"烏口腕筋":`<svg viewBox="0 0 280 270" xmlns="http://www.w3.org/2000/svg">
+
+<path d="M80,60 Q100,40 130,50 L160,55 Q180,58 185,80 L180,160 Q175,180 160,185 L140,190 Q120,190 110,175 L90,150 Q75,130 72,100 Z" fill="#dbc9a8" stroke="#9e7d5a" stroke-width="1.5" stroke-linejoin="round" />
+<path d="M155,80 Q165,75 175,85 L185,200 Q185,220 175,240 L165,250 Q155,252 150,240 L148,200 Z" fill="#dbc9a8" stroke="#9e7d5a" stroke-width="1.5" stroke-linejoin="round" />
+<path d="M118,68 Q128,62 138,68 L148,150 Q140,155 132,150 L125,145 L122,70 Z" fill="#c0392b" fill-opacity="0.82" stroke="#7b241c" stroke-width="1" />
+<line x1="124" y1="80" x2="143" y2="148" stroke="#e88080" stroke-width="0.7"/>
+<line x1="130" y1="75" x2="145" y2="146" stroke="#e88080" stroke-width="0.7"/>
+<circle cx="125" cy="65" r="5" fill="#2471a3" stroke="white" stroke-width="1.5"/> <circle cx="145" cy="150" r="5" fill="#1e8449" stroke="white" stroke-width="1.5"/>
+<text x="140" y="248" text-anchor="middle" font-size="11" fill="#333" font-family="sans-serif">烏口腕筋</text>
+<circle cx="10" cy="258" r="4" fill="#2471a3"/><text x="16" y="262" font-size="8" fill="#333" font-family="sans-serif">起始</text>
+<circle cx="50" cy="258" r="4" fill="#1e8449"/><text x="56" y="262" font-size="8" fill="#333" font-family="sans-serif">停止</text>
+</svg>`,
+"鎖骨下筋":`<svg viewBox="0 0 280 270" xmlns="http://www.w3.org/2000/svg">
+
+<path d="M30,45 Q80,35 130,50 L135,58 Q85,45 35,55 Z" fill="#dbc9a8" stroke="#9e7d5a" stroke-width="1.5" stroke-linejoin="round" />
+<path d="M50,65 L58,70 L110,70 L115,60 L60,58 Z" fill="#dbc9a8" stroke="#9e7d5a" stroke-width="1.5" stroke-linejoin="round" />
+<path d="M62,57 Q90,52 125,58 L125,65 Q95,60 65,65 Z" fill="#c0392b" fill-opacity="0.82" stroke="#7b241c" stroke-width="1" />
+<line x1="75" y1="60" x2="115" y2="60" stroke="#e88080" stroke-width="0.7"/>
+<circle cx="65" cy="58" r="5" fill="#2471a3" stroke="white" stroke-width="1.5"/> <circle cx="118" cy="62" r="5" fill="#1e8449" stroke="white" stroke-width="1.5"/>
+<text x="140" y="248" text-anchor="middle" font-size="11" fill="#333" font-family="sans-serif">鎖骨下筋</text>
+<circle cx="10" cy="258" r="4" fill="#2471a3"/><text x="16" y="262" font-size="8" fill="#333" font-family="sans-serif">起始</text>
+<circle cx="50" cy="258" r="4" fill="#1e8449"/><text x="56" y="262" font-size="8" fill="#333" font-family="sans-serif">停止</text>
+</svg>`,
+"小胸筋":`<svg viewBox="0 0 280 270" xmlns="http://www.w3.org/2000/svg">
+
+<path d="M55,80 L60,200 L80,200 L75,80 Z" fill="#dbc9a8" stroke="#9e7d5a" stroke-width="1.5" stroke-linejoin="round" />
+<path d="M80,60 Q100,40 130,50 L160,55 Q180,58 185,80 L180,160 Q175,180 160,185 L140,190 Q120,190 110,175 L90,150 Q75,130 72,100 Z" fill="#dbc9a8" stroke="#9e7d5a" stroke-width="1.5" stroke-linejoin="round" />
+<path d="M62,90 L62,155 Q75,160 90,148 Q110,120 118,100 Q108,85 95,80 Q80,78 62,90Z" fill="#c0392b" fill-opacity="0.82" stroke="#7b241c" stroke-width="1" />
+<line x1="68" y1="100" x2="115" y2="100" stroke="#e88080" stroke-width="0.7"/>
+<line x1="66" y1="120" x2="108" y2="115" stroke="#e88080" stroke-width="0.7"/>
+<line x1="64" y1="140" x2="98" y2="130" stroke="#e88080" stroke-width="0.7"/>
+<circle cx="62" cy="95" r="5" fill="#2471a3" stroke="white" stroke-width="1.5"/> <circle cx="120" cy="82" r="5" fill="#1e8449" stroke="white" stroke-width="1.5"/>
+<text x="140" y="248" text-anchor="middle" font-size="11" fill="#333" font-family="sans-serif">小胸筋</text>
+<circle cx="10" cy="258" r="4" fill="#2471a3"/><text x="16" y="262" font-size="8" fill="#333" font-family="sans-serif">起始</text>
+<circle cx="50" cy="258" r="4" fill="#1e8449"/><text x="56" y="262" font-size="8" fill="#333" font-family="sans-serif">停止</text>
+</svg>`,
+"前鋸筋（上部）":`<svg viewBox="0 0 280 270" xmlns="http://www.w3.org/2000/svg">
+
+<path d="M48,55 L52,90 L65,88 L60,52 Z" fill="#dbc9a8" stroke="#9e7d5a" stroke-width="1.5" stroke-linejoin="round" />
+<path d="M80,60 Q100,40 130,50 L160,55 Q180,58 185,80 L180,160 Q175,180 160,185 L140,190 Q120,190 110,175 L90,150 Q75,130 72,100 Z" fill="#dbc9a8" stroke="#9e7d5a" stroke-width="1.5" stroke-linejoin="round" />
+<path d="M52,58 Q58,52 65,55 L150,62 Q148,72 142,75 L65,68 Q58,65 52,58Z" fill="#c0392b" fill-opacity="0.82" stroke="#7b241c" stroke-width="1" />
+<line x1="65" y1="60" x2="145" y2="66" stroke="#e88080" stroke-width="0.7"/>
+<circle cx="52" cy="58" r="5" fill="#2471a3" stroke="white" stroke-width="1.5"/> <circle cx="148" cy="68" r="5" fill="#1e8449" stroke="white" stroke-width="1.5"/>
+<text x="140" y="248" text-anchor="middle" font-size="11" fill="#333" font-family="sans-serif">前鋸筋（上部）</text>
+<circle cx="10" cy="258" r="4" fill="#2471a3"/><text x="16" y="262" font-size="8" fill="#333" font-family="sans-serif">起始</text>
+<circle cx="50" cy="258" r="4" fill="#1e8449"/><text x="56" y="262" font-size="8" fill="#333" font-family="sans-serif">停止</text>
+</svg>`,
+"前鋸筋（中間部）":`<svg viewBox="0 0 280 270" xmlns="http://www.w3.org/2000/svg">
+
+<path d="M45,60 L52,160 L68,158 L60,58 Z" fill="#dbc9a8" stroke="#9e7d5a" stroke-width="1.5" stroke-linejoin="round" />
+<path d="M80,60 Q100,40 130,50 L160,55 Q180,58 185,80 L180,160 Q175,180 160,185 L140,190 Q120,190 110,175 L90,150 Q75,130 72,100 Z" fill="#dbc9a8" stroke="#9e7d5a" stroke-width="1.5" stroke-linejoin="round" />
+<path d="M50,80 Q78,74 120,80 L148,92 Q145,102 140,105 L115,98 Q82,90 52,88 Q48,88 50,80Z" fill="#c0392b" fill-opacity="0.82" stroke="#7b241c" stroke-width="1" />
+<line x1="60" y1="84" x2="145" y2="97" stroke="#e88080" stroke-width="0.7"/>
+<line x1="65" y1="80" x2="143" y2="95" stroke="#e88080" stroke-width="0.7"/>
+<circle cx="50" cy="82" r="5" fill="#2471a3" stroke="white" stroke-width="1.5"/> <circle cx="148" cy="100" r="5" fill="#1e8449" stroke="white" stroke-width="1.5"/>
+<text x="140" y="248" text-anchor="middle" font-size="11" fill="#333" font-family="sans-serif">前鋸筋（中間部）</text>
+<circle cx="10" cy="258" r="4" fill="#2471a3"/><text x="16" y="262" font-size="8" fill="#333" font-family="sans-serif">起始</text>
+<circle cx="50" cy="258" r="4" fill="#1e8449"/><text x="56" y="262" font-size="8" fill="#333" font-family="sans-serif">停止</text>
+</svg>`,
+"前鋸筋（下部）":`<svg viewBox="0 0 280 270" xmlns="http://www.w3.org/2000/svg">
+
+<path d="M45,80 L52,200 L68,198 L60,78 Z" fill="#dbc9a8" stroke="#9e7d5a" stroke-width="1.5" stroke-linejoin="round" />
+<path d="M80,60 Q100,40 130,50 L160,55 Q180,58 185,80 L180,160 Q175,180 160,185 L140,190 Q120,190 110,175 L90,150 Q75,130 72,100 Z" fill="#dbc9a8" stroke="#9e7d5a" stroke-width="1.5" stroke-linejoin="round" />
+<path d="M50,120 Q65,112 90,118 L148,150 Q142,162 135,165 L90,140 Q65,130 52,125 Z" fill="#c0392b" fill-opacity="0.82" stroke="#7b241c" stroke-width="1" />
+<line x1="62" y1="125" x2="145" y2="155" stroke="#e88080" stroke-width="0.7"/>
+<line x1="68" y1="120" x2="142" y2="152" stroke="#e88080" stroke-width="0.7"/>
+<circle cx="50" cy="123" r="5" fill="#2471a3" stroke="white" stroke-width="1.5"/> <circle cx="150" cy="155" r="5" fill="#1e8449" stroke="white" stroke-width="1.5"/>
+<text x="140" y="248" text-anchor="middle" font-size="11" fill="#333" font-family="sans-serif">前鋸筋（下部）</text>
+<circle cx="10" cy="258" r="4" fill="#2471a3"/><text x="16" y="262" font-size="8" fill="#333" font-family="sans-serif">起始</text>
+<circle cx="50" cy="258" r="4" fill="#1e8449"/><text x="56" y="262" font-size="8" fill="#333" font-family="sans-serif">停止</text>
+</svg>`,
+"広背筋":`<svg viewBox="0 0 280 270" xmlns="http://www.w3.org/2000/svg">
+
+<path d="M30,80 L35,230 L80,230 L75,80 Z" fill="#dbc9a8" stroke="#9e7d5a" stroke-width="1.5" stroke-linejoin="round" />
+<path d="M80,60 Q100,40 130,50 L160,55 Q180,58 185,80 L180,160 Q175,180 160,185 L140,190 Q120,190 110,175 L90,150 Q75,130 72,100 Z" fill="#dbc9a8" stroke="#9e7d5a" stroke-width="1.5" stroke-linejoin="round" />
+<path d="M155,80 Q165,75 175,85 L185,200 Q185,220 175,240 L165,250 Q155,252 150,240 L148,200 Z" fill="#dbc9a8" stroke="#9e7d5a" stroke-width="1.5" stroke-linejoin="round" />
+<path d="M35,100 Q60,92 120,100 L155,115 Q148,128 140,130 L110,120 Q65,108 40,108 Q35,108 35,100Z" fill="#c0392b" fill-opacity="0.82" stroke="#7b241c" stroke-width="1" />
+<line x1="45" y1="104" x2="150" y2="122" stroke="#e88080" stroke-width="0.7"/>
+<line x1="55" y1="100" x2="148" y2="120" stroke="#e88080" stroke-width="0.7"/>
+<line x1="75" y1="96" x2="148" y2="118" stroke="#e88080" stroke-width="0.7"/>
+<circle cx="38" cy="102" r="5" fill="#2471a3" stroke="white" stroke-width="1.5"/> <circle cx="155" cy="120" r="5" fill="#1e8449" stroke="white" stroke-width="1.5"/>
+<text x="140" y="248" text-anchor="middle" font-size="11" fill="#333" font-family="sans-serif">広背筋</text>
+<circle cx="10" cy="258" r="4" fill="#2471a3"/><text x="16" y="262" font-size="8" fill="#333" font-family="sans-serif">起始</text>
+<circle cx="50" cy="258" r="4" fill="#1e8449"/><text x="56" y="262" font-size="8" fill="#333" font-family="sans-serif">停止</text>
+</svg>`,
+"大円筋":`<svg viewBox="0 0 280 270" xmlns="http://www.w3.org/2000/svg">
+
+<path d="M80,60 Q100,40 130,50 L160,55 Q180,58 185,80 L180,160 Q175,180 160,185 L140,190 Q120,190 110,175 L90,150 Q75,130 72,100 Z" fill="#dbc9a8" stroke="#9e7d5a" stroke-width="1.5" stroke-linejoin="round" />
+<path d="M155,80 Q165,75 175,85 L185,200 Q185,220 175,240 L165,250 Q155,252 150,240 L148,200 Z" fill="#dbc9a8" stroke="#9e7d5a" stroke-width="1.5" stroke-linejoin="round" />
+<path d="M110,158 Q128,152 145,158 L155,180 Q148,192 140,195 L120,188 Q108,178 110,158Z" fill="#c0392b" fill-opacity="0.82" stroke="#7b241c" stroke-width="1" />
+<line x1="118" y1="162" x2="150" y2="185" stroke="#e88080" stroke-width="0.7"/>
+<line x1="126" y1="158" x2="152" y2="182" stroke="#e88080" stroke-width="0.7"/>
+<circle cx="112" cy="160" r="5" fill="#2471a3" stroke="white" stroke-width="1.5"/> <circle cx="155" cy="182" r="5" fill="#1e8449" stroke="white" stroke-width="1.5"/>
+<text x="140" y="248" text-anchor="middle" font-size="11" fill="#333" font-family="sans-serif">大円筋</text>
+<circle cx="10" cy="258" r="4" fill="#2471a3"/><text x="16" y="262" font-size="8" fill="#333" font-family="sans-serif">起始</text>
+<circle cx="50" cy="258" r="4" fill="#1e8449"/><text x="56" y="262" font-size="8" fill="#333" font-family="sans-serif">停止</text>
+</svg>`,
+"僧帽筋（下行部）":`<svg viewBox="0 0 280 270" xmlns="http://www.w3.org/2000/svg">
+
+<path d="M100,20 Q140,15 165,25 L168,35 Q142,25 102,30 Z" fill="#dbc9a8" stroke="#9e7d5a" stroke-width="1.5" stroke-linejoin="round" />
+<path d="M30,45 Q80,35 130,50 L135,58 Q85,45 35,55 Z" fill="#dbc9a8" stroke="#9e7d5a" stroke-width="1.5" stroke-linejoin="round" />
+<path d="M80,60 Q100,40 130,50 L160,55 Q180,58 185,80 L180,160 Q175,180 160,185 L140,190 Q120,190 110,175 L90,150 Q75,130 72,100 Z" fill="#dbc9a8" stroke="#9e7d5a" stroke-width="1.5" stroke-linejoin="round" />
+<path d="M108,22 Q140,16 165,26 L168,42 Q148,38 128,48 L112,55 Q100,48 98,36 Z" fill="#c0392b" fill-opacity="0.82" stroke="#7b241c" stroke-width="1" />
+<line x1="115" y1="28" x2="160" y2="38" stroke="#e88080" stroke-width="0.7"/>
+<line x1="125" y1="24" x2="162" y2="36" stroke="#e88080" stroke-width="0.7"/>
+<circle cx="108" cy="24" r="5" fill="#2471a3" stroke="white" stroke-width="1.5"/> <circle cx="168" cy="38" r="5" fill="#1e8449" stroke="white" stroke-width="1.5"/>
+<text x="140" y="248" text-anchor="middle" font-size="11" fill="#333" font-family="sans-serif">僧帽筋（下行部）</text>
+<circle cx="10" cy="258" r="4" fill="#2471a3"/><text x="16" y="262" font-size="8" fill="#333" font-family="sans-serif">起始</text>
+<circle cx="50" cy="258" r="4" fill="#1e8449"/><text x="56" y="262" font-size="8" fill="#333" font-family="sans-serif">停止</text>
+</svg>`,
+"僧帽筋（横行部）":`<svg viewBox="0 0 280 270" xmlns="http://www.w3.org/2000/svg">
+
+<path d="M60,80 Q100,70 175,80 L178,90 Q100,80 62,90 Z" fill="#dbc9a8" stroke="#9e7d5a" stroke-width="1.5" stroke-linejoin="round" />
+<path d="M80,60 Q100,40 130,50 L160,55 Q180,58 185,80 L180,160 Q175,180 160,185 L140,190 Q120,190 110,175 L90,150 Q75,130 72,100 Z" fill="#dbc9a8" stroke="#9e7d5a" stroke-width="1.5" stroke-linejoin="round" />
+<path d="M62,82 Q100,74 172,82 L175,95 Q105,86 65,94 Q60,92 62,82Z" fill="#c0392b" fill-opacity="0.82" stroke="#7b241c" stroke-width="1" />
+<line x1="80" y1="85" x2="168" y2="88" stroke="#e88080" stroke-width="0.7"/>
+<line x1="100" y1="82" x2="170" y2="86" stroke="#e88080" stroke-width="0.7"/>
+<circle cx="62" cy="85" r="5" fill="#2471a3" stroke="white" stroke-width="1.5"/> <circle cx="175" cy="88" r="5" fill="#1e8449" stroke="white" stroke-width="1.5"/>
+<text x="140" y="248" text-anchor="middle" font-size="11" fill="#333" font-family="sans-serif">僧帽筋（横行部）</text>
+<circle cx="10" cy="258" r="4" fill="#2471a3"/><text x="16" y="262" font-size="8" fill="#333" font-family="sans-serif">起始</text>
+<circle cx="50" cy="258" r="4" fill="#1e8449"/><text x="56" y="262" font-size="8" fill="#333" font-family="sans-serif">停止</text>
+</svg>`,
+"僧帽筋（上行部）":`<svg viewBox="0 0 280 270" xmlns="http://www.w3.org/2000/svg">
+
+<path d="M60,120 Q80,200 90,220 L100,215 Q88,195 72,120 Z" fill="#dbc9a8" stroke="#9e7d5a" stroke-width="1.5" stroke-linejoin="round" />
+<path d="M80,60 Q100,40 130,50 L160,55 Q180,58 185,80 L180,160 Q175,180 160,185 L140,190 Q120,190 110,175 L90,150 Q75,130 72,100 Z" fill="#dbc9a8" stroke="#9e7d5a" stroke-width="1.5" stroke-linejoin="round" />
+<path d="M68,125 Q88,145 118,158 L120,172 Q102,168 85,155 Q72,140 65,125 Z" fill="#c0392b" fill-opacity="0.82" stroke="#7b241c" stroke-width="1" />
+<line x1="72" y1="132" x2="118" y2="165" stroke="#e88080" stroke-width="0.7"/>
+<line x1="78" y1="128" x2="119" y2="162" stroke="#e88080" stroke-width="0.7"/>
+<circle cx="68" cy="127" r="5" fill="#2471a3" stroke="white" stroke-width="1.5"/> <circle cx="122" cy="168" r="5" fill="#1e8449" stroke="white" stroke-width="1.5"/>
+<text x="140" y="248" text-anchor="middle" font-size="11" fill="#333" font-family="sans-serif">僧帽筋（上行部）</text>
+<circle cx="10" cy="258" r="4" fill="#2471a3"/><text x="16" y="262" font-size="8" fill="#333" font-family="sans-serif">起始</text>
+<circle cx="50" cy="258" r="4" fill="#1e8449"/><text x="56" y="262" font-size="8" fill="#333" font-family="sans-serif">停止</text>
+</svg>`,
+"肩甲挙筋":`<svg viewBox="0 0 280 270" xmlns="http://www.w3.org/2000/svg">
+
+<path d="M120,15 Q130,18 128,80 L120,80 Q122,18 112,15 Z" fill="#dbc9a8" stroke="#9e7d5a" stroke-width="1.5" stroke-linejoin="round" />
+<path d="M80,60 Q100,40 130,50 L160,55 Q180,58 185,80 L180,160 Q175,180 160,185 L140,190 Q120,190 110,175 L90,150 Q75,130 72,100 Z" fill="#dbc9a8" stroke="#9e7d5a" stroke-width="1.5" stroke-linejoin="round" />
+<path d="M116,18 Q122,16 126,20 L128,78 Q122,82 118,78 L116,20 Z" fill="#c0392b" fill-opacity="0.82" stroke="#7b241c" stroke-width="1" />
+<line x1="122" y1="30" x2="123" y2="70" stroke="#e88080" stroke-width="0.7"/>
+<circle cx="120" cy="18" r="5" fill="#2471a3" stroke="white" stroke-width="1.5"/> <circle cx="124" cy="78" r="5" fill="#1e8449" stroke="white" stroke-width="1.5"/>
+<text x="140" y="248" text-anchor="middle" font-size="11" fill="#333" font-family="sans-serif">肩甲挙筋</text>
+<circle cx="10" cy="258" r="4" fill="#2471a3"/><text x="16" y="262" font-size="8" fill="#333" font-family="sans-serif">起始</text>
+<circle cx="50" cy="258" r="4" fill="#1e8449"/><text x="56" y="262" font-size="8" fill="#333" font-family="sans-serif">停止</text>
+</svg>`,
+"小菱形筋":`<svg viewBox="0 0 280 270" xmlns="http://www.w3.org/2000/svg">
+
+<path d="M80,60 Q120,55 165,62 L166,72 Q120,65 80,70 Z" fill="#dbc9a8" stroke="#9e7d5a" stroke-width="1.5" stroke-linejoin="round" />
+<path d="M80,60 Q100,40 130,50 L160,55 Q180,58 185,80 L180,160 Q175,180 160,185 L140,190 Q120,190 110,175 L90,150 Q75,130 72,100 Z" fill="#dbc9a8" stroke="#9e7d5a" stroke-width="1.5" stroke-linejoin="round" />
+<path d="M85,62 Q115,57 162,64 L160,74 Q118,68 88,70 Z" fill="#c0392b" fill-opacity="0.82" stroke="#7b241c" stroke-width="1" />
+<line x1="100" y1="64" x2="158" y2="68" stroke="#e88080" stroke-width="0.7"/>
+<circle cx="85" cy="64" r="5" fill="#2471a3" stroke="white" stroke-width="1.5"/> <circle cx="162" cy="68" r="5" fill="#1e8449" stroke="white" stroke-width="1.5"/>
+<text x="140" y="248" text-anchor="middle" font-size="11" fill="#333" font-family="sans-serif">小菱形筋</text>
+<circle cx="10" cy="258" r="4" fill="#2471a3"/><text x="16" y="262" font-size="8" fill="#333" font-family="sans-serif">起始</text>
+<circle cx="50" cy="258" r="4" fill="#1e8449"/><text x="56" y="262" font-size="8" fill="#333" font-family="sans-serif">停止</text>
+</svg>`,
+"大菱形筋":`<svg viewBox="0 0 280 270" xmlns="http://www.w3.org/2000/svg">
+
+<path d="M70,75 Q120,68 165,78 L165,130 Q120,122 70,128 Z" fill="#dbc9a8" stroke="#9e7d5a" stroke-width="1.5" stroke-linejoin="round" />
+<path d="M80,60 Q100,40 130,50 L160,55 Q180,58 185,80 L180,160 Q175,180 160,185 L140,190 Q120,190 110,175 L90,150 Q75,130 72,100 Z" fill="#dbc9a8" stroke="#9e7d5a" stroke-width="1.5" stroke-linejoin="round" />
+<path d="M75,80 Q118,73 162,82 L160,125 Q118,118 78,122 Z" fill="#c0392b" fill-opacity="0.82" stroke="#7b241c" stroke-width="1" />
+<line x1="90" y1="84" x2="160" y2="94" stroke="#e88080" stroke-width="0.7"/>
+<line x1="88" y1="100" x2="160" y2="108" stroke="#e88080" stroke-width="0.7"/>
+<line x1="85" y1="116" x2="160" y2="120" stroke="#e88080" stroke-width="0.7"/>
+<circle cx="76" cy="82" r="5" fill="#2471a3" stroke="white" stroke-width="1.5"/> <circle cx="162" cy="100" r="5" fill="#1e8449" stroke="white" stroke-width="1.5"/>
+<text x="140" y="248" text-anchor="middle" font-size="11" fill="#333" font-family="sans-serif">大菱形筋</text>
+<circle cx="10" cy="258" r="4" fill="#2471a3"/><text x="16" y="262" font-size="8" fill="#333" font-family="sans-serif">起始</text>
+<circle cx="50" cy="258" r="4" fill="#1e8449"/><text x="56" y="262" font-size="8" fill="#333" font-family="sans-serif">停止</text>
+</svg>`,
+"上腕二頭筋（長頭）":`<svg viewBox="0 0 280 270" xmlns="http://www.w3.org/2000/svg">
+
+<path d="M80,60 Q100,40 130,50 L160,55 Q180,58 185,80 L180,160 Q175,180 160,185 L140,190 Q120,190 110,175 L90,150 Q75,130 72,100 Z" fill="#dbc9a8" stroke="#9e7d5a" stroke-width="1.5" stroke-linejoin="round" />
+<path d="M142,95 Q165,90 175,250 L162,252 Q155,240 148,200 L148,95 Z" fill="#dbc9a8" stroke="#9e7d5a" stroke-width="1.5" stroke-linejoin="round" />
+<path d="M168,220 Q180,218 195,250 L183,252 Q172,235 168,220 Z" fill="#dbc9a8" stroke="#9e7d5a" stroke-width="1.5" stroke-linejoin="round" />
+<path d="M142,65 Q150,58 158,65 L168,200 Q162,208 155,205 L148,200 L148,68 Z" fill="#c0392b" fill-opacity="0.82" stroke="#7b241c" stroke-width="1" />
+<line x1="150" y1="85" x2="162" y2="200" stroke="#e88080" stroke-width="0.7"/>
+<line x1="154" y1="80" x2="164" y2="198" stroke="#e88080" stroke-width="0.7"/>
+<circle cx="148" cy="62" r="5" fill="#2471a3" stroke="white" stroke-width="1.5"/> <circle cx="168" cy="205" r="5" fill="#1e8449" stroke="white" stroke-width="1.5"/>
+<text x="140" y="248" text-anchor="middle" font-size="11" fill="#333" font-family="sans-serif">上腕二頭筋（長頭）</text>
+<circle cx="10" cy="258" r="4" fill="#2471a3"/><text x="16" y="262" font-size="8" fill="#333" font-family="sans-serif">起始</text>
+<circle cx="50" cy="258" r="4" fill="#1e8449"/><text x="56" y="262" font-size="8" fill="#333" font-family="sans-serif">停止</text>
+</svg>`,
+"上腕二頭筋（短頭）":`<svg viewBox="0 0 280 270" xmlns="http://www.w3.org/2000/svg">
+
+<path d="M80,60 Q100,40 130,50 L160,55 Q180,58 185,80 L180,160 Q175,180 160,185 L140,190 Q120,190 110,175 L90,150 Q75,130 72,100 Z" fill="#dbc9a8" stroke="#9e7d5a" stroke-width="1.5" stroke-linejoin="round" />
+<path d="M142,95 Q165,90 175,250 L162,252 Q155,240 148,200 L148,95 Z" fill="#dbc9a8" stroke="#9e7d5a" stroke-width="1.5" stroke-linejoin="round" />
+<path d="M168,220 Q180,218 195,250 L183,252 Q172,235 168,220 Z" fill="#dbc9a8" stroke="#9e7d5a" stroke-width="1.5" stroke-linejoin="round" />
+<path d="M118,68 Q128,62 138,68 L155,200 Q148,208 142,205 L135,200 L120,72 Z" fill="#c0392b" fill-opacity="0.82" stroke="#7b241c" stroke-width="1" />
+<line x1="126" y1="85" x2="150" y2="200" stroke="#e88080" stroke-width="0.7"/>
+<line x1="130" y1="80" x2="152" y2="198" stroke="#e88080" stroke-width="0.7"/>
+<circle cx="125" cy="65" r="5" fill="#2471a3" stroke="white" stroke-width="1.5"/> <circle cx="152" cy="205" r="5" fill="#1e8449" stroke="white" stroke-width="1.5"/>
+<text x="140" y="248" text-anchor="middle" font-size="11" fill="#333" font-family="sans-serif">上腕二頭筋（短頭）</text>
+<circle cx="10" cy="258" r="4" fill="#2471a3"/><text x="16" y="262" font-size="8" fill="#333" font-family="sans-serif">起始</text>
+<circle cx="50" cy="258" r="4" fill="#1e8449"/><text x="56" y="262" font-size="8" fill="#333" font-family="sans-serif">停止</text>
+</svg>`,
+"上腕筋":`<svg viewBox="0 0 280 270" xmlns="http://www.w3.org/2000/svg">
+
+<path d="M130,85 Q155,80 168,85 L175,225 Q165,240 155,238 L148,230 L138,88 Z" fill="#dbc9a8" stroke="#9e7d5a" stroke-width="1.5" stroke-linejoin="round" />
+<path d="M148,225 Q160,222 175,238 L182,250 L170,252 Q162,240 150,228 Z" fill="#dbc9a8" stroke="#9e7d5a" stroke-width="1.5" stroke-linejoin="round" />
+<path d="M132,140 Q155,135 168,140 L172,225 Q162,235 152,232 L146,225 L135,142 Z" fill="#c0392b" fill-opacity="0.82" stroke="#7b241c" stroke-width="1" />
+<line x1="138" y1="160" x2="168" y2="228" stroke="#e88080" stroke-width="0.7"/>
+<line x1="145" y1="148" x2="170" y2="226" stroke="#e88080" stroke-width="0.7"/>
+<circle cx="134" cy="142" r="5" fill="#2471a3" stroke="white" stroke-width="1.5"/> <circle cx="170" cy="228" r="5" fill="#1e8449" stroke="white" stroke-width="1.5"/>
+<text x="140" y="248" text-anchor="middle" font-size="11" fill="#333" font-family="sans-serif">上腕筋</text>
+<circle cx="10" cy="258" r="4" fill="#2471a3"/><text x="16" y="262" font-size="8" fill="#333" font-family="sans-serif">起始</text>
+<circle cx="50" cy="258" r="4" fill="#1e8449"/><text x="56" y="262" font-size="8" fill="#333" font-family="sans-serif">停止</text>
+</svg>`,
+"上腕三頭筋（長頭）":`<svg viewBox="0 0 280 270" xmlns="http://www.w3.org/2000/svg">
+
+<path d="M80,60 Q100,40 130,50 L160,55 Q180,58 185,80 L180,160 Q175,180 160,185 L140,190 Q120,190 110,175 L90,150 Q75,130 72,100 Z" fill="#dbc9a8" stroke="#9e7d5a" stroke-width="1.5" stroke-linejoin="round" />
+<path d="M130,88 Q150,83 162,88 L168,232 L155,234 L142,90 Z" fill="#dbc9a8" stroke="#9e7d5a" stroke-width="1.5" stroke-linejoin="round" />
+<path d="M142,228 Q155,224 170,235 L175,248 L162,250 Z" fill="#dbc9a8" stroke="#9e7d5a" stroke-width="1.5" stroke-linejoin="round" />
+<path d="M115,76 Q125,68 135,76 L148,220 Q140,230 132,226 L126,218 L118,80 Z" fill="#c0392b" fill-opacity="0.82" stroke="#7b241c" stroke-width="1" />
+<line x1="122" y1="100" x2="143" y2="222" stroke="#e88080" stroke-width="0.7"/>
+<line x1="128" y1="95" x2="145" y2="220" stroke="#e88080" stroke-width="0.7"/>
+<circle cx="122" cy="72" r="5" fill="#2471a3" stroke="white" stroke-width="1.5"/> <circle cx="145" cy="224" r="5" fill="#1e8449" stroke="white" stroke-width="1.5"/>
+<text x="140" y="248" text-anchor="middle" font-size="11" fill="#333" font-family="sans-serif">上腕三頭筋（長頭）</text>
+<circle cx="10" cy="258" r="4" fill="#2471a3"/><text x="16" y="262" font-size="8" fill="#333" font-family="sans-serif">起始</text>
+<circle cx="50" cy="258" r="4" fill="#1e8449"/><text x="56" y="262" font-size="8" fill="#333" font-family="sans-serif">停止</text>
+</svg>`,
+"上腕三頭筋（内側頭）":`<svg viewBox="0 0 280 270" xmlns="http://www.w3.org/2000/svg">
+
+<path d="M130,88 Q155,83 168,88 L172,232 L158,234 L140,90 Z" fill="#dbc9a8" stroke="#9e7d5a" stroke-width="1.5" stroke-linejoin="round" />
+<path d="M145,226 Q158,222 172,234 L178,248 L165,250 Z" fill="#dbc9a8" stroke="#9e7d5a" stroke-width="1.5" stroke-linejoin="round" />
+<path d="M132,155 Q148,150 162,155 L168,228 Q160,236 152,232 L146,226 L135,158 Z" fill="#c0392b" fill-opacity="0.82" stroke="#7b241c" stroke-width="1" />
+<line x1="138" y1="168" x2="165" y2="228" stroke="#e88080" stroke-width="0.7"/>
+<line x1="145" y1="162" x2="166" y2="226" stroke="#e88080" stroke-width="0.7"/>
+<circle cx="134" cy="158" r="5" fill="#2471a3" stroke="white" stroke-width="1.5"/> <circle cx="166" cy="230" r="5" fill="#1e8449" stroke="white" stroke-width="1.5"/>
+<text x="140" y="248" text-anchor="middle" font-size="11" fill="#333" font-family="sans-serif">上腕三頭筋（内側頭）</text>
+<circle cx="10" cy="258" r="4" fill="#2471a3"/><text x="16" y="262" font-size="8" fill="#333" font-family="sans-serif">起始</text>
+<circle cx="50" cy="258" r="4" fill="#1e8449"/><text x="56" y="262" font-size="8" fill="#333" font-family="sans-serif">停止</text>
+</svg>`};
+</script>
+</head>
+<body>
+<header class="hdr">
+  <span class="hdr-title">💪 筋肉カード</span>
+  <span style="font-size:12px;color:var(--t3);">肩・上腕</span>
+</header>
+
+<div id="s-menu" class="screen active">
+  <div class="menu-scroll">
+    <div>
+      <div class="sec-lbl">筋肉グループ</div>
+      <div class="chip-row" id="gchips">
+        <button class="chip on" data-g="all">全筋肉（29）</button>
+        <button class="chip" data-g="三角筋">三角筋</button>
+        <button class="chip" data-g="腱板">回旋筋腱板</button>
+        <button class="chip" data-g="胸筋">胸筋・烏口腕</button>
+        <button class="chip" data-g="背筋">広背筋・大円筋</button>
+        <button class="chip" data-g="僧帽">僧帽筋・菱形筋</button>
+        <button class="chip" data-g="上腕">上腕筋</button>
+      </div>
+    </div>
+    <div>
+      <div class="sec-lbl">出題項目</div>
+      <div class="chip-row" id="mchips">
+        <button class="chip on" data-m="all">すべて</button>
+        <button class="chip" data-m="起始">起始</button>
+        <button class="chip" data-m="停止">停止</button>
+        <button class="chip" data-m="神経">支配神経</button>
+        <button class="chip" data-m="作用">作用</button>
+      </div>
+    </div>
+    <div id="stat-block" style="display:none;">
+      <div class="sec-lbl">前回の結果</div>
+      <div class="stat-row">
+        <div class="stat-card"><div class="num" id="st-c">—</div><div class="lbl">正解</div></div>
+        <div class="stat-card"><div class="num" id="st-t">—</div><div class="lbl">総問数</div></div>
+        <div class="stat-card"><div class="num" id="st-p">—</div><div class="lbl">正解率</div></div>
+      </div>
+    </div>
+  </div>
+  <div class="menu-footer">
+    <button class="start-btn" id="start-btn">スタート</button>
+  </div>
+</div>
+
+<div id="s-quiz" class="screen">
+  <div class="quiz-hdr">
+    <span class="q-cnt" id="counter">1 / 1</span>
+    <div class="prog-wrap"><div class="prog-fill" id="prog" style="width:0%"></div></div>
+  </div>
+  <div class="quiz-body">
+    <div class="card-wrap" id="card-wrap">
+      <div class="card-inner" id="ci">
+        <div class="card-face">
+          <div class="c-tag" id="q-tag"></div>
+          <div class="c-name" id="q-name"></div>
+          <div class="c-grp" id="q-grp"></div>
+          <div class="c-hint">タップで答えを確認 →</div>
+        </div>
+        <div class="card-face card-back-face">
+          <div class="b-svg-wrap" id="bsvgwrap">
+            <div class="b-loading">
+              <div class="spinner"></div>
+              <div class="b-loading-text">図を生成中…</div>
+            </div>
+          </div>
+          <div class="b-data" id="bdata"></div>
+        </div>
+      </div>
+    </div>
+    <div class="ans-row hidden" id="ans-row">
+      <button class="ans-btn btn-ng" id="btn-ng">✗ もう一度</button>
+      <button class="ans-btn btn-ok" id="btn-ok">○ 覚えた</button>
+    </div>
+  </div>
+  <div class="quiz-footer">
+    <button class="back-btn" id="back-btn">← メニューへ戻る</button>
+  </div>
+</div>
+
+<div id="s-result" class="screen">
+  <div class="result-body">
+    <div class="ring-wrap">
+      <svg width="140" height="140" viewBox="0 0 140 140">
+        <circle cx="70" cy="70" r="62" fill="none" stroke="var(--surface2)" stroke-width="7"/>
+        <circle id="ring" cx="70" cy="70" r="62" fill="none" stroke="var(--green)" stroke-width="7"
+          stroke-linecap="round" stroke-dasharray="389.6" stroke-dashoffset="389.6"/>
+      </svg>
+      <div class="ring-center">
+        <div class="ring-pct" id="r-pct">0%</div>
+        <div class="ring-sub" id="r-sub">0 / 0</div>
+      </div>
+    </div>
+    <div class="result-msg" id="r-msg"></div>
+  </div>
+  <div class="result-footer">
+    <button class="res-btn" id="retry-btn" style="display:none;">間違えた問題だけ再挑戦</button>
+    <button class="res-btn primary" id="menu-btn">メニューへ戻る</button>
+  </div>
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+
+const MS = [
+  {n:"三角筋（鎖骨部）",g:"三角筋",起始:"鎖骨の外側1/3",停止:"上腕骨（三角筋粗面）",神経:"腋窩神経 C5・C6",作用:"上腕の前方挙上・内旋・内転"},
+  {n:"三角筋（肩峰部）",g:"三角筋",起始:"肩峰",停止:"上腕骨（三角筋粗面）",神経:"腋窩神経 C5・C6",作用:"上腕の外転"},
+  {n:"三角筋（肩甲棘部）",g:"三角筋",起始:"肩甲棘",停止:"上腕骨（三角筋粗面）",神経:"腋窩神経 C5・C6",作用:"上腕の後方挙上・外旋・内転"},
+  {n:"棘上筋",g:"腱板",起始:"肩甲骨・棘上窩",停止:"上腕骨・大結節",神経:"肩甲上神経 C4–C6",作用:"上腕の外転"},
+  {n:"棘下筋",g:"腱板",起始:"肩甲骨・棘下窩",停止:"上腕骨・大結節",神経:"肩甲上神経 C4–C6",作用:"上腕の外旋"},
+  {n:"小円筋",g:"腱板",起始:"肩甲骨・外側縁",停止:"上腕骨・大結節",神経:"腋窩神経 C5・C6",作用:"上腕の外旋（弱い内転作用もあり）"},
+  {n:"肩甲下筋",g:"腱板",起始:"肩甲骨・肩甲下窩",停止:"上腕骨・小結節",神経:"肩甲下神経 C5・C6",作用:"上腕の内旋"},
+  {n:"大胸筋（鎖骨部）",g:"胸筋",起始:"鎖骨（内側半分）",停止:"上腕骨・大結節稜",神経:"内側・外側胸筋神経 C5–T1",作用:"上腕の前方挙上・内転・内旋"},
+  {n:"大胸筋（胸肋部）",g:"胸筋",起始:"胸骨と第1–6肋軟骨",停止:"上腕骨・大結節稜",神経:"内側・外側胸筋神経 C5–T1",作用:"上腕の内転・内旋（肩固定時は呼吸補助）"},
+  {n:"大胸筋（腹部）",g:"胸筋",起始:"腹直筋鞘（前葉）",停止:"上腕骨・大結節稜",神経:"内側・外側胸筋神経 C5–T1",作用:"上腕の内転・内旋"},
+  {n:"烏口腕筋",g:"胸筋",起始:"肩甲骨・烏口突起",停止:"上腕骨（小結節稜の下方）",神経:"筋皮神経 C5–C7",作用:"上腕の前方挙上・内転・内旋"},
+  {n:"鎖骨下筋",g:"胸筋",起始:"第1肋骨",停止:"鎖骨（下面）",神経:"鎖骨下筋神経 C5・C6",作用:"胸鎖関節において鎖骨を安定に保つ"},
+  {n:"小胸筋",g:"胸筋",起始:"第3–5肋骨",停止:"肩甲骨・烏口突起",神経:"内側胸筋神経C8・T1 / 外側胸筋神経C5–C7",作用:"肩甲骨を引き下げ・下角を後内側に引く・呼吸補助"},
+  {n:"前鋸筋（上部）",g:"胸筋",起始:"第1–9肋骨",停止:"肩甲骨・上角（肋骨面と背側面）",神経:"長胸神経 C5–C7",作用:"挙上した上腕を下げる"},
+  {n:"前鋸筋（中間部）",g:"胸筋",起始:"第1–9肋骨",停止:"肩甲骨・内側縁（肋骨面）",神経:"長胸神経 C5–C7",作用:"肩甲骨を前外側に引く（呼吸補助）"},
+  {n:"前鋸筋（下部）",g:"胸筋",起始:"第1–9肋骨",停止:"肩甲骨・内側縁の肋骨面・下角の背側面",神経:"長胸神経 C5–C7",作用:"下角を前外側に引く（上腕90°以上の挙上を可能にする）"},
+  {n:"広背筋",g:"背筋",起始:"T7–12棘突起・胸腰筋膜・第9–12肋骨・腸骨稜後1/3・肩甲骨下角",停止:"上腕骨・結節間溝の底",神経:"胸背神経 C6–C8",作用:"上腕の内旋・内転・後方挙上・呼吸補助（咳嗽筋）"},
+  {n:"大円筋",g:"背筋",起始:"肩甲骨（下角）",停止:"上腕骨・小結節稜",神経:"下位の肩甲下神経 C5–C7",作用:"上腕の内旋・内転・後方挙上"},
+  {n:"僧帽筋（下行部）",g:"僧帽",起始:"後頭骨・C1–C7の棘突起",停止:"鎖骨外側1/3",神経:"副神経CN XI・頸神経叢 C3・C4",作用:"肩甲骨を上内側に引く・関節窩を上方に回す・頭を同側に傾け対側に回旋"},
+  {n:"僧帽筋（横行部）",g:"僧帽",起始:"T1–T4の高さの靱帯",停止:"肩甲棘",神経:"副神経CN XI・頸神経叢 C3・C4",作用:"肩甲骨を上内側に引く"},
+  {n:"僧帽筋（上行部）",g:"僧帽",起始:"T5–T12の棘突起",停止:"肩峰",神経:"副神経CN XI・頸神経叢 C3・C4",作用:"肩甲骨を上内側に引く"},
+  {n:"肩甲挙筋",g:"僧帽",起始:"C1–C4の横突起",停止:"肩甲棘",神経:"肩甲背神経と頸神経 C3・C4",作用:"肩甲骨を内側に引く"},
+  {n:"小菱形筋",g:"僧帽",起始:"C6・C7の棘突起",停止:"肩甲骨内側縁（肩甲棘より上）",神経:"肩甲背神経と頸神経 C3・C4",作用:"肩甲骨を上内側に引く・下角を内側に動かす"},
+  {n:"大菱形筋",g:"僧帽",起始:"T1–T4の棘突起",停止:"肩甲骨内側縁（肩甲棘より下）",神経:"肩甲背神経 C4・C5",作用:"肩甲骨を安定させる・上内側に引く"},
+  {n:"上腕二頭筋（長頭）",g:"上腕",起始:"肩甲骨・関節上結節",停止:"橈骨粗面・上腕二頭筋腱膜",神経:"筋皮神経 C5・C6",作用:"肘関節の屈曲・回外・肩関節の前方挙上"},
+  {n:"上腕二頭筋（短頭）",g:"上腕",起始:"肩甲骨・烏口突起",停止:"橈骨粗面・上腕二頭筋腱膜",神経:"筋皮神経 C5・C6",作用:"肘関節の屈曲・回外・上腕の内転と内旋"},
+  {n:"上腕筋",g:"上腕",起始:"上腕骨（肋骨面の遠位半分）",停止:"尺骨粗面",神経:"筋皮神経C5・C6 / 橈骨神経C7（一部）",作用:"肘関節の屈曲"},
+  {n:"上腕三頭筋（長頭）",g:"上腕",起始:"肩甲骨・関節下結節",停止:"尺骨の肘頭",神経:"橈骨神経 C6–C8",作用:"肘関節の伸展・肩関節の後方挙上"},
+  {n:"上腕三頭筋（内側頭）",g:"上腕",起始:"上腕骨後面（橈骨神経溝の下位）・内側筋間中隔",停止:"尺骨の肘頭（橈側面）",神経:"橈骨神経 C6–C8",作用:"肘関節の伸展と安定化"},
+  {n:"上腕三頭筋（外側頭）",g:"上腕",起始:"上腕骨後面（橈骨神経溝の近位）・外側筋間中隔",停止:"尺骨の肘頭（橈側面）",神経:"橈骨神経 C6–C8",作用:"肘関節の伸展と安定化"},
+];
+
+const svgCache = {};
+let deck=[],wrong=[],idx=0,ok=0,tot=0,flipped=false,currentName='';
+let sg='all', sm='all';
+
+document.querySelectorAll('#gchips .chip').forEach(function(b){
+  b.addEventListener('click',function(){
+    document.querySelectorAll('#gchips .chip').forEach(function(x){x.classList.remove('on');});
+    b.classList.add('on'); sg=b.dataset.g;
+  });
+});
+document.querySelectorAll('#mchips .chip').forEach(function(b){
+  b.addEventListener('click',function(){
+    document.querySelectorAll('#mchips .chip').forEach(function(x){x.classList.remove('on');});
+    b.classList.add('on'); sm=b.dataset.m;
+  });
+});
+document.getElementById('start-btn').addEventListener('click', startQuiz);
+document.getElementById('card-wrap').addEventListener('click', flip);
+document.getElementById('btn-ng').addEventListener('click', function(){ ans(false); });
+document.getElementById('btn-ok').addEventListener('click', function(){ ans(true); });
+document.getElementById('back-btn').addEventListener('click', goMenu);
+document.getElementById('retry-btn').addEventListener('click', retryWrong);
+document.getElementById('menu-btn').addEventListener('click', goMenu);
+
+// ── SVGルックアップ（事前生成済み）──
+function fetchSVG(m) {
+  return Promise.resolve(
+    (typeof SVGS !== 'undefined' && SVGS[m.n]) ? SVGS[m.n] : null
+  );
+}
+
+function shuffle(a){
+  for(var i=a.length-1;i>0;i--){var j=Math.floor(Math.random()*(i+1));var t=a[i];a[i]=a[j];a[j]=t;}
+  return a;
+}
+function buildDeck(ms){
+  var keys=sm==='all'?['起始','停止','神経','作用']:[sm];
+  var c=[]; ms.forEach(function(m){keys.forEach(function(k){c.push({m:m,k:k});});});
+  return shuffle(c);
+}
+
+function startQuiz(){
+  var ms=sg==='all'?MS:MS.filter(function(m){return m.g===sg;});
+  deck=buildDeck(ms); wrong=[]; idx=0; ok=0; tot=deck.length;
+  show('quiz'); renderCard();
+}
+
+function renderCard(){
+  if(idx>=deck.length){showResult();return;}
+  flipped=false;
+  document.getElementById('ci').classList.remove('flipped');
+  document.getElementById('ans-row').classList.add('hidden');
+
+  var card=deck[idx]; var m=card.m; var k=card.k;
+  currentName=m.n;
+
+  document.getElementById('q-tag').textContent={起始:'起始を答えよ',停止:'停止を答えよ',神経:'支配神経を答えよ',作用:'作用を答えよ'}[k];
+  document.getElementById('q-name').textContent=m.n;
+  document.getElementById('q-grp').textContent=m.g;
+
+  var bd=document.getElementById('bdata'); bd.innerHTML='';
+  var lm={起始:'起始',停止:'停止',神経:'支配神経',作用:'作用'};
+  ['起始','停止','神経','作用'].forEach(function(key){
+    var d=document.createElement('div');
+    d.className='b-item'+(key===k?' hl':'');
+    d.innerHTML='<div class="b-lbl">'+lm[key]+'</div><div class="b-val">'+m[key]+'</div>';
+    bd.appendChild(d);
+  });
+
+  var wrap=document.getElementById('bsvgwrap');
+  // キャッシュにあれば即表示
+  if(svgCache[m.n]){
+    wrap.innerHTML=svgCache[m.n];
+  } else {
+    wrap.innerHTML='<div class="b-loading"><div class="spinner"></div><div class="b-loading-text">図を生成中…</div></div>';
+  }
+
+  // バックグラウンドで先読み（次のカード用）
+  var nameAtFetch=m.n;
+  fetchSVG(m).then(function(svg){
+    if(currentName===nameAtFetch){
+      document.getElementById('bsvgwrap').innerHTML=svg;
+    }
+  }).catch(function(err){
+    if(currentName===nameAtFetch){
+      document.getElementById('bsvgwrap').innerHTML='<div class="b-err">⚠️ 図の生成に失敗しました<br><small>'+err.message+'</small></div>';
+    }
+  });
+
+  document.getElementById('prog').style.width=Math.round(idx/tot*100)+'%';
+  document.getElementById('counter').textContent=(idx+1)+' / '+tot;
+}
+
+function flip(){
+  if(!flipped){
+    flipped=true;
+    document.getElementById('ci').classList.add('flipped');
+    document.getElementById('ans-row').classList.remove('hidden');
+  }
+}
+function ans(isOk){ if(isOk)ok++; else wrong.push(deck[idx]); idx++; renderCard(); }
+
+function showResult(){
+  show('result');
+  var pct=Math.round(ok/tot*100);
+  document.getElementById('r-pct').textContent=pct+'%';
+  document.getElementById('r-sub').textContent=ok+' / '+tot+'問';
+  document.getElementById('ring').style.strokeDashoffset=(2*Math.PI*62*(1-pct/100)).toFixed(1);
+  document.getElementById('r-msg').textContent=['繰り返し挑戦しましょう！','半分超えました。間違えた問題を重点的に！','あと少しで完璧！','ほぼ完璧！素晴らしいです 🎉'][pct<50?0:pct<70?1:pct<90?2:3];
+  document.getElementById('retry-btn').style.display=wrong.length?'block':'none';
+  document.getElementById('stat-block').style.display='block';
+  document.getElementById('st-c').textContent=ok;
+  document.getElementById('st-t').textContent=tot;
+  document.getElementById('st-p').textContent=pct+'%';
+}
+function retryWrong(){ deck=shuffle(wrong.slice()); wrong=[]; idx=0; ok=0; tot=deck.length; show('quiz'); renderCard(); }
+function goMenu(){ show('menu'); }
+function show(n){ ['menu','quiz','result'].forEach(function(s){ document.getElementById('s-'+s).classList.toggle('active',s===n); }); }
+
+if('serviceWorker' in navigator){ navigator.serviceWorker.register('./sw.js').catch(function(){}); }
+});
+</script>
+</body>
+</html>

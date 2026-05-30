@@ -1,0 +1,924 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>管理ページ | ST同好会</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+JP:wght@700;900&family=Noto+Sans+JP:wght@300;400;500;700&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --accent: #E60012;
+      --black: #0a0a0a;
+      --gray: #707070;
+      --gray-light: #d0d0d0;
+      --border: #e8e8e8;
+      --bg: #f8f8f8;
+      --surface: #fff;
+      --serif: 'Noto Serif JP', serif;
+      --sans: 'Noto Sans JP', sans-serif;
+    }
+    body { font-family: var(--sans); font-weight: 300; background: var(--bg); color: var(--black); line-height: 1.7; }
+    a { color: inherit; text-decoration: none; }
+    button { cursor: pointer; font: inherit; }
+
+    /* ===== ログイン画面 ===== */
+    .login-screen {
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 2rem;
+    }
+    .login-box {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      padding: 3rem 2.5rem;
+      width: 100%;
+      max-width: 400px;
+      display: flex;
+      flex-direction: column;
+      gap: 1.5rem;
+    }
+    .login-box .eyebrow { font-size: 0.7rem; letter-spacing: 0.2em; color: var(--accent); font-weight: 500; }
+    .login-box h1 { font-family: var(--serif); font-size: 1.6rem; font-weight: 900; }
+    .login-box p { font-size: 0.85rem; color: var(--gray); }
+    .login-error { font-size: 0.75rem; color: var(--accent); display: none; }
+    .login-error.show { display: block; }
+
+    /* ===== 管理画面ヘッダー ===== */
+    .admin-header {
+      background: var(--black);
+      color: #fff;
+      padding: 0 2rem;
+      height: 56px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+    .admin-header__logo { font-family: var(--serif); font-size: 1.1rem; font-weight: 900; }
+    .admin-header__logo span { color: var(--accent); }
+    .admin-header__right { display: flex; align-items: center; gap: 1rem; }
+    .admin-header__right a { font-size: 0.8rem; color: rgba(255,255,255,0.6); transition: color 0.2s; }
+    .admin-header__right a:hover { color: #fff; }
+
+    /* ===== メインレイアウト ===== */
+    .admin-body { display: none; }
+    .admin-body.show { display: block; }
+    .admin-main { max-width: 960px; margin: 0 auto; padding: 2.5rem 1.5rem; }
+
+    /* ===== タブナビ ===== */
+    .admin-tabs { display: flex; border-bottom: 1px solid var(--border); margin-bottom: 2rem; }
+    .admin-tab {
+      background: none;
+      border: none;
+      border-bottom: 2px solid transparent;
+      padding: 0.75rem 1.5rem;
+      font-size: 0.875rem;
+      color: var(--gray);
+      margin-bottom: -1px;
+      transition: color 0.2s, border-color 0.2s;
+      font-weight: 400;
+    }
+    .admin-tab:hover { color: var(--black); }
+    .admin-tab.active { color: var(--accent); border-bottom-color: var(--accent); font-weight: 500; }
+    .admin-panel { display: none; }
+    .admin-panel.active { display: block; }
+
+    /* ===== セクションタイトル ===== */
+    .section-label { font-size: 0.7rem; letter-spacing: 0.2em; color: var(--accent); font-weight: 500; margin-bottom: 0.25rem; }
+    .section-title { font-family: var(--serif); font-size: 1.5rem; font-weight: 900; margin-bottom: 2rem; }
+
+    /* ===== 追加フォームカード ===== */
+    .add-form {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      padding: 1.5rem;
+      margin-bottom: 2rem;
+    }
+    .add-form__title {
+      font-size: 0.8rem;
+      font-weight: 500;
+      letter-spacing: 0.1em;
+      margin-bottom: 1.25rem;
+      padding-bottom: 0.75rem;
+      border-bottom: 1px solid var(--border);
+    }
+    .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+    .form-grid--3 { grid-template-columns: 1fr 1fr 1fr; }
+    .form-group { display: flex; flex-direction: column; gap: 6px; }
+    .form-group.full { grid-column: 1 / -1; }
+    label { font-size: 0.75rem; font-weight: 500; letter-spacing: 0.08em; color: var(--black); }
+    input[type="text"],
+    input[type="date"],
+    input[type="url"],
+    select,
+    textarea {
+      border: none;
+      border-bottom: 1px solid var(--border);
+      background: var(--bg);
+      padding: 0.6rem 0.5rem;
+      font: 300 0.875rem var(--sans);
+      color: var(--black);
+      outline: none;
+      transition: border-color 0.2s;
+      resize: vertical;
+    }
+    input:focus, select:focus, textarea:focus { border-bottom-color: var(--accent); }
+    input::placeholder, textarea::placeholder { color: var(--gray-light); }
+    .form-actions { display: flex; justify-content: flex-end; margin-top: 1.25rem; padding-top: 1rem; border-top: 1px solid var(--border); }
+
+    /* チェックボックス */
+    .check-group { flex-direction: row; align-items: center; gap: 8px; }
+    .check-group input { width: auto; }
+    .check-group label { font-size: 0.8rem; cursor: pointer; }
+
+    /* ===== ボタン ===== */
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      padding: 0.6rem 1.5rem;
+      font-size: 0.8rem;
+      font-weight: 500;
+      letter-spacing: 0.06em;
+      border: 1px solid transparent;
+      transition: all 0.2s;
+    }
+    .btn--primary { background: var(--accent); color: #fff; border-color: var(--accent); }
+    .btn--primary:hover { background: #b8000e; }
+    .btn--ghost { background: transparent; color: var(--black); border-color: var(--border); }
+    .btn--ghost:hover { border-color: var(--black); }
+    .btn--danger { background: transparent; color: #c00; border-color: #c00; font-size: 0.75rem; padding: 0.3rem 0.75rem; }
+    .btn--danger:hover { background: #c00; color: #fff; }
+    .btn--edit { background: transparent; color: var(--gray); border-color: var(--gray-light); font-size: 0.75rem; padding: 0.3rem 0.75rem; }
+    .btn--edit:hover { border-color: var(--black); color: var(--black); }
+    .add-form__mode { font-size: 0.75rem; color: var(--accent); font-weight: 500; margin-bottom: 0.75rem; min-height: 1em; }
+    .btn--sm { padding: 0.35rem 0.85rem; font-size: 0.75rem; }
+
+    /* ===== 一覧テーブル ===== */
+    .items-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 1rem;
+    }
+    .items-count { font-size: 0.8rem; color: var(--gray); }
+    .items-list { display: flex; flex-direction: column; gap: 0; border: 1px solid var(--border); }
+    .item-row {
+      display: flex;
+      align-items: flex-start;
+      gap: 1rem;
+      padding: 1rem 1.25rem;
+      border-bottom: 1px solid var(--border);
+      background: var(--surface);
+      transition: background 0.2s;
+    }
+    .item-row:last-child { border-bottom: none; }
+    .item-row:hover { background: var(--bg); }
+    .item-row__body { flex: 1; min-width: 0; }
+    .item-row__meta { display: flex; align-items: center; gap: 0.75rem; margin-bottom: 0.35rem; flex-wrap: wrap; }
+    .item-row__date { font-size: 0.75rem; color: var(--gray); font-family: var(--serif); }
+    .item-tag {
+      font-size: 0.65rem;
+      padding: 2px 8px;
+      border: 1px solid var(--border);
+      color: var(--gray);
+      letter-spacing: 0.06em;
+    }
+    .item-tag--important { border-color: var(--accent); color: var(--accent); }
+    .item-badge-new { font-size: 0.6rem; background: var(--accent); color: #fff; padding: 2px 6px; font-weight: 700; }
+    .item-row__title { font-family: var(--serif); font-size: 0.95rem; font-weight: 700; }
+    .item-row__sub { font-size: 0.8rem; color: var(--gray); margin-top: 2px; }
+    .item-row__actions { flex-shrink: 0; }
+
+    /* 空状態 */
+    .empty-state {
+      text-align: center;
+      padding: 3rem;
+      color: var(--gray);
+      font-size: 0.875rem;
+      border: 1px dashed var(--border);
+      background: var(--surface);
+    }
+
+    /* トースト */
+    .toast {
+      position: fixed;
+      bottom: 2rem;
+      right: 2rem;
+      background: var(--black);
+      color: #fff;
+      padding: 0.75rem 1.25rem;
+      font-size: 0.85rem;
+      transform: translateY(80px);
+      opacity: 0;
+      transition: all 0.3s;
+      z-index: 500;
+    }
+    .toast.show { transform: translateY(0); opacity: 1; }
+
+    @media (max-width: 640px) {
+      .form-grid, .form-grid--3 { grid-template-columns: 1fr; }
+      .form-group.full { grid-column: 1; }
+      .admin-tab { padding: 0.75rem 0.75rem; font-size: 0.8rem; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ===== ログイン画面 ===== -->
+  <div class="login-screen" id="login-screen">
+    <div class="login-box">
+      <p class="eyebrow">ADMIN</p>
+      <h1>管理ページ</h1>
+      <p>このページはサイト管理者専用です。パスワードを入力してください。</p>
+      <form id="admin-login-form">
+        <div class="form-group">
+          <label for="admin-pw">管理者パスワード</label>
+          <input type="password" id="admin-pw" placeholder="パスワードを入力" required autocomplete="current-password" />
+        </div>
+        <p class="login-error" id="admin-login-error">パスワードが違います。</p>
+        <div class="form-actions">
+          <button type="submit" class="btn btn--primary" style="width:100%;justify-content:center;margin-top:1rem;">ログイン</button>
+        </div>
+      </form>
+      <a href="index.html" style="font-size:0.8rem;color:var(--gray);text-align:center;">← サイトに戻る</a>
+    </div>
+  </div>
+
+  <!-- ===== 管理画面 ===== -->
+  <div class="admin-body" id="admin-body">
+
+    <header class="admin-header">
+      <div class="admin-header__logo"><span>ST</span> 管理ページ</div>
+      <div class="admin-header__right">
+        <a href="index.html" target="_blank">サイトを見る →</a>
+        <button class="btn btn--ghost btn--sm" id="admin-logout" style="color:rgba(255,255,255,0.6);border-color:rgba(255,255,255,0.2);">ログアウト</button>
+      </div>
+    </header>
+
+    <main class="admin-main">
+
+      <div class="admin-tabs">
+        <button class="admin-tab active" data-panel="news">お知らせ</button>
+        <button class="admin-tab" data-panel="videos">動画一覧</button>
+        <button class="admin-tab" data-panel="lectures">講義一覧</button>
+        <button class="admin-tab" data-panel="memory">暗記学習</button>
+      </div>
+
+      <!-- ===== お知らせ管理 ===== -->
+      <div class="admin-panel active" id="panel-news">
+        <p class="section-label">MANAGE</p>
+        <h2 class="section-title">お知らせ管理</h2>
+
+        <div class="add-form">
+          <p class="add-form__title">+ 新規追加</p>
+          <p class="add-form__mode" id="news-form-mode"></p>
+          <form id="news-form">
+            <div class="form-grid">
+              <div class="form-group">
+                <label for="n-date">日付</label>
+                <input type="date" id="n-date" required />
+              </div>
+              <div class="form-group">
+                <label for="n-tag">カテゴリ</label>
+                <select id="n-tag">
+                  <option value="重要">重要</option>
+                  <option value="活動報告">活動報告</option>
+                  <option value="コンテンツ">コンテンツ</option>
+                  <option value="入会">入会</option>
+                  <option value="その他">その他</option>
+                </select>
+              </div>
+              <div class="form-group full">
+                <label for="n-title">タイトル</label>
+                <input type="text" id="n-title" placeholder="お知らせのタイトルを入力" required />
+              </div>
+              <div class="form-group full">
+                <label for="n-body">本文</label>
+                <textarea id="n-body" rows="3" placeholder="お知らせの内容を入力" required></textarea>
+              </div>
+              <div class="form-group check-group">
+                <input type="checkbox" id="n-important" />
+                <label for="n-important">重要フラグ（赤枠表示）</label>
+              </div>
+              <div class="form-group check-group">
+                <input type="checkbox" id="n-new" checked />
+                <label for="n-new">NEWバッジを表示</label>
+              </div>
+            </div>
+            <div class="form-actions">
+              <button type="button" class="btn btn--ghost" id="news-cancel" style="display:none" onclick="cancelEdit('news')">キャンセル</button>
+              <button type="submit" class="btn btn--primary" id="news-submit">追加する</button>
+            </div>
+          </form>
+        </div>
+
+        <div class="items-header">
+          <p class="items-count" id="news-count"></p>
+        </div>
+        <div id="news-list-admin"></div>
+      </div>
+
+      <!-- ===== 動画管理 ===== -->
+      <div class="admin-panel" id="panel-videos">
+        <p class="section-label">MANAGE</p>
+        <h2 class="section-title">動画一覧管理</h2>
+
+        <div class="add-form">
+          <p class="add-form__title">+ 新規追加</p>
+          <p class="add-form__mode" id="videos-form-mode"></p>
+          <form id="videos-form">
+            <div class="form-grid">
+              <div class="form-group">
+                <label for="v-title">タイトル</label>
+                <input type="text" id="v-title" placeholder="動画タイトル" required />
+              </div>
+              <div class="form-group">
+                <label for="v-category">カテゴリ</label>
+                <select id="v-category">
+                  <option value="basics">基礎</option>
+                  <option value="stretch">ストレッチ</option>
+                  <option value="taping">テーピング</option>
+                  <option value="rehab">リハビリ</option>
+                </select>
+              </div>
+              <div class="form-group">
+                <label for="v-duration">再生時間</label>
+                <input type="text" id="v-duration" placeholder="例：12:34" />
+              </div>
+              <div class="form-group">
+                <label for="v-date">投稿日</label>
+                <input type="date" id="v-date" required />
+              </div>
+              <div class="form-group full">
+                <label for="v-url">Google Drive 動画URL（共有リンク）</label>
+                <input type="url" id="v-url" placeholder="https://drive.google.com/file/d/.../view?usp=sharing" />
+              </div>
+              <div class="form-group full">
+                <label for="v-thumb">サムネイル画像URL（空欄可）</label>
+                <input type="url" id="v-thumb" placeholder="https://..." />
+              </div>
+              <div class="form-group check-group">
+                <input type="checkbox" id="v-new" />
+                <label for="v-new">NEWバッジを表示</label>
+              </div>
+            </div>
+            <div class="form-actions">
+              <button type="button" class="btn btn--ghost" id="videos-cancel" style="display:none" onclick="cancelEdit('videos')">キャンセル</button>
+              <button type="submit" class="btn btn--primary" id="videos-submit">追加する</button>
+            </div>
+          </form>
+        </div>
+
+        <div class="items-header">
+          <p class="items-count" id="videos-count"></p>
+        </div>
+        <div id="videos-list-admin"></div>
+      </div>
+
+      <!-- ===== 講義管理 ===== -->
+      <div class="admin-panel" id="panel-lectures">
+        <p class="section-label">MANAGE</p>
+        <h2 class="section-title">講義一覧管理</h2>
+
+        <div class="add-form">
+          <p class="add-form__title">+ 新規追加</p>
+          <p class="add-form__mode" id="lectures-form-mode"></p>
+          <form id="lectures-form">
+            <div class="form-grid form-grid--3">
+              <div class="form-group">
+                <label for="l-title">タイトル</label>
+                <input type="text" id="l-title" placeholder="講義タイトル" required />
+              </div>
+              <div class="form-group">
+                <label for="l-category">カテゴリ</label>
+                <select id="l-category">
+                  <option value="anatomy">解剖学</option>
+                  <option value="nutrition">栄養学</option>
+                  <option value="taping">テーピング</option>
+                  <option value="rehab">リハビリ</option>
+                  <option value="sc">S&amp;C</option>
+                </select>
+              </div>
+              <div class="form-group">
+                <label for="l-date">実施日</label>
+                <input type="date" id="l-date" required />
+              </div>
+              <div class="form-group">
+                <label for="l-instructor">担当講師</label>
+                <input type="text" id="l-instructor" placeholder="例：山田 講師" />
+              </div>
+              <div class="form-group full">
+                <label for="l-desc">説明</label>
+                <textarea id="l-desc" rows="2" placeholder="講義の概要"></textarea>
+              </div>
+              <div class="form-group check-group">
+                <input type="checkbox" id="l-new" />
+                <label for="l-new">NEWバッジを表示</label>
+              </div>
+            </div>
+            <div class="form-actions">
+              <button type="button" class="btn btn--ghost" id="lectures-cancel" style="display:none" onclick="cancelEdit('lectures')">キャンセル</button>
+              <button type="submit" class="btn btn--primary" id="lectures-submit">追加する</button>
+            </div>
+          </form>
+        </div>
+
+        <div class="items-header">
+          <p class="items-count" id="lectures-count"></p>
+        </div>
+        <div id="lectures-list-admin"></div>
+      </div>
+
+      <!-- ===== 暗記学習管理 ===== -->
+      <div class="admin-panel" id="panel-memory">
+        <p class="section-label">MANAGE</p>
+        <h2 class="section-title">暗記学習管理</h2>
+
+        <div class="add-form">
+          <p class="add-form__title">+ 新規追加</p>
+          <p class="add-form__mode" id="memory-form-mode"></p>
+          <form id="memory-form">
+            <div class="form-grid">
+              <div class="form-group">
+                <label for="m-title">タイトル</label>
+                <input type="text" id="m-title" placeholder="暗記セットのタイトル" required />
+              </div>
+              <div class="form-group">
+                <label for="m-category">カテゴリ</label>
+                <select id="m-category">
+                  <option value="anatomy">解剖学</option>
+                  <option value="nutrition">栄養学</option>
+                  <option value="injury">スポーツ障害</option>
+                </select>
+              </div>
+              <div class="form-group">
+                <label for="m-count">問題数</label>
+                <input type="text" id="m-count" placeholder="例：40問" />
+              </div>
+              <div class="form-group">
+                <label for="m-progress">習得率 (%)</label>
+                <input type="text" id="m-progress" placeholder="例：0" value="0" />
+              </div>
+              <div class="form-group full">
+                <label for="m-desc">説明</label>
+                <textarea id="m-desc" rows="2" placeholder="暗記セットの内容説明"></textarea>
+              </div>
+              <div class="form-group check-group">
+                <input type="checkbox" id="m-new" />
+                <label for="m-new">NEWバッジを表示</label>
+              </div>
+            </div>
+            <div class="form-actions">
+              <button type="button" class="btn btn--ghost" id="memory-cancel" style="display:none" onclick="cancelEdit('memory')">キャンセル</button>
+              <button type="submit" class="btn btn--primary" id="memory-submit">追加する</button>
+            </div>
+          </form>
+        </div>
+
+        <div class="items-header">
+          <p class="items-count" id="memory-count"></p>
+        </div>
+        <div id="memory-list-admin"></div>
+      </div>
+
+    </main>
+  </div>
+
+  <!-- トースト通知 -->
+  <div class="toast" id="toast"></div>
+
+  <script>
+    'use strict';
+
+    const ADMIN_PASSWORD = '75315987';
+    const ADMIN_KEY = 'st_admin_logged_in';
+
+    // ===== ログイン =====
+    function isAdminLoggedIn() { return sessionStorage.getItem(ADMIN_KEY) === 'true'; }
+    function adminLogin() {
+      sessionStorage.setItem(ADMIN_KEY, 'true');
+      document.getElementById('login-screen').style.display = 'none';
+      document.getElementById('admin-body').classList.add('show');
+      renderAll();
+    }
+    function adminLogout() {
+      sessionStorage.removeItem(ADMIN_KEY);
+      location.reload();
+    }
+
+    if (isAdminLoggedIn()) {
+      document.getElementById('login-screen').style.display = 'none';
+      document.getElementById('admin-body').classList.add('show');
+    }
+
+    document.getElementById('admin-login-form').addEventListener('submit', e => {
+      e.preventDefault();
+      const pw = document.getElementById('admin-pw').value;
+      if (pw === ADMIN_PASSWORD) {
+        adminLogin();
+      } else {
+        document.getElementById('admin-login-error').classList.add('show');
+        document.getElementById('admin-pw').value = '';
+      }
+    });
+    document.getElementById('admin-logout').addEventListener('click', adminLogout);
+
+    // ===== タブ =====
+    document.querySelectorAll('.admin-tab').forEach(btn => {
+      btn.addEventListener('click', () => {
+        document.querySelectorAll('.admin-tab').forEach(b => b.classList.remove('active'));
+        document.querySelectorAll('.admin-panel').forEach(p => p.classList.remove('active'));
+        btn.classList.add('active');
+        document.getElementById(`panel-${btn.dataset.panel}`).classList.add('active');
+      });
+    });
+
+    // ===== データ管理ユーティリティ =====
+    function getData(key, defaults) {
+      const raw = localStorage.getItem(key);
+      return raw ? JSON.parse(raw) : defaults;
+    }
+    function saveData(key, data) { localStorage.setItem(key, JSON.stringify(data)); }
+    function genId() { return Date.now().toString(36) + Math.random().toString(36).slice(2); }
+    function formatDate(iso) {
+      if (!iso) return '';
+      const [y, m, d] = iso.split('-');
+      return `${y}.${m}.${d}`;
+    }
+
+    // ===== トースト =====
+    function showToast(msg) {
+      const t = document.getElementById('toast');
+      t.textContent = msg;
+      t.classList.add('show');
+      setTimeout(() => t.classList.remove('show'), 2500);
+    }
+
+    // ===== デフォルトデータ =====
+    const defaultNews = [
+      { id: 'n1', date: '2025.05.20', tag: '重要', important: true, isNew: true, title: '2025年度 前期 勉強会スケジュールを公開しました', body: '6月〜9月の勉強会・実技練習の日程を公開しました。詳細は各回の案内をご確認ください。' },
+      { id: 'n2', date: '2025.05.10', tag: '活動報告', important: false, isNew: true, title: '第6回 勉強会「テーピング実技 応用編」を実施しました', body: '5月10日に第6回勉強会を開催しました。参加者20名でテーピング応用技術を学びました。' },
+      { id: 'n3', date: '2025.04.18', tag: 'コンテンツ', important: false, isNew: false, title: '暗記学習「RICE処置と応急対応」を追加しました', body: '新しい暗記学習セット（45問）を追加しました。部員の皆さんはぜひ活用してください。' },
+      { id: 'n4', date: '2025.04.01', tag: '入会', important: false, isNew: false, title: '2025年度 新入部員の募集を開始しました', body: '新年度の部員募集を開始しました。スポーツトレーナーに興味のある方はお気軽にお問い合わせください。' },
+    ];
+    const defaultVideos = [
+      { id: 'v1', title: 'スポーツトレーナーの基本姿勢', category: 'basics', duration: '12:34', date: '2024.11.15', thumb: 'https://picsum.photos/seed/v1/400/225', isNew: false },
+      { id: 'v2', title: '下肢ストレッチの基礎と実践', category: 'stretch', duration: '18:02', date: '2024.11.20', thumb: 'https://picsum.photos/seed/v2/400/225', isNew: false },
+      { id: 'v3', title: '足首テーピングの巻き方・基礎編', category: 'taping', duration: '22:15', date: '2024.12.01', thumb: 'https://picsum.photos/seed/v3/400/225', isNew: false },
+      { id: 'v4', title: '膝関節リハビリプロトコル', category: 'rehab', duration: '30:48', date: '2024.12.10', thumb: 'https://picsum.photos/seed/v4/400/225', isNew: false },
+      { id: 'v5', title: '肩・首のコンディショニング', category: 'stretch', duration: '14:30', date: '2025.01.05', thumb: 'https://picsum.photos/seed/v5/400/225', isNew: false },
+      { id: 'v6', title: 'スポーツ栄養学 入門', category: 'basics', duration: '09:55', date: '2025.01.18', thumb: 'https://picsum.photos/seed/v6/400/225', isNew: false },
+      { id: 'v7', title: '肘MCL テーピング', category: 'taping', duration: '', date: '2025.05.27', thumb: 'https://img.youtube.com/vi/Bjn-l-MQaOg/mqdefault.jpg', isNew: true, url: 'https://youtu.be/Bjn-l-MQaOg' },
+      { id: 'v8', title: '回外捻挫 テーピング', category: 'taping', duration: '', date: '2025.05.27', thumb: 'https://img.youtube.com/vi/wFq8E8XQMYo/mqdefault.jpg', isNew: true, url: 'https://youtu.be/wFq8E8XQMYo' },
+      { id: 'v9', title: '膝MCL テーピング', category: 'taping', duration: '', date: '2025.05.27', thumb: 'https://img.youtube.com/vi/qOHkj2de5ls/mqdefault.jpg', isNew: true, url: 'https://youtu.be/qOHkj2de5ls' },
+      { id: 'v10', title: '肩鎖関節捻挫 テーピング', category: 'taping', duration: '', date: '2025.05.27', thumb: 'https://img.youtube.com/vi/SAbc9h8JlSk/mqdefault.jpg', isNew: true, url: 'https://youtu.be/SAbc9h8JlSk' },
+      { id: 'v11', title: '反復性前方脱臼 テーピング', category: 'taping', duration: '', date: '2025.05.27', thumb: 'https://img.youtube.com/vi/uJ0xLfDHsmU/mqdefault.jpg', isNew: true, url: 'https://youtu.be/uJ0xLfDHsmU' },
+    ];
+    const defaultLectures = [
+      { id: 'l1', title: '上肢の解剖学 基礎講義', category: 'anatomy', date: '2024.10.05', instructor: '山田 講師', desc: '肩・肘・手関節周囲の骨・筋・神経の構造と機能を学ぶ。', isNew: false, num: 1 },
+      { id: 'l2', title: '下肢の解剖学 基礎講義', category: 'anatomy', date: '2024.10.19', instructor: '山田 講師', desc: '股・膝・足関節周囲の構造と、スポーツ動作への影響を解説。', isNew: false, num: 2 },
+      { id: 'l3', title: 'スポーツ栄養学 入門', category: 'nutrition', date: '2024.11.02', instructor: '鈴木 講師', desc: '三大栄養素の役割・試合前後の食事戦略・水分補給のポイント。', isNew: false, num: 3 },
+      { id: 'l4', title: 'テーピング理論と実践 基礎編', category: 'taping', date: '2024.11.16', instructor: '佐藤 講師', desc: 'テーピングの目的・種類・適応と禁忌、足首の基本的な巻き方。', isNew: false, num: 4 },
+      { id: 'l5', title: 'スポーツ障害とリハビリテーション', category: 'rehab', date: '2024.12.07', instructor: '田中 講師', desc: '代表的なスポーツ外傷・障害の分類と、段階的な復帰プログラム。', isNew: false, num: 5 },
+      { id: 'l6', title: 'テーピング実技 応用編', category: 'taping', date: '2025.01.11', instructor: '佐藤 講師', desc: '膝・肩・手首のテーピング技術。スポーツ種目別の応用も紹介。', isNew: false, num: 6 },
+      { id: 'l7', title: 'プライオメトリクス（NSCA 18章）', category: 'sc', date: '2025.05.25', instructor: '', desc: 'SSC（伸張-短縮サイクル）を活用した爆発的パワー向上トレーニング。初級〜上級のプログラム設計、48種類のドリル、理解度クイズまで網羅。', isNew: true, num: 7, url: 'plyometrics/④プライオメトリクス資料一覧.html' },
+    ];
+    const defaultMemory = [
+      { id: 'm1', title: '上肢の筋肉・名称', category: 'anatomy', count: '40問', progress: 65, desc: '三角筋・上腕二頭筋・上腕三頭筋など主要筋の起始停止と機能。', isNew: false },
+      { id: 'm2', title: '下肢の筋肉・名称', category: 'anatomy', count: '52問', progress: 40, desc: '大腿四頭筋・ハムストリングスなど。起始停止と機能を網羅。', isNew: false },
+      { id: 'm3', title: '三大栄養素と役割', category: 'nutrition', count: '35問', progress: 82, desc: '糖質・脂質・タンパク質の代謝経路とスポーツへの影響。', isNew: false },
+      { id: 'm4', title: 'ビタミン・ミネラル', category: 'nutrition', count: '28問', progress: 20, desc: '各ビタミン・ミネラルの機能・欠乏症・スポーツでの必要量。', isNew: false },
+      { id: 'm5', title: 'スポーツ外傷の分類', category: 'injury', count: '60問', progress: 55, desc: '捻挫・骨折・肉離れの分類・症状・応急処置のポイント。', isNew: false },
+      { id: 'm6', title: 'RICE処置と応急対応', category: 'injury', count: '45問', progress: 90, desc: 'Rest・Ice・Compression・Elevationの具体的手順と注意点。', isNew: false },
+      { id: 'm7', title: '肩・上腕 筋肉カード', category: 'anatomy', count: '20問', progress: 0, desc: '肩・上腕帯の筋肉（起始・停止・作用・支配神経）を暗記カードまたはテストで学習できます。', isNew: true, urlMemory: 'muscle-quiz/index.html', urlQuiz: 'muscle-quiz/quiz.html' },
+    ];
+
+    const categoryLabels = { basics:'基礎', stretch:'ストレッチ', taping:'テーピング', rehab:'リハビリ', anatomy:'解剖学', nutrition:'栄養学', injury:'スポーツ障害', sc:'S&C' };
+
+    // ===== レンダリング =====
+    function renderNews() {
+      const news = getData('st_news', defaultNews);
+      const el = document.getElementById('news-list-admin');
+      document.getElementById('news-count').textContent = `${news.length}件`;
+      if (!news.length) { el.innerHTML = '<div class="empty-state">お知らせはまだありません</div>'; return; }
+      el.innerHTML = `<div class="items-list">${news.map(n => `
+        <div class="item-row">
+          <div class="item-row__body">
+            <div class="item-row__meta">
+              <span class="item-row__date">${n.date}</span>
+              <span class="item-tag ${n.important ? 'item-tag--important' : ''}">${n.tag}</span>
+              ${n.isNew ? '<span class="item-badge-new">NEW</span>' : ''}
+            </div>
+            <p class="item-row__title">${n.title}</p>
+            <p class="item-row__sub">${n.body}</p>
+          </div>
+          <div class="item-row__actions">
+            <button class="btn btn--edit" onclick="editNews('${n.id}')">編集</button>
+            <button class="btn btn--danger" onclick="deleteItem('st_news', '${n.id}', renderNews)">削除</button>
+          </div>
+        </div>`).join('')}</div>`;
+    }
+
+    function renderVideos() {
+      const videos = getData('st_videos', defaultVideos);
+      const el = document.getElementById('videos-list-admin');
+      document.getElementById('videos-count').textContent = `${videos.length}件`;
+      if (!videos.length) { el.innerHTML = '<div class="empty-state">動画はまだありません</div>'; return; }
+      el.innerHTML = `<div class="items-list">${videos.map(v => `
+        <div class="item-row">
+          <div class="item-row__body">
+            <div class="item-row__meta">
+              <span class="item-row__date">${v.date}</span>
+              <span class="item-tag">${categoryLabels[v.category] || v.category}</span>
+              ${v.isNew ? '<span class="item-badge-new">NEW</span>' : ''}
+              ${v.duration ? `<span style="font-size:0.75rem;color:var(--gray)">${v.duration}</span>` : ''}
+            </div>
+            <p class="item-row__title">${v.title}</p>
+          </div>
+          <div class="item-row__actions">
+            <button class="btn btn--edit" onclick="editVideos('${v.id}')">編集</button>
+            <button class="btn btn--danger" onclick="deleteItem('st_videos', '${v.id}', renderVideos)">削除</button>
+          </div>
+        </div>`).join('')}</div>`;
+    }
+
+    function renderLectures() {
+      const lectures = getData('st_lectures', defaultLectures);
+      const el = document.getElementById('lectures-list-admin');
+      document.getElementById('lectures-count').textContent = `${lectures.length}件`;
+      if (!lectures.length) { el.innerHTML = '<div class="empty-state">講義はまだありません</div>'; return; }
+      el.innerHTML = `<div class="items-list">${lectures.map(l => `
+        <div class="item-row">
+          <div class="item-row__body">
+            <div class="item-row__meta">
+              <span class="item-row__date">${l.date}</span>
+              <span class="item-tag">${categoryLabels[l.category] || l.category}</span>
+              ${l.isNew ? '<span class="item-badge-new">NEW</span>' : ''}
+            </div>
+            <p class="item-row__title">${l.title}</p>
+            <p class="item-row__sub">${l.instructor || ''}</p>
+          </div>
+          <div class="item-row__actions">
+            <button class="btn btn--edit" onclick="editLectures('${l.id}')">編集</button>
+            <button class="btn btn--danger" onclick="deleteItem('st_lectures', '${l.id}', renderLectures)">削除</button>
+          </div>
+        </div>`).join('')}</div>`;
+    }
+
+    function renderMemory() {
+      const memory = getData('st_memory', defaultMemory);
+      const el = document.getElementById('memory-list-admin');
+      document.getElementById('memory-count').textContent = `${memory.length}件`;
+      if (!memory.length) { el.innerHTML = '<div class="empty-state">暗記セットはまだありません</div>'; return; }
+      el.innerHTML = `<div class="items-list">${memory.map(m => `
+        <div class="item-row">
+          <div class="item-row__body">
+            <div class="item-row__meta">
+              <span class="item-tag">${categoryLabels[m.category] || m.category}</span>
+              <span style="font-size:0.75rem;color:var(--gray)">${m.count}</span>
+              ${m.isNew ? '<span class="item-badge-new">NEW</span>' : ''}
+            </div>
+            <p class="item-row__title">${m.title}</p>
+            <p class="item-row__sub">${m.desc}</p>
+          </div>
+          <div class="item-row__actions">
+            <button class="btn btn--edit" onclick="editMemory('${m.id}')">編集</button>
+            <button class="btn btn--danger" onclick="deleteItem('st_memory', '${m.id}', renderMemory)">削除</button>
+          </div>
+        </div>`).join('')}</div>`;
+    }
+
+    function renderAll() { renderNews(); renderVideos(); renderLectures(); renderMemory(); }
+
+    // ===== 削除 =====
+    function deleteItem(key, id, renderFn) {
+      if (!confirm('削除しますか？')) return;
+      const defaults = { st_news: defaultNews, st_videos: defaultVideos, st_lectures: defaultLectures, st_memory: defaultMemory };
+      const data = getData(key, defaults[key]).filter(i => i.id !== id);
+      saveData(key, data);
+      renderFn();
+      showToast('削除しました');
+    }
+
+    // ===== 編集状態 =====
+    const editingId = { news: null, videos: null, lectures: null, memory: null };
+
+    function dateToISO(formatted) {
+      return formatted ? formatted.replace(/\./g, '-') : '';
+    }
+
+    function setEditMode(type, label) {
+      document.getElementById(`${type}-form-mode`).textContent = label ? `✎ 編集中：${label}` : '';
+      document.getElementById(`${type}-submit`).textContent = label ? '更新する' : '追加する';
+      document.getElementById(`${type}-cancel`).style.display = label ? 'inline-flex' : 'none';
+    }
+
+    function cancelEdit(type) {
+      editingId[type] = null;
+      setEditMode(type, '');
+      document.getElementById(`${type}-form`).reset();
+      if (type === 'news') document.getElementById('n-new').checked = true;
+    }
+
+    function editNews(id) {
+      const item = getData('st_news', defaultNews).find(n => n.id === id);
+      if (!item) return;
+      editingId.news = id;
+      document.getElementById('n-date').value = dateToISO(item.date);
+      document.getElementById('n-tag').value = item.tag;
+      document.getElementById('n-title').value = item.title;
+      document.getElementById('n-body').value = item.body;
+      document.getElementById('n-important').checked = !!item.important;
+      document.getElementById('n-new').checked = !!item.isNew;
+      setEditMode('news', item.title);
+      document.getElementById('news-form').scrollIntoView({ behavior: 'smooth', block: 'center' });
+    }
+
+    function editVideos(id) {
+      const item = getData('st_videos', defaultVideos).find(v => v.id === id);
+      if (!item) return;
+      editingId.videos = id;
+      document.getElementById('v-title').value = item.title;
+      document.getElementById('v-category').value = item.category;
+      document.getElementById('v-duration').value = item.duration || '';
+      document.getElementById('v-date').value = dateToISO(item.date);
+      document.getElementById('v-url').value = item.url || '';
+      document.getElementById('v-thumb').value = item.thumb || '';
+      document.getElementById('v-new').checked = !!item.isNew;
+      setEditMode('videos', item.title);
+      document.getElementById('videos-form').scrollIntoView({ behavior: 'smooth', block: 'center' });
+    }
+
+    function editLectures(id) {
+      const item = getData('st_lectures', defaultLectures).find(l => l.id === id);
+      if (!item) return;
+      editingId.lectures = id;
+      document.getElementById('l-title').value = item.title;
+      document.getElementById('l-category').value = item.category;
+      document.getElementById('l-date').value = dateToISO(item.date);
+      document.getElementById('l-instructor').value = item.instructor || '';
+      document.getElementById('l-desc').value = item.desc || '';
+      document.getElementById('l-new').checked = !!item.isNew;
+      setEditMode('lectures', item.title);
+      document.getElementById('lectures-form').scrollIntoView({ behavior: 'smooth', block: 'center' });
+    }
+
+    function editMemory(id) {
+      const item = getData('st_memory', defaultMemory).find(m => m.id === id);
+      if (!item) return;
+      editingId.memory = id;
+      document.getElementById('m-title').value = item.title;
+      document.getElementById('m-category').value = item.category;
+      document.getElementById('m-count').value = item.count || '';
+      document.getElementById('m-progress').value = item.progress || 0;
+      document.getElementById('m-desc').value = item.desc || '';
+      document.getElementById('m-new').checked = !!item.isNew;
+      setEditMode('memory', item.title);
+      document.getElementById('memory-form').scrollIntoView({ behavior: 'smooth', block: 'center' });
+    }
+
+    // ===== フォーム送信 =====
+    document.getElementById('news-form').addEventListener('submit', e => {
+      e.preventDefault();
+      const news = getData('st_news', defaultNews);
+      const isEditing = !!editingId.news;
+      if (isEditing) {
+        const idx = news.findIndex(n => n.id === editingId.news);
+        if (idx !== -1) news[idx] = { ...news[idx],
+          date: formatDate(document.getElementById('n-date').value),
+          tag: document.getElementById('n-tag').value,
+          important: document.getElementById('n-important').checked,
+          isNew: document.getElementById('n-new').checked,
+          title: document.getElementById('n-title').value,
+          body: document.getElementById('n-body').value,
+        };
+        editingId.news = null;
+        setEditMode('news', '');
+      } else {
+        news.unshift({ id: genId(),
+          date: formatDate(document.getElementById('n-date').value),
+          tag: document.getElementById('n-tag').value,
+          important: document.getElementById('n-important').checked,
+          isNew: document.getElementById('n-new').checked,
+          title: document.getElementById('n-title').value,
+          body: document.getElementById('n-body').value,
+        });
+      }
+      saveData('st_news', news);
+      e.target.reset();
+      document.getElementById('n-new').checked = true;
+      renderNews();
+      showToast(isEditing ? 'お知らせを更新しました' : 'お知らせを追加しました');
+    });
+
+    document.getElementById('videos-form').addEventListener('submit', e => {
+      e.preventDefault();
+      const videos = getData('st_videos', defaultVideos);
+      const isEditing = !!editingId.videos;
+      if (isEditing) {
+        const idx = videos.findIndex(v => v.id === editingId.videos);
+        if (idx !== -1) videos[idx] = { ...videos[idx],
+          title: document.getElementById('v-title').value,
+          category: document.getElementById('v-category').value,
+          duration: document.getElementById('v-duration').value,
+          date: formatDate(document.getElementById('v-date').value),
+          url: document.getElementById('v-url').value,
+          thumb: document.getElementById('v-thumb').value,
+          isNew: document.getElementById('v-new').checked,
+        };
+        editingId.videos = null;
+        setEditMode('videos', '');
+      } else {
+        videos.unshift({ id: genId(),
+          title: document.getElementById('v-title').value,
+          category: document.getElementById('v-category').value,
+          duration: document.getElementById('v-duration').value,
+          date: formatDate(document.getElementById('v-date').value),
+          url: document.getElementById('v-url').value,
+          thumb: document.getElementById('v-thumb').value,
+          isNew: document.getElementById('v-new').checked,
+        });
+      }
+      saveData('st_videos', videos);
+      e.target.reset();
+      renderVideos();
+      showToast(isEditing ? '動画を更新しました' : '動画を追加しました');
+    });
+
+    document.getElementById('lectures-form').addEventListener('submit', e => {
+      e.preventDefault();
+      const lectures = getData('st_lectures', defaultLectures);
+      const isEditing = !!editingId.lectures;
+      if (isEditing) {
+        const idx = lectures.findIndex(l => l.id === editingId.lectures);
+        if (idx !== -1) lectures[idx] = { ...lectures[idx],
+          title: document.getElementById('l-title').value,
+          category: document.getElementById('l-category').value,
+          date: formatDate(document.getElementById('l-date').value),
+          instructor: document.getElementById('l-instructor').value,
+          desc: document.getElementById('l-desc').value,
+          isNew: document.getElementById('l-new').checked,
+        };
+        editingId.lectures = null;
+        setEditMode('lectures', '');
+      } else {
+        lectures.push({ id: genId(),
+          num: lectures.length + 1,
+          title: document.getElementById('l-title').value,
+          category: document.getElementById('l-category').value,
+          date: formatDate(document.getElementById('l-date').value),
+          instructor: document.getElementById('l-instructor').value,
+          desc: document.getElementById('l-desc').value,
+          isNew: document.getElementById('l-new').checked,
+        });
+      }
+      saveData('st_lectures', lectures);
+      e.target.reset();
+      renderLectures();
+      showToast(isEditing ? '講義を更新しました' : '講義を追加しました');
+    });
+
+    document.getElementById('memory-form').addEventListener('submit', e => {
+      e.preventDefault();
+      const memory = getData('st_memory', defaultMemory);
+      const isEditing = !!editingId.memory;
+      if (isEditing) {
+        const idx = memory.findIndex(m => m.id === editingId.memory);
+        if (idx !== -1) memory[idx] = { ...memory[idx],
+          title: document.getElementById('m-title').value,
+          category: document.getElementById('m-category').value,
+          count: document.getElementById('m-count').value,
+          progress: parseInt(document.getElementById('m-progress').value) || 0,
+          desc: document.getElementById('m-desc').value,
+          isNew: document.getElementById('m-new').checked,
+        };
+        editingId.memory = null;
+        setEditMode('memory', '');
+      } else {
+        memory.unshift({ id: genId(),
+          title: document.getElementById('m-title').value,
+          category: document.getElementById('m-category').value,
+          count: document.getElementById('m-count').value,
+          progress: parseInt(document.getElementById('m-progress').value) || 0,
+          desc: document.getElementById('m-desc').value,
+          isNew: document.getElementById('m-new').checked,
+        });
+      }
+      saveData('st_memory', memory);
+      e.target.reset();
+      renderMemory();
+      showToast(isEditing ? '暗記セットを更新しました' : '暗記セットを追加しました');
+    });
+
+    if (isAdminLoggedIn()) renderAll();
+  </script>
+</body>
+</html>

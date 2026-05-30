@@ -1,0 +1,799 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>NSCA S&C 第18章 プライオメトリクス ─ 資料一覧</title>
+  <style>
+    :root {
+      --primary: #1F5C8B;
+      --accent:  #2E86C1;
+      --light:   #D6EAF8;
+      --dark:    #1A3A5C;
+      --green:   #27AE60;
+      --yellow:  #F39C12;
+      --red:     #E74C3C;
+      --bg:      #F0F4F8;
+      --white:   #FFFFFF;
+      --text:    #2C3E50;
+      --gray:    #7F8C8D;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: 'Meiryo', 'Yu Gothic', 'MS Gothic', sans-serif; background: var(--bg); color: var(--text); }
+
+    /* ── Header ── */
+    header {
+      background: linear-gradient(135deg, var(--dark) 0%, var(--primary) 60%, var(--accent) 100%);
+      color: var(--white); padding: 48px 40px 36px;
+      text-align: center;
+    }
+    header h1 { font-size: 2.0rem; letter-spacing: 0.04em; margin-bottom: 10px; }
+    header p  { font-size: 1.05rem; opacity: 0.85; }
+    header .badge {
+      display: inline-block; margin-top: 14px; padding: 5px 18px;
+      border: 1.5px solid rgba(255,255,255,0.5); border-radius: 20px;
+      font-size: 0.85rem; letter-spacing: 0.05em;
+    }
+
+    /* ── Nav tabs ── */
+    nav.tabs {
+      display: flex; flex-wrap: wrap; gap: 0;
+      background: var(--dark); justify-content: center;
+      border-bottom: 3px solid var(--accent);
+    }
+    nav.tabs button {
+      background: none; border: none; color: #AED6F1;
+      padding: 12px 22px; cursor: pointer; font-size: 0.95rem;
+      font-family: inherit; transition: all 0.2s;
+    }
+    nav.tabs button:hover  { background: rgba(255,255,255,0.08); color: var(--white); }
+    nav.tabs button.active { background: var(--accent); color: var(--white); font-weight: bold; }
+
+    /* ── Main layout ── */
+    main { max-width: 1100px; margin: 0 auto; padding: 36px 24px 60px; }
+    section { display: none; }
+    section.active { display: block; }
+
+    /* ── Section title ── */
+    .sec-title {
+      font-size: 1.5rem; font-weight: bold; color: var(--primary);
+      border-left: 5px solid var(--accent); padding-left: 14px;
+      margin-bottom: 24px;
+    }
+
+    /* ── File cards ── */
+    .card-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 20px; margin-bottom: 40px; }
+    a.card { display: block; text-decoration: none; cursor: pointer; }
+    .card {
+      background: var(--white); border-radius: 12px;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.08);
+      transition: transform 0.2s, box-shadow 0.2s;
+      overflow: hidden;
+    }
+    .card:hover { transform: translateY(-4px); box-shadow: 0 8px 24px rgba(0,0,0,0.14); }
+    .card-header { padding: 18px 20px 12px; }
+    .card-icon { font-size: 2.2rem; margin-bottom: 8px; }
+    .card-title { font-size: 1.05rem; font-weight: bold; color: var(--dark); }
+    .card-desc { font-size: 0.85rem; color: var(--gray); margin-top: 6px; line-height: 1.5; }
+    .card-footer {
+      padding: 10px 20px; display: flex; align-items: center; justify-content: space-between;
+      border-top: 1px solid #ECF0F1;
+    }
+    .tag {
+      display: inline-block; padding: 3px 10px; border-radius: 12px;
+      font-size: 0.78rem; font-weight: bold;
+    }
+    .tag-docx  { background: #D6EAF8; color: #1F5C8B; }
+    .tag-xlsx  { background: #D5F5E3; color: #1E8449; }
+    .tag-png   { background: #FDEBD0; color: #A04000; }
+    .tag-html  { background: #F9EBEA; color: #922B21; }
+    .tag-pptx  { background: #EBF5FB; color: #1A5276; }
+    .tag-quiz  { background: #F4ECF7; color: #6C3483; }
+
+    /* ── Content boxes ── */
+    .info-box {
+      background: var(--white); border-radius: 12px; padding: 28px 30px;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.07); margin-bottom: 28px;
+    }
+    .info-box h3 {
+      font-size: 1.1rem; font-weight: bold; color: var(--primary);
+      border-bottom: 2px solid var(--light); padding-bottom: 8px; margin-bottom: 16px;
+    }
+
+    /* ── Tables ── */
+    .styled-table { width: 100%; border-collapse: collapse; font-size: 0.92rem; }
+    .styled-table th {
+      background: var(--primary); color: var(--white);
+      padding: 10px 14px; text-align: left; font-weight: bold;
+    }
+    .styled-table td { padding: 9px 14px; border-bottom: 1px solid #ECF0F1; }
+    .styled-table tr:nth-child(even) td { background: var(--light); }
+    .styled-table tr:hover td { background: #D6EAF8; }
+
+    /* ── Intensity badges ── */
+    .int-low  { background: #D5F5E3; color: #1E8449; padding: 2px 8px; border-radius: 8px; font-size: 0.8rem; font-weight: bold; }
+    .int-mid  { background: #FEF9E7; color: #B7770D; padding: 2px 8px; border-radius: 8px; font-size: 0.8rem; font-weight: bold; }
+    .int-high { background: #FDEDEC; color: #C0392B; padding: 2px 8px; border-radius: 8px; font-size: 0.8rem; font-weight: bold; }
+
+    /* ── SSC Flow ── */
+    .ssc-flow { display: flex; gap: 0; align-items: stretch; margin: 16px 0; }
+    .ssc-step {
+      flex: 1; background: var(--accent); color: var(--white);
+      padding: 20px 16px; text-align: center; position: relative;
+    }
+    .ssc-step:nth-child(2) { background: var(--yellow); }
+    .ssc-step:nth-child(3) { background: var(--green); border-radius: 0 8px 8px 0; }
+    .ssc-step:first-child  { border-radius: 8px 0 0 8px; }
+    .ssc-step h4 { font-size: 1rem; font-weight: bold; margin-bottom: 6px; }
+    .ssc-step p  { font-size: 0.83rem; line-height: 1.4; }
+    .ssc-arrow {
+      display: flex; align-items: center; padding: 0 6px;
+      font-size: 1.4rem; color: var(--primary); font-weight: bold;
+    }
+
+    /* ── Program vars ── */
+    .var-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 14px; margin: 16px 0; }
+    .var-card {
+      background: var(--light); border-radius: 10px; padding: 16px 14px; text-align: center;
+      border-top: 4px solid var(--accent);
+    }
+    .var-card .val { font-size: 1.6rem; font-weight: bold; color: var(--primary); }
+    .var-card .lbl { font-size: 0.82rem; color: var(--gray); margin-top: 4px; }
+
+    /* ── Drill accordion ── */
+    .accordion { border: 1px solid #D5D8DC; border-radius: 10px; overflow: hidden; margin-bottom: 12px; }
+    .accordion summary {
+      background: var(--primary); color: var(--white);
+      padding: 12px 18px; cursor: pointer; font-weight: bold;
+      list-style: none; display: flex; justify-content: space-between; align-items: center;
+    }
+    .accordion summary:hover { background: var(--accent); }
+    .accordion summary::after { content: '+'; font-size: 1.3rem; }
+    .accordion[open] summary::after { content: '−'; }
+    .accordion-body { padding: 16px 18px; background: var(--white); }
+
+    /* ── Quiz ── */
+    .quiz-q {
+      background: var(--white); border-radius: 10px; padding: 20px 24px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.07); margin-bottom: 20px;
+    }
+    .quiz-q .q-text { font-weight: bold; font-size: 1.0rem; margin-bottom: 14px; color: var(--dark); }
+    .quiz-q .q-num  { color: var(--accent); margin-right: 6px; }
+    .option-list    { list-style: none; display: flex; flex-direction: column; gap: 8px; }
+    .option-list li { display: flex; align-items: center; gap: 10px; }
+    .option-list label {
+      display: flex; align-items: center; gap: 10px; cursor: pointer;
+      padding: 8px 14px; border: 1.5px solid #D5D8DC; border-radius: 8px;
+      width: 100%; transition: background 0.15s;
+    }
+    .option-list label:hover { background: var(--light); }
+    .option-list input[type=radio] { accent-color: var(--accent); width: 16px; height: 16px; }
+    .check-btn {
+      background: var(--accent); color: var(--white); border: none;
+      padding: 10px 28px; border-radius: 8px; cursor: pointer; font-size: 0.95rem;
+      font-family: inherit; margin-top: 10px; transition: background 0.2s;
+    }
+    .check-btn:hover { background: var(--primary); }
+    .result { margin-top: 10px; font-weight: bold; font-size: 0.95rem; display: none; }
+    .result.correct { color: var(--green); }
+    .result.wrong   { color: var(--red); }
+
+    /* ── Footer ── */
+    footer {
+      background: var(--dark); color: #AED6F1;
+      text-align: center; padding: 18px; font-size: 0.85rem;
+    }
+
+    /* ── Responsive ── */
+    @media(max-width:600px){
+      header h1 { font-size: 1.4rem; }
+      nav.tabs button { font-size: 0.82rem; padding: 10px 12px; }
+      .ssc-flow { flex-direction: column; }
+      .ssc-arrow { display: none; }
+    }
+  </style>
+</head>
+<body>
+
+<header>
+  <h1>NSCA S&C教本 第18章</h1>
+  <p>プライオメトリクス トレーニングのためのプログラムデザインとテクニック</p>
+  <div class="badge">スポーツトレーナー志望学生向け 自習用資料一覧</div>
+</header>
+
+<nav class="tabs" id="tabs">
+  <button class="active" onclick="showTab('home')">ホーム・資料一覧</button>
+  <button onclick="showTab('concept')">基本概念・科学</button>
+  <button onclick="showTab('program')">プログラムデザイン</button>
+  <button onclick="showTab('drills')">ドリル一覧</button>
+  <button onclick="showTab('safety')">安全・対象者</button>
+  <button onclick="showTab('quiz')">理解度クイズ</button>
+</nav>
+
+<main>
+<!-- ═══════════════════ HOME ═══════════════════ -->
+<section id="home" class="active">
+  <p class="sec-title">資料一覧</p>
+  <p style="margin-bottom:20px;color:var(--gray);">以下の7種類の資料を用意しました。各ファイルを開いてご活用ください。</p>
+  <div class="card-grid">
+    <a class="card" href="①プライオメトリクス入門テキスト.docx" target="_blank">
+      <div class="card-header" style="border-top:4px solid #1F5C8B;">
+        <div class="card-icon">📄</div>
+        <div class="card-title">①入門テキスト（Word）</div>
+        <div class="card-desc">初心者でも分かりやすく、プライオメトリクスの基礎から安全な実施方法まで体系的にまとめた入門テキスト。</div>
+      </div>
+      <div class="card-footer">
+        <span class="tag tag-docx">Word (.docx)</span>
+        <span style="font-size:0.82rem;color:var(--gray);">全7章 ↗ 開く</span>
+      </div>
+    </a>
+    <a class="card" href="②プライオメトリクス内容まとめ.xlsx" target="_blank">
+      <div class="card-header" style="border-top:4px solid #27AE60;">
+        <div class="card-icon">📊</div>
+        <div class="card-title">②内容まとめ（Excel）</div>
+        <div class="card-desc">概要・プログラムデザイン・ドリル一覧（下半身41種・上半身7種）・安全基準を5シートにまとめたスプレッドシート。</div>
+      </div>
+      <div class="card-footer">
+        <span class="tag tag-xlsx">Excel (.xlsx)</span>
+        <span style="font-size:0.82rem;color:var(--gray);">5シート ↗ 開く</span>
+      </div>
+    </a>
+    <a class="card" href="③プライオメトリクス_インフォグラフィック.png" target="_blank">
+      <div class="card-header" style="border-top:4px solid #E67E22;">
+        <div class="card-icon">🖼️</div>
+        <div class="card-title">③インフォグラフィック（PNG）</div>
+        <div class="card-desc">SSCの3段階・力学モデル・強度ピラミッド・ドリルカテゴリを1枚のビジュアルにまとめた画像。SNSやスライドに活用可。</div>
+      </div>
+      <div class="card-footer">
+        <span class="tag tag-png">画像 (.png)</span>
+        <span style="font-size:0.82rem;color:var(--gray);">A2サイズ相当 ↗ 開く</span>
+      </div>
+    </a>
+    <a class="card" href="#" onclick="event.preventDefault();">
+      <div class="card-header" style="border-top:4px solid #E74C3C;">
+        <div class="card-icon">🌐</div>
+        <div class="card-title">④資料一覧Webページ（HTML）</div>
+        <div class="card-desc">全資料を一覧できるWebページ（このファイル）。基本概念・ドリル一覧・クイズを内蔵。ブラウザで開いてそのまま使えます。</div>
+      </div>
+      <div class="card-footer">
+        <span class="tag tag-html">HTML (.html)</span>
+        <span style="font-size:0.82rem;color:var(--gray);">このページ</span>
+      </div>
+    </a>
+    <a class="card" href="⑤プライオメトリクス講義スライド.pptx" target="_blank">
+      <div class="card-header" style="border-top:4px solid #2E86C1;">
+        <div class="card-icon">📑</div>
+        <div class="card-title">⑤講義用スライド（PowerPoint）</div>
+        <div class="card-desc">全20スライド構成の自習用プレゼンテーション。図解・表・ドリル写真説明を含む。オンライン共有に最適。</div>
+      </div>
+      <div class="card-footer">
+        <span class="tag tag-pptx">PowerPoint (.pptx)</span>
+        <span style="font-size:0.82rem;color:var(--gray);">全20スライド ↗ 開く</span>
+      </div>
+    </a>
+    <a class="card" href="#" onclick="event.preventDefault(); showTab('quiz'); document.getElementById('tabs').querySelectorAll('button')[5].click();">
+      <div class="card-header" style="border-top:4px solid #6C3483;">
+        <div class="card-icon">✏️</div>
+        <div class="card-title">⑥理解度クイズ（HTML内蔵）</div>
+        <div class="card-desc">全15問の選択式クイズ。このWebページの「理解度クイズ」タブから即座に解答・採点できます。</div>
+      </div>
+      <div class="card-footer">
+        <span class="tag tag-quiz">クイズ（HTML内蔵）</span>
+        <span style="font-size:0.82rem;color:var(--gray);">全15問 → クイズへ</span>
+      </div>
+    </a>
+  </div>
+
+  <!-- Quick overview -->
+  <div class="info-box">
+    <h3>本章の学習目標（NSCA S&C教本 第18章）</h3>
+    <ul style="list-style:disc; padding-left:22px; line-height:2.0; font-size:0.95rem;">
+      <li>プライオメトリクスの生理学を説明することができる</li>
+      <li>ストレッチ・ショートニングサイクル（中間〜短縮サイクル）の各局面を区別することができる</li>
+      <li>プライオメトリクストレーニングプログラムの構成要素を識別することができる</li>
+      <li>安全で適切なプライオメトリックトレーニングのプログラムをデザインすることができる</li>
+      <li>下記を参照および上半身プライオメトリックエクササイズを正しく実施する方法について支援することができる</li>
+    </ul>
+  </div>
+</section>
+
+<!-- ═══════════════════ CONCEPT ═══════════════════ -->
+<section id="concept">
+  <p class="sec-title">基本概念・科学的背景</p>
+
+  <div class="info-box">
+    <h3>プライオメトリクスとは</h3>
+    <p style="line-height:1.8;font-size:0.95rem;margin-bottom:14px;">
+      <strong>プライオメトリクス</strong>とは、筋肉が素早く伸ばされた直後に収縮することで最大の力を発揮できるトレーニング方法です。
+      ギリシャ語の「プリオ（plio：多く）」と「メトリック（metric：長さ）」が語源です。
+    </p>
+    <p style="line-height:1.8;font-size:0.95rem;">
+      目的は <strong>ストレッチ・ショートニングサイクル（SSC）</strong> を活用して、筋の反応速度とパワー発揮能力を向上させることです。
+    </p>
+  </div>
+
+  <div class="info-box">
+    <h3>ストレッチ・ショートニングサイクル（SSC）の3段階</h3>
+    <div class="ssc-flow">
+      <div class="ssc-step">
+        <h4>第1段階<br>伸張性局面</h4>
+        <p>主動筋が引き伸ばされる<br>弾性エネルギーを蓄積</p>
+      </div>
+      <div class="ssc-arrow">▶</div>
+      <div class="ssc-step">
+        <h4>第2段階<br>アモルチゼーション相</h4>
+        <p>伸張から短縮への<br>切り替えの瞬間（極めて短時間）</p>
+      </div>
+      <div class="ssc-arrow">▶</div>
+      <div class="ssc-step">
+        <h4>第3段階<br>短縮性局面</h4>
+        <p>筋肉が収縮して<br>エネルギーを解放・パワー発揮</p>
+      </div>
+    </div>
+    <p style="font-size:0.88rem;color:var(--gray);margin-top:10px;">
+      ★ 第1段階（伸張）から第3段階（短縮）への移行時間が短いほど、蓄えたエネルギーをより多く利用できます。
+    </p>
+  </div>
+
+  <div class="info-box">
+    <h3>力学的モデル（弾性要素）</h3>
+    <table class="styled-table">
+      <thead><tr><th>要素</th><th>略称</th><th>役割</th><th>プライオメトリクスでの重要度</th></tr></thead>
+      <tbody>
+        <tr><td><strong>直列弾性要素</strong></td><td>SEC</td><td>腱・腱膜に蓄えられる弾性エネルギー</td><td style="color:var(--red);font-weight:bold;">主役 ★★★</td></tr>
+        <tr><td><strong>並列弾性要素</strong></td><td>PEC</td><td>筋膜などの受動的な弾性</td><td>補助的 ★</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="info-box">
+    <h3>神経生理学的モデル（伸張反射）</h3>
+    <p style="line-height:1.8;font-size:0.95rem;">
+      骨格筋の中には <strong>筋紡錘</strong> という感覚受容器があります。
+      筋肉が急激に引き伸ばされると、筋紡錘が感知し、脊髄を経由して「筋肉を収縮させよ！」という信号を瞬時に送ります。
+      これが <strong>伸張反射</strong> です。プライオメトリクスではこの反射を訓練することで、より素早く強い反応が得られるようになります。
+    </p>
+    <p style="margin-top:12px;line-height:1.8;font-size:0.95rem;">
+      また、<strong>ゴルジ腱器官（GTO）</strong> は過度の張力から筋を守る保護機構として働きます。
+      プライオメトリクスのトレーニングにより、GTOの抑制閾値が上昇し、より大きな力の発揮が可能になります。
+    </p>
+  </div>
+
+  <div class="info-box">
+    <h3>重要用語集</h3>
+    <table class="styled-table">
+      <thead><tr><th>用語</th><th>説明</th></tr></thead>
+      <tbody>
+        <tr><td><strong>プライオメトリクス</strong></td><td>伸張・短縮サイクルを利用した爆発的トレーニング</td></tr>
+        <tr><td><strong>SSC</strong></td><td>筋が伸ばされた後に短縮する一連のサイクル</td></tr>
+        <tr><td><strong>SEC（直列弾性要素）</strong></td><td>腱や腱膜などに蓄えられる弾性エネルギー</td></tr>
+        <tr><td><strong>伸張反射</strong></td><td>筋紡錘が急激な伸張を感知して収縮を促す反射</td></tr>
+        <tr><td><strong>デプスジャンプ</strong></td><td>高い台から降りて即座に跳ぶ、最高強度のドリル</td></tr>
+        <tr><td><strong>筋紡錘</strong></td><td>筋肉内の感覚受容器。伸張反射を起こす</td></tr>
+        <tr><td><strong>GTO（ゴルジ腱器官）</strong></td><td>過度の張力から筋を守る保護機構</td></tr>
+        <tr><td><strong>漸進性（Progressive Overload）</strong></td><td>少しずつ負荷を高めていくトレーニング原則</td></tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<!-- ═══════════════════ PROGRAM ═══════════════════ -->
+<section id="program">
+  <p class="sec-title">プログラムデザイン</p>
+
+  <div class="info-box">
+    <h3>プログラムの変数</h3>
+    <div class="var-grid">
+      <div class="var-card"><div class="val">6〜10週</div><div class="lbl">プログラム期間</div></div>
+      <div class="var-card"><div class="val">48〜72時間</div><div class="lbl">セッション間の回復時間の目安</div></div>
+      <div class="var-card"><div class="val">80〜140</div><div class="lbl">1セッションあたりの回数</div></div>
+    </div>
+    <div style="margin-top:16px; padding:14px 16px; background:#FEF9E7; border-left:4px solid #F39C12; border-radius:6px; font-size:0.9rem; line-height:1.8;">
+      <strong style="color:#B7770D;">頻度について：</strong>プライオメトリクスの頻度に関して適切なガイドラインを示せるほど十分な研究は行われていない。頻度は競技の種類によって異なり、またシーズン中とオフシーズンでも変わる（オフシーズンでより多く実施する）。そのため、<strong>適切な回復時間を設けることと実践的な経験が最善の判断材料</strong>となる。
+    </div>
+  </div>
+
+  <div class="info-box">
+    <h3>回復について（p.520）</h3>
+    <p style="font-size:0.93rem;line-height:1.8;margin-bottom:14px;">プライオメトリクスドリルでは、無酸素性パワーを向上させるために最大努力が行われるので、<strong>完全かつ適切な回復</strong>（反復回数間・セット間・ワークアウト間）が必要となる。</p>
+    <table class="styled-table">
+      <thead><tr><th>回復の種類</th><th>目安</th><th>備考</th></tr></thead>
+      <tbody>
+        <tr><td><strong>反復回数間</strong></td><td>5〜10秒</td><td>デプスジャンプの場合</td></tr>
+        <tr><td><strong>セット間</strong></td><td>2〜3分</td><td>デプスジャンプの場合</td></tr>
+        <tr><td><strong>ワークアウト間</strong></td><td>2〜4日間</td><td>競技・時期によって異なる</td></tr>
+      </tbody>
+    </table>
+    <ul style="margin-top:12px;padding-left:22px;line-height:2.0;font-size:0.9rem;">
+      <li>運動-休息比は <strong>1:1〜1:10</strong>。実施するドリルの量とタイプによって異なる</li>
+      <li>プライオメトリクスは<strong>心肺系コンディショニングではなく、パワートレーニング</strong>として考える</li>
+      <li>同じ身体部位のドリルを<strong>2日連続で実施しない</strong></li>
+    </ul>
+    <div style="margin-top:12px;padding:10px 14px;background:#FEF9E7;border-left:4px solid #F39C12;border-radius:6px;font-size:0.85rem;line-height:1.7;">
+      <strong style="color:#B7770D;">研究の現状：</strong>回復時間の設定に関するプライオメトリクスの研究は近い将来数多く行われることが求められる。回復のためのより具体的な時間を示すには、この分野におけるさらなる研究が必要である。
+    </div>
+  </div>
+
+  <div class="info-box">
+    <h3>経験レベル別 トレーニング量</h3>
+    <table class="styled-table">
+      <thead><tr><th>経験レベル</th><th>1セッションあたりの回数</th></tr></thead>
+      <tbody>
+        <tr><td>初心者（経験なし）</td><td><strong>80〜100回</strong></td></tr>
+        <tr><td>中級者（少し経験あり）</td><td><strong>100〜120回</strong></td></tr>
+        <tr><td>上級者（かなり経験あり）</td><td><strong>120〜140回</strong></td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="info-box">
+    <h3>強度レベル</h3>
+    <table class="styled-table">
+      <thead><tr><th>強度</th><th>内容</th><th>主なドリル例</th></tr></thead>
+      <tbody>
+        <tr><td><span class="int-low">低</span></td><td>衝撃が小さい</td><td>アンクルホップ、スクワットジャンプ</td></tr>
+        <tr><td><span class="int-mid">中</span></td><td>中程度の衝撃</td><td>スタンディングジャンプ、ボックスジャンプ</td></tr>
+        <tr><td><span class="int-high">高</span></td><td>大きな衝撃</td><td>デプスジャンプ（最高強度）</td></tr>
+      </tbody>
+    </table>
+    <p style="font-size:0.85rem;color:var(--gray);margin-top:10px;">
+      強度に影響する要因：体重（重いほど強度増）・スピード（速いほど強度増）・ドリルの高さ（高いほど強度増）
+    </p>
+  </div>
+
+  <div class="info-box">
+    <h3>プログラム実施のステップ</h3>
+    <ol style="list-style:decimal;padding-left:22px;line-height:2.2;font-size:0.95rem;">
+      <li>姿勢およびトレーニング分野で選手の適切なポジションを確認する</li>
+      <li>競技種目およびポジション別の適切なプライオメトリクスのデザインを確認する</li>
+      <li>適切なプライオメトリクストレーニングのデザイン（強度・回数・量・プログラムの継続期間・ウォームアップ）を設定する</li>
+      <li>選手に対して適切なテクニックと安全に留意した実施方法を指導する</li>
+      <li>選手に対して、適切なプライオメトリクスプログラムを適時に確認する</li>
+    </ol>
+  </div>
+
+  <div class="info-box">
+    <h3>ウォームアップドリル</h3>
+    <table class="styled-table">
+      <thead><tr><th>ドリル</th><th>目的</th><th>実施方法</th></tr></thead>
+      <tbody>
+        <tr><td>マーチング</td><td>ランニング動作の準備・股関節動作の調整</td><td>その場または移動しながら</td></tr>
+        <tr><td>ジョギング</td><td>下半身の連続動作の準備</td><td>軽いペースで継続</td></tr>
+        <tr><td>スキップ</td><td>上肢の反動動作の準備</td><td>リズミカルに連続</td></tr>
+        <tr><td>フットワーク</td><td>方向転換の準備</td><td>素早い足の動きを意識</td></tr>
+        <tr><td>ランジ</td><td>大腿・臀部の動的ストレッチ</td><td>フォワードステップ形式</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="info-box">
+    <h3>レジスタンストレーニングとの組み合わせ（週スケジュール例）</h3>
+    <table class="styled-table">
+      <thead><tr><th>曜日</th><th>レジスタンス</th><th>プライオメトリクス</th></tr></thead>
+      <tbody>
+        <tr><td>月</td><td>高強度・上半身</td><td>低強度・下半身</td></tr>
+        <tr><td>火</td><td>低強度・上半身</td><td>高強度・下半身</td></tr>
+        <tr><td>水</td><td>高強度・上半身</td><td>低強度・下半身</td></tr>
+        <tr><td>木</td><td colspan="2" style="text-align:center;color:var(--gray);">休息</td></tr>
+        <tr><td>金</td><td>高強度・下半身</td><td>低強度・上半身</td></tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<!-- ═══════════════════ DRILLS ═══════════════════ -->
+<section id="drills">
+  <p class="sec-title">ドリル一覧</p>
+
+  <details class="accordion" open>
+    <summary>下半身 ─ その場ジャンプ（強度：低〜中）</summary>
+    <div class="accordion-body">
+      <table class="styled-table">
+        <thead><tr><th>No.</th><th>ドリル名</th><th>強度</th><th>ポイント</th></tr></thead>
+        <tbody>
+          <tr><td>18.1</td><td>トゥーフット・アンクルホップ</td><td><span class="int-low">低</span></td><td>足首の素早い動き。膝をほとんど使わない</td></tr>
+          <tr><td>18.2</td><td>シングルレッグ・アンクルホップ</td><td><span class="int-low">低</span></td><td>片脚バランスと足首強化</td></tr>
+          <tr><td>18.3</td><td>スクワットジャンプ</td><td><span class="int-low">低</span></td><td>スクワット姿勢から最大高さへ。SSC活用</td></tr>
+          <tr><td>18.4</td><td>ジャンプ＆リーチ</td><td><span class="int-low">低</span></td><td>目標にタッチするように跳ぶ</td></tr>
+          <tr><td>18.5</td><td>ダブルレッグ・タックジャンプ</td><td><span class="int-mid">中</span></td><td>空中で膝を引き寄せる</td></tr>
+          <tr><td>18.6</td><td>スプリット・スクワットジャンプ</td><td><span class="int-mid">中</span></td><td>脚を前後に開いた状態から跳ぶ</td></tr>
+          <tr><td>18.7</td><td>サイクルド・スプリットスクワットジャンプ</td><td><span class="int-high">高</span></td><td>空中で前後の脚を入れ替える</td></tr>
+          <tr><td>18.8</td><td>シングルレッグ・タックジャンプ</td><td><span class="int-high">高</span></td><td>片脚で最大高さへ跳び膝を引き寄せる</td></tr>
+          <tr><td>18.9</td><td>バイクジャンプ</td><td><span class="int-high">高</span></td><td>空中で自転車こぎ動作。高い調整力が必要</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </details>
+
+  <details class="accordion">
+    <summary>下半身 ─ スタンディングジャンプ（強度：中〜高）</summary>
+    <div class="accordion-body">
+      <table class="styled-table">
+        <thead><tr><th>No.</th><th>ドリル名</th><th>強度</th><th>ポイント</th></tr></thead>
+        <tbody>
+          <tr><td>18.10</td><td>ダブルレッグ・バーティカルジャンプ</td><td><span class="int-mid">中</span></td><td>最大高さを目指す。反動から開始</td></tr>
+          <tr><td>18.11</td><td>シングルレッグ・バーティカルジャンプ</td><td><span class="int-high">高</span></td><td>片脚で最大高さへ</td></tr>
+          <tr><td>18.12</td><td>障害物飛び越え（ジャンプ・オーバー・バリア）</td><td><span class="int-high">高</span></td><td>前進しながら障害物を越える</td></tr>
+          <tr><td>18.13</td><td>立ち幅跳び</td><td><span class="int-mid">中</span></td><td>前方への最大距離ジャンプ</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </details>
+
+  <details class="accordion">
+    <summary>下半身 ─ 連続ホップ＆ジャンプ（強度：中〜高）</summary>
+    <div class="accordion-body">
+      <table class="styled-table">
+        <thead><tr><th>No.</th><th>ドリル名</th><th>強度</th><th>用具</th><th>ポイント</th></tr></thead>
+        <tbody>
+          <tr><td>18.14</td><td>ダブルレッグ・ホップ</td><td><span class="int-mid">中</span></td><td>なし</td><td>連続して前方へホップ。素早く</td></tr>
+          <tr><td>18.15</td><td>ダブルレッグ・ジグザグホップ</td><td><span class="int-high">高</span></td><td>ハードル</td><td>10個のハードルを45〜60cmのジグザグで越える</td></tr>
+          <tr><td>18.16</td><td>シングルレッグ・ホップ</td><td><span class="int-high">高</span></td><td>なし</td><td>片脚で前方へ連続ホップ。短い接地時間</td></tr>
+          <tr><td>18.17</td><td>フロント・バリアホップ</td><td><span class="int-mid">中</span></td><td>コーン</td><td>障害物を前方から越えて連続ホップ</td></tr>
+          <tr><td>18.18</td><td>ラテラル・バリアホップ</td><td><span class="int-mid">中</span></td><td>コーン</td><td>横方向に障害物を越えて連続ホップ</td></tr>
+          <tr><td>18.19</td><td>4ハードルドリル</td><td><span class="int-high">高</span></td><td>ハードル×4</td><td>4つのハードルを連続で越えるコンビネーション</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </details>
+
+  <details class="accordion">
+    <summary>下半身 ─ バウンド（強度：中〜高）</summary>
+    <div class="accordion-body">
+      <table class="styled-table">
+        <thead><tr><th>No.</th><th>ドリル名</th><th>強度</th><th>ポイント</th></tr></thead>
+        <tbody>
+          <tr><td>18.20</td><td>スキップ</td><td><span class="int-low">低</span></td><td>片足踏み込みとジャンプの組み合わせ</td></tr>
+          <tr><td>18.21</td><td>パワースキップ</td><td><span class="int-mid">中</span></td><td>最大高さと距離を狙うスキップ</td></tr>
+          <tr><td>18.22</td><td>バックワードスキップ</td><td><span class="int-mid">中</span></td><td>後ろ方向へのスキップ</td></tr>
+          <tr><td>18.23</td><td>サイドスキップ</td><td><span class="int-mid">中</span></td><td>側方へのスキップ。横方向のパワー強化</td></tr>
+          <tr><td>18.24</td><td>シングルアーム交互バウンド</td><td><span class="int-mid">中</span></td><td>片腕のスイングを使って推進力を高める</td></tr>
+          <tr><td>18.25</td><td>ダブルアーム交互バウンド</td><td><span class="int-high">高</span></td><td>両腕スイングで最大の推進力を発揮</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </details>
+
+  <details class="accordion">
+    <summary>下半身 ─ ボックスドリル（強度：中〜高）</summary>
+    <div class="accordion-body">
+      <table class="styled-table">
+        <thead><tr><th>No.</th><th>ドリル名</th><th>強度</th><th>ポイント</th></tr></thead>
+        <tbody>
+          <tr><td>18.26</td><td>シングルレッグ・プッシュオフ</td><td><span class="int-mid">中</span></td><td>片足でボックスを踏み切って跳ぶ。最初15cmから</td></tr>
+          <tr><td>18.27</td><td>交互プッシュオフ</td><td><span class="int-mid">中</span></td><td>左右交互にボックスを踏み切る</td></tr>
+          <tr><td>18.28</td><td>ラテラル・プッシュオフ</td><td><span class="int-mid">中</span></td><td>横からボックスを踏み切って跳ぶ</td></tr>
+          <tr><td>18.29</td><td>サイドトゥーサイド・プッシュオフ</td><td><span class="int-mid">中</span></td><td>左右交互にボックスを乗り越える</td></tr>
+          <tr><td>18.30</td><td>ダブルレッグ・ジャンプトゥボックス</td><td><span class="int-mid">中</span></td><td>両足でボックスの上に跳び乗る</td></tr>
+          <tr><td>18.31</td><td>シングルレッグ・ジャンプトゥボックス</td><td><span class="int-high">高</span></td><td>片脚でボックスの上に跳び乗る</td></tr>
+          <tr><td>18.32</td><td>スクワット・ボックスジャンプ</td><td><span class="int-mid">中</span></td><td>スクワットからボックス上へジャンプ</td></tr>
+          <tr><td>18.33</td><td>ラテラル・ボックスジャンプ</td><td><span class="int-mid">中</span></td><td>横方向にボックスの上へジャンプ</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </details>
+
+  <details class="accordion">
+    <summary>下半身 ─ デプスジャンプ（強度：高）</summary>
+    <div class="accordion-body">
+      <p style="background:#FDEDEC;padding:10px 14px;border-radius:6px;margin-bottom:12px;font-size:0.88rem;color:#C0392B;">
+        ⚠ デプスジャンプは最高強度のドリルです。事前評価・段階的な実施が必須です。
+      </p>
+      <table class="styled-table">
+        <thead><tr><th>No.</th><th>ドリル名</th><th>ポイント</th></tr></thead>
+        <tbody>
+          <tr><td>18.34</td><td>ドロップフリーズ</td><td>降りて着地で静止。フォームの確認用</td></tr>
+          <tr><td>18.35</td><td>デプスジャンプ</td><td>ボックスから降りて即座に最大高さへ跳ぶ</td></tr>
+          <tr><td>18.36</td><td>デプスジャンプ・トゥ・セカンドボックス</td><td>着地後に第2ボックスへ跳ぶ</td></tr>
+          <tr><td>18.37</td><td>スクワット・デプスジャンプ</td><td>着地後スクワットして最大高さへ</td></tr>
+          <tr><td>18.38</td><td>側方への動作を伴うデプスジャンプ</td><td>パートナーの合図で方向を変えて跳ぶ</td></tr>
+          <tr><td>18.39</td><td>立ち幅跳びを伴うデプスジャンプ</td><td>降りた後に最大距離で前方ジャンプ</td></tr>
+          <tr><td>18.40</td><td>デプスジャンプからの180°ターン</td><td>空中で180°回転。高い協調性が必要</td></tr>
+          <tr><td>18.41</td><td>シングルレッグ・デプスジャンプ</td><td>片脚でのデプスジャンプ。最も高難度</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </details>
+
+  <details class="accordion">
+    <summary>上半身 ─ スロー（投てき）・プッシュアップ</summary>
+    <div class="accordion-body">
+      <table class="styled-table">
+        <thead><tr><th>No.</th><th>ドリル名</th><th>強度</th><th>用具</th><th>ポイント</th></tr></thead>
+        <tbody>
+          <tr><td>18.42</td><td>チェストパス</td><td><span class="int-low">低</span></td><td>メディシンボール 0.9〜3.6kg</td><td>胸からパートナーに素早くパス</td></tr>
+          <tr><td>18.43</td><td>トゥーハンド・オーバーヘッドスロー</td><td><span class="int-low">低</span></td><td>メディシンボール 0.9〜3.6kg</td><td>頭上から両手で前方に投げる</td></tr>
+          <tr><td>18.44</td><td>トゥーハンド・サイドトゥーサイドスロー</td><td><span class="int-mid">中</span></td><td>メディシンボール 0.9〜3.6kg</td><td>体を回旋させながらサイドに投げる</td></tr>
+          <tr><td>18.45</td><td>シングルアーム・スロー</td><td><span class="int-mid">中</span></td><td>メディシンボール 0.5〜1.5kg</td><td>片腕で投げる。体幹回旋も使う</td></tr>
+          <tr><td>18.46</td><td>パワードロップ</td><td><span class="int-high">高</span></td><td>メディシンボール 0.9〜3.6kg</td><td>パートナーが落としたボールを瞬時にキャッチして返す</td></tr>
+          <tr><td>18.47</td><td>デプス・プッシュアップ</td><td><span class="int-mid">中</span></td><td>メディシンボール 2.3〜3.6kg</td><td>腕立てのプライオメトリック版</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </details>
+
+  <details class="accordion">
+    <summary>体幹 ─ プライオメトリクス</summary>
+    <div class="accordion-body">
+      <table class="styled-table">
+        <thead><tr><th>No.</th><th>ドリル名</th><th>強度</th><th>用具</th><th>ポイント</th></tr></thead>
+        <tbody>
+          <tr><td>18.48</td><td>45°シットアップ</td><td><span class="int-mid">中</span></td><td>メディシンボール 0.9〜3.6kg</td><td>45°の角度でシットアップしながらボールを投げる。体幹回旋力の爆発的な発揮</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </details>
+</section>
+
+<!-- ═══════════════════ SAFETY ═══════════════════ -->
+<section id="safety">
+  <p class="sec-title">安全配慮・対象者別ガイド</p>
+
+  <div class="info-box">
+    <h3>トレーニング前の選手評価</h3>
+    <table class="styled-table">
+      <thead><tr><th>評価項目</th><th>基準・内容</th></tr></thead>
+      <tbody>
+        <tr><td>テクニック</td><td>スクワット等の基本動作を正しく行えるか</td></tr>
+        <tr><td>筋力（下半身 上級）</td><td>体重×1.5倍のバーベルスクワット（高強度実施前）</td></tr>
+        <tr><td>筋力（上半身 上級）</td><td>体重×60%のパワークリーン</td></tr>
+        <tr><td>バランス（中級）</td><td>スタンディング・クォータースクワットでの片脚バランス</td></tr>
+        <tr><td>バランス（上級）</td><td>ハーフスクワットでの片脚バランス</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="info-box">
+    <h3>施設・用具の安全基準</h3>
+    <table class="styled-table">
+      <thead><tr><th>項目</th><th>推奨内容</th><th>注意事項</th></tr></thead>
+      <tbody>
+        <tr><td>床面</td><td>芝生、木製フロア、マット、人工芝</td><td>コンクリート・アスファルトは避ける</td></tr>
+        <tr><td>天井高</td><td>4m以上推奨</td><td>屋内では特に重要</td></tr>
+        <tr><td>ボックス高さ（標準）</td><td>最大1.2m（48インチ）</td><td>段階的に高さを上げる（最初は15cm〜）</td></tr>
+        <tr><td>ボックス高さ（100kg超）</td><td>最大46cm（18インチ）から開始</td><td>体重が重い場合は低めから</td></tr>
+        <tr><td>シューズ</td><td>足首サポート・横方向安定性重視</td><td>テニス・バスケット用が適切。ランニング用は不向き</td></tr>
+        <tr><td>監視</td><td>常時指導者が監視</td><td>疲労による動作の崩れを見逃さない</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="info-box">
+    <h3>対象者別の配慮</h3>
+    <table class="styled-table">
+      <thead><tr><th>対象者</th><th>配慮事項</th><th>プログラムの方針</th></tr></thead>
+      <tbody>
+        <tr><td><strong>青年期（中高生）</strong></td><td>デプスジャンプ・高強度下半身ドリルは非推奨</td><td>低〜中強度・テクニックを最優先</td></tr>
+        <tr><td><strong>成人</strong></td><td>通常のプログラムを段階的に適用</td><td>ニーズ分析に基づき漸進的に強度を上げる</td></tr>
+        <tr><td><strong>マスターズ（高齢者）</strong></td><td>筋力・骨密度・柔軟性・バランス低下を考慮</td><td>強度・量を下げ、ウォームアップを充実させる</td></tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<!-- ═══════════════════ QUIZ ═══════════════════ -->
+<section id="quiz">
+  <p class="sec-title">理解度クイズ（全15問）</p>
+  <p style="margin-bottom:24px;color:var(--gray);font-size:0.92rem;">各問題の選択肢を選んで「答えを確認する」ボタンを押してください。</p>
+
+  <div id="quiz-container"></div>
+  <div id="quiz-score" style="display:none;background:var(--primary);color:var(--white);padding:20px 28px;border-radius:12px;margin-top:20px;font-size:1.1rem;font-weight:bold;text-align:center;"></div>
+  <button class="check-btn" onclick="scoreAll()" style="margin-top:16px;padding:12px 40px;font-size:1.0rem;">全問採点する</button>
+</section>
+
+</main>
+
+<footer>
+  <p>NSCA S&C教本 第18章 プライオメトリクス | スポーツトレーナー同好会 | 自習用資料</p>
+</footer>
+
+<script>
+// ── Tab switching ──
+function showTab(id) {
+  document.querySelectorAll('section').forEach(s => s.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  document.querySelectorAll('nav.tabs button').forEach(b => b.classList.remove('active'));
+  event.target.classList.add('active');
+}
+
+// ── Quiz data ──
+const questions = [
+  { q: 'プライオメトリクスの語源について正しいものはどれか？',
+    opts: ['ギリシャ語の「より多く」と「測る」が語源', 'ラテン語の「跳躍」と「力」が語源', '英語の「爆発的な動作」が語源', 'フランス語の「バランス」が語源'],
+    ans: 0, exp: 'プライオ（plio：より多く）とメトリック（metric：測る）がギリシャ語の語源です。' },
+  { q: 'ストレッチ・ショートニングサイクル（SSC）の第1段階はどれか？',
+    opts: ['短縮性局面', '伸張性局面', '一般筋放電', '等尺性局面'],
+    ans: 1, exp: 'SSCの第1段階は伸張性局面で、主動筋が引き伸ばされ弾性エネルギーが蓄積されます。' },
+  { q: 'プライオメトリクスで弾性エネルギーを主に蓄える弾性要素はどれか？',
+    opts: ['並列弾性要素（PEC）', '直列弾性要素（SEC）', '筋紡錘', 'ゴルジ腱器官'],
+    ans: 1, exp: '直列弾性要素（SEC）が腱や腱膜に弾性エネルギーを蓄える主役です。' },
+  { q: '伸張反射を起こす感覚受容器はどれか？',
+    opts: ['ゴルジ腱器官', '自由神経終末', '筋紡錘（筋紡錘）', 'パチニ小体'],
+    ans: 2, exp: '筋紡錘が急激な伸張を感知し、脊髄を経由して伸張反射を起こします。' },
+  { q: '初心者が1セッションで実施すべきプライオメトリクスの回数はどれか？',
+    opts: ['60〜80回', '80〜100回', '100〜120回', '120〜140回'],
+    ans: 1, exp: '初心者（経験なし）の目安は80〜100回/セッションです。' },
+  { q: 'プライオメトリクスの実施頻度として正しいものはどれか？',
+    opts: ['週1回', '週2〜3回', '毎日', '2週間に1回'],
+    ans: 1, exp: '一般的に週2〜3回が推奨され、各セッション間に48時間の回復が必要です。' },
+  { q: 'デプスジャンプに使用するボックスの最大高さはどれか？',
+    opts: ['0.6m（24インチ）', '0.9m（36インチ）', '1.2m（48インチ）', '1.5m（60インチ）'],
+    ans: 2, exp: 'デプスジャンプに使用するボックスの最大高さは1.2m（48インチ）です。' },
+  { q: '体重100kg以上の選手がデプスジャンプを始める場合、ボックスの開始高さはどれか？',
+    opts: ['30cm（12インチ）以下', '46cm（18インチ）以下', '61cm（24インチ）以下', '76cm（30インチ）以下'],
+    ans: 1, exp: '体重100kg以上の選手は46cm（18インチ）以下のボックス高さから開始します。' },
+  { q: '最も強度の高いプライオメトリックドリルはどれか？',
+    opts: ['アンクルホップ', 'スクワットジャンプ', 'バーティカルジャンプ', 'デプスジャンプ'],
+    ans: 3, exp: 'デプスジャンプはボックスから降りて即座に跳ぶ、最高強度のドリルです。' },
+  { q: 'プライオメトリクスに適した床面はどれか？',
+    opts: ['コンクリート', 'アスファルト', '芝生・木製フロア・マット', '砂利'],
+    ans: 2, exp: 'クッション性のある芝生、木製フロア、マット、人工芝が適しています。' },
+  { q: '青年期（中高生）のプライオメトリクスについて正しいものはどれか？',
+    opts: ['デプスジャンプを積極的に行うべき', '大人と同じ高強度ドリルが推奨される', 'デプスジャンプや高強度ドリルは推奨されない', 'プライオメトリクスは全く行うべきではない'],
+    ans: 2, exp: '青年期にはデプスジャンプや高強度の下半身プライオメトリクスは推奨されません。低〜中強度でテクニックを最優先します。' },
+  { q: 'プライオメトリクスプログラムの一般的な継続期間はどれか？',
+    opts: ['1〜3週間', '6〜10週間', '15〜20週間', '1年以上'],
+    ans: 1, exp: 'プライオメトリクスプログラムの継続期間は一般的に6〜10週間です。' },
+  { q: 'SSCで第1段階から第3段階への移行時間が短いほど、どうなるか？',
+    opts: ['蓄えたエネルギーの利用が少なくなる', '怪我のリスクが高まる', '蓄えたエネルギーをより多く利用できる', 'トレーニング効果がなくなる'],
+    ans: 2, exp: '移行時間が短いほど、蓄えた弾性エネルギーをより多く力の発揮に利用できます。' },
+  { q: '下半身プライオメトリクスドリルの強度に影響する要因として正しくないものはどれか？',
+    opts: ['選手の体重', 'ドリルの実施スピード', 'ドリルの高さ', '天気（気温）'],
+    ans: 3, exp: '強度に影響する要因は体重・スピード・ドリルの高さです。天気（気温）は直接的な強度要因ではありません。' },
+  { q: '上半身のプライオメトリックドリルとして正しいものはどれか？',
+    opts: ['デプスジャンプ', 'スキップ', 'チェストパス', 'アンクルホップ'],
+    ans: 2, exp: 'チェストパスはメディシンボールを使った上半身のプライオメトリックドリルです。' },
+];
+
+// Build quiz HTML
+const container = document.getElementById('quiz-container');
+questions.forEach((q, i) => {
+  const div = document.createElement('div');
+  div.className = 'quiz-q';
+  div.innerHTML = `
+    <div class="q-text"><span class="q-num">Q${i+1}.</span>${q.q}</div>
+    <ul class="option-list">
+      ${q.opts.map((o, j) => `
+        <li><label>
+          <input type="radio" name="q${i}" value="${j}">
+          <span>${String.fromCharCode(65+j)}）${o}</span>
+        </label></li>
+      `).join('')}
+    </ul>
+    <button class="check-btn" onclick="checkAnswer(${i})">答えを確認する</button>
+    <div class="result" id="result${i}"></div>
+  `;
+  container.appendChild(div);
+});
+
+function checkAnswer(i) {
+  const selected = document.querySelector(`input[name="q${i}"]:checked`);
+  const resEl = document.getElementById('result' + i);
+  if (!selected) { resEl.style.display='block'; resEl.className='result'; resEl.textContent='選択肢を選んでください。'; return; }
+  resEl.style.display = 'block';
+  if (parseInt(selected.value) === questions[i].ans) {
+    resEl.className = 'result correct';
+    resEl.textContent = '正解！ ' + questions[i].exp;
+  } else {
+    resEl.className = 'result wrong';
+    resEl.textContent = '不正解。正解は「' + String.fromCharCode(65 + questions[i].ans) + '）' + questions[i].opts[questions[i].ans] + '」です。' + questions[i].exp;
+  }
+}
+
+function scoreAll() {
+  let score = 0;
+  questions.forEach((q, i) => {
+    const selected = document.querySelector(`input[name="q${i}"]:checked`);
+    if (selected && parseInt(selected.value) === q.ans) score++;
+    checkAnswer(i);
+  });
+  const el = document.getElementById('quiz-score');
+  el.style.display = 'block';
+  const pct = Math.round(score / questions.length * 100);
+  el.innerHTML = `採点結果：${score} / ${questions.length} 問正解（${pct}%）<br>
+    <span style="font-size:0.9rem;opacity:0.85;">${pct >= 80 ? '素晴らしい！理解度が高いです。' : pct >= 60 ? 'もう少し！テキストを見直してみましょう。' : '基本概念を再度確認しましょう。'}</span>`;
+  el.scrollIntoView({ behavior: 'smooth' });
+}
+</script>
+</body>
+</html>

@@ -1,0 +1,802 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="theme-color" content="#1a1a18">
+<title>筋肉テスト | 肩・上腕</title>
+
+<!--
+  ══════════════════════════════════════════════════════
+  ランキング機能セットアップ（Google Apps Script）
+  ══════════════════════════════════════════════════════
+
+  1. https://sheets.google.com でスプレッドシートを新規作成する
+  2. メニュー「拡張機能」→「Apps Script」を開く
+  3. 以下のコードを全て貼り付けて保存（Ctrl+S）:
+
+  ───────────────────────────────────────────
+  function doGet(e) {
+    const action = e.parameter.action;
+    const ss = SpreadsheetApp.getActiveSpreadsheet();
+    let sheet = ss.getSheetByName('rankings');
+    if (!sheet) {
+      sheet = ss.insertSheet('rankings');
+      sheet.appendRow(['名前', 'スコア', '日時']);
+    }
+    const out = ContentService.createTextOutput();
+    out.setMimeType(ContentService.MimeType.JSON);
+    if (action === 'submit') {
+      const name = (e.parameter.name || '名無し').slice(0, 30);
+      const score = Math.min(100, Math.max(0, parseInt(e.parameter.score) || 0));
+      const date = Utilities.formatDate(new Date(), 'Asia/Tokyo', 'yyyy/MM/dd HH:mm');
+      sheet.appendRow([name, score, date]);
+      out.setContent(JSON.stringify({success: true}));
+    } else if (action === 'rankings') {
+      const data = sheet.getDataRange().getValues();
+      const rankings = data.slice(1)
+        .filter(r => r[0] && r[1] !== '')
+        .map(r => ({name: String(r[0]), score: Number(r[1]), date: String(r[2])}))
+        .sort((a, b) => b.score - a.score)
+        .slice(0, 100);
+      out.setContent(JSON.stringify({rankings}));
+    } else {
+      out.setContent(JSON.stringify({error: 'unknown action'}));
+    }
+    return out;
+  }
+  ───────────────────────────────────────────
+
+  4. 「デプロイ」→「新しいデプロイ」→種類「ウェブアプリ」
+  5. 「次のユーザーとして実行」→ 自分
+     「アクセスできるユーザー」→ 全員
+  6. 「デプロイ」をクリック → ウェブアプリのURLをコピー
+  7. 下の APPS_SCRIPT_URL に貼り付ける
+
+  ══════════════════════════════════════════════════════
+-->
+
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent;}
+:root{
+  --bg:#f5f4f0;--surface:#fff;--surface2:#eceae3;
+  --t1:#18181a;--t2:#6b6a63;--t3:#aaa99f;
+  --border:rgba(0,0,0,0.09);
+  --green:#1D9E75;--green-bg:#e1f5ee;
+  --red:#D85A30;--red-bg:#faece7;
+  --blue:#5b5bc8;--blue-bg:rgba(91,91,200,0.1);
+  --r:18px;--rsm:12px;
+  --safe-top:env(safe-area-inset-top,0px);
+  --safe-bot:env(safe-area-inset-bottom,0px);
+}
+@media(prefers-color-scheme:dark){
+  :root{--bg:#18181a;--surface:#232321;--surface2:#2c2c29;--t1:#f0efe8;--t2:#a8a79e;--t3:#6b6a63;--border:rgba(255,255,255,0.09);--green-bg:#04342c;--red-bg:#4a1b0c;--blue-bg:rgba(91,91,200,0.18);}
+}
+html,body{height:100%;overflow:hidden;}
+body{font-family:-apple-system,BlinkMacSystemFont,"Hiragino Sans","Noto Sans JP",sans-serif;background:var(--bg);color:var(--t1);display:flex;flex-direction:column;padding-top:var(--safe-top);}
+
+/* ── SCREEN SYSTEM ── */
+.screen{display:none;flex-direction:column;flex:1;overflow:hidden;}
+.screen.active{display:flex;}
+
+/* ── NAME SCREEN ── */
+#s-name{align-items:center;justify-content:center;padding:24px 20px;}
+.logo{font-size:48px;margin-bottom:6px;}
+.title{font-size:22px;font-weight:700;text-align:center;}
+.subtitle{font-size:14px;color:var(--t2);text-align:center;margin-bottom:28px;margin-top:4px;}
+.name-card{width:100%;max-width:360px;background:var(--surface);border:0.5px solid var(--border);border-radius:var(--r);padding:20px;display:flex;flex-direction:column;gap:12px;}
+.name-lbl{font-size:12px;color:var(--t2);font-weight:500;}
+.name-inp{width:100%;padding:14px 16px;border-radius:var(--rsm);border:1.5px solid var(--border);background:var(--surface2);font-size:16px;color:var(--t1);outline:none;font-family:inherit;transition:border-color .2s;}
+.name-inp:focus{border-color:var(--green);}
+.btn-primary{width:100%;padding:15px;background:var(--t1);color:var(--bg);border:none;border-radius:var(--rsm);font-size:16px;font-weight:700;cursor:pointer;font-family:inherit;transition:opacity .15s;}
+.btn-primary:active{opacity:.75;}
+.btn-secondary{width:100%;padding:13px;background:none;color:var(--t2);border:0.5px solid var(--border);border-radius:var(--rsm);font-size:14px;cursor:pointer;font-family:inherit;}
+.btn-secondary:active{opacity:.75;}
+.rank-link{margin-top:14px;font-size:13px;color:var(--t2);text-align:center;cursor:pointer;text-decoration:underline;text-underline-offset:3px;}
+
+/* ── QUIZ SCREEN ── */
+.quiz-hdr{flex-shrink:0;padding:10px 16px;background:var(--surface);border-bottom:0.5px solid var(--border);display:flex;align-items:center;gap:12px;}
+.q-cnt{font-size:13px;color:var(--t2);white-space:nowrap;}
+.prog-wrap{flex:1;height:4px;background:var(--surface2);border-radius:99px;overflow:hidden;}
+.prog-fill{height:100%;background:var(--green);border-radius:99px;transition:width .3s;}
+.q-score{font-size:13px;font-weight:700;color:var(--green);white-space:nowrap;}
+.quiz-body{flex:1;overflow-y:auto;-webkit-overflow-scrolling:touch;padding:14px 16px;display:flex;flex-direction:column;gap:12px;}
+.type-badge{display:inline-block;padding:3px 11px;border-radius:99px;font-size:11px;font-weight:600;letter-spacing:.05em;}
+.badge-w{background:var(--green-bg);color:var(--green);}
+.badge-mc{background:var(--blue-bg);color:var(--blue);}
+.q-instruction{font-size:13px;color:var(--t2);line-height:1.6;}
+.clue-card{background:var(--surface);border:0.5px solid var(--border);border-radius:var(--r);overflow:hidden;}
+.clue-row{display:flex;padding:10px 14px;border-bottom:0.5px solid var(--border);}
+.clue-row:last-child{border-bottom:none;}
+.clue-key{font-size:11px;color:var(--t3);width:64px;flex-shrink:0;padding-top:2px;font-weight:600;text-transform:uppercase;letter-spacing:.03em;}
+.clue-val{font-size:14px;color:var(--t1);line-height:1.55;}
+.q-text{font-size:16px;font-weight:600;line-height:1.5;color:var(--t1);}
+.mc-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;}
+.mc-btn{padding:11px 8px;border-radius:var(--rsm);border:1.5px solid var(--border);background:var(--surface);font-size:13px;color:var(--t1);cursor:pointer;text-align:center;line-height:1.4;font-family:inherit;transition:border-color .15s,background .15s,color .15s;}
+.mc-btn:active:not(:disabled){transform:scale(.97);}
+.mc-btn.correct{background:var(--green-bg)!important;border-color:var(--green)!important;color:var(--green)!important;font-weight:700;}
+.mc-btn.wrong{background:var(--red-bg)!important;border-color:var(--red)!important;color:var(--red)!important;}
+.mc-btn.reveal{background:var(--green-bg);border-color:var(--green);color:var(--green);}
+.mc-btn:disabled{cursor:default;}
+.mc-btn.selected{background:var(--blue-bg)!important;border-color:var(--blue)!important;color:var(--blue)!important;font-weight:700;}
+.written-wrap{display:flex;flex-direction:column;gap:8px;}
+.written-inp{width:100%;padding:14px;border-radius:var(--rsm);border:1.5px solid var(--border);background:var(--surface);font-size:20px;color:var(--t1);outline:none;font-family:inherit;text-align:center;transition:border-color .2s,background .2s;}
+.written-inp:focus{border-color:var(--green);}
+.written-inp.correct{border-color:var(--green)!important;background:var(--green-bg)!important;color:var(--green)!important;}
+.written-inp.wrong{border-color:var(--red)!important;background:var(--red-bg)!important;color:var(--red)!important;}
+.submit-btn{width:100%;padding:14px;background:var(--t1);color:var(--bg);border:none;border-radius:var(--rsm);font-size:16px;font-weight:700;cursor:pointer;font-family:inherit;}
+.submit-btn:active{opacity:.75;}
+.feedback{text-align:center;font-size:16px;font-weight:700;}
+.feedback.ok{color:var(--green);}
+.feedback.ng{color:var(--red);}
+.correct-ans{font-size:13px;color:var(--t2);text-align:center;}
+.quiz-footer{flex-shrink:0;padding:12px 16px calc(12px + var(--safe-bot));background:var(--surface);border-top:0.5px solid var(--border);}
+.next-btn{width:100%;padding:15px;background:var(--t1);color:var(--bg);border:none;border-radius:var(--rsm);font-size:16px;font-weight:700;cursor:pointer;font-family:inherit;}
+.next-btn:active{opacity:.75;}
+.next-btn:disabled{opacity:.3;cursor:default;}
+
+/* ── RESULT SCREEN ── */
+#s-result{overflow-y:auto;-webkit-overflow-scrolling:touch;}
+.result-inner{padding:28px 20px calc(28px + var(--safe-bot));display:flex;flex-direction:column;align-items:center;gap:18px;}
+.result-heading{font-size:20px;font-weight:700;}
+.score-circle{width:140px;height:140px;border-radius:50%;border:4px solid var(--green);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;transition:border-color .3s;}
+.score-num{font-size:42px;font-weight:700;color:var(--green);line-height:1;transition:color .3s;}
+.score-denom{font-size:13px;color:var(--t2);}
+.grade-badge{padding:6px 22px;border-radius:99px;font-size:16px;font-weight:700;}
+.breakdown-card{width:100%;max-width:380px;background:var(--surface);border:0.5px solid var(--border);border-radius:var(--r);overflow:hidden;}
+.bd-row{display:flex;align-items:center;padding:9px 14px;border-bottom:0.5px solid var(--border);gap:8px;}
+.bd-row:last-child{border-bottom:none;}
+.bd-q{flex:1;font-size:12px;color:var(--t2);line-height:1.4;}
+.bd-mark{font-size:13px;font-weight:700;white-space:nowrap;}
+.bd-mark.ok{color:var(--green);}
+.bd-mark.ng{color:var(--red);}
+.result-actions{width:100%;max-width:380px;display:flex;flex-direction:column;gap:10px;}
+.submit-status{font-size:13px;color:var(--t2);text-align:center;min-height:18px;}
+
+/* ── RANKING SCREEN ── */
+#s-ranking{overflow-y:auto;-webkit-overflow-scrolling:touch;}
+.ranking-inner{padding:14px 16px calc(20px + var(--safe-bot));display:flex;flex-direction:column;gap:12px;}
+.ranking-hdr{display:flex;align-items:center;gap:12px;padding:10px 0 4px;}
+.ranking-title{font-size:20px;font-weight:700;flex:1;}
+.refresh-btn{padding:6px 14px;border-radius:99px;border:0.5px solid var(--border);background:var(--surface);color:var(--t2);font-size:13px;cursor:pointer;font-family:inherit;}
+.ranking-card{background:var(--surface);border:0.5px solid var(--border);border-radius:var(--r);overflow:hidden;}
+.rank-row{display:flex;align-items:center;padding:12px 14px;border-bottom:0.5px solid var(--border);gap:10px;}
+.rank-row:last-child{border-bottom:none;}
+.rank-pos{font-size:16px;font-weight:700;width:30px;text-align:center;flex-shrink:0;}
+.rank-pos.gold{color:#c8a84b;}
+.rank-pos.silver{color:#8e9aaf;}
+.rank-pos.bronze{color:#b5714c;}
+.rank-name{flex:1;font-size:15px;font-weight:600;}
+.rank-info{display:flex;flex-direction:column;align-items:flex-end;gap:2px;}
+.rank-score{font-size:16px;font-weight:700;color:var(--green);}
+.rank-date{font-size:11px;color:var(--t3);}
+.ranking-empty{text-align:center;padding:40px 20px;color:var(--t2);font-size:14px;line-height:1.7;}
+.ranking-note{font-size:12px;color:var(--t3);text-align:center;}
+.back-link{text-align:center;font-size:14px;color:var(--t2);cursor:pointer;text-decoration:underline;text-underline-offset:3px;padding:4px;}
+.highlight-row{background:var(--green-bg);}
+.highlight-row .rank-name{color:var(--green);}
+
+/* ── HISTORY ── */
+.history-section{width:100%;max-width:380px;display:flex;flex-direction:column;gap:8px;}
+.history-title{font-size:14px;font-weight:700;color:var(--t2);}
+.history-card{background:var(--surface);border:0.5px solid var(--border);border-radius:var(--r);overflow:hidden;}
+.history-row{display:flex;align-items:center;padding:9px 14px;border-bottom:0.5px solid var(--border);gap:8px;}
+.history-row:last-child{border-bottom:none;}
+.history-num{font-size:12px;color:var(--t3);width:22px;flex-shrink:0;text-align:center;}
+.history-date{flex:1;font-size:12px;color:var(--t2);}
+.history-score{font-size:15px;font-weight:700;color:var(--green);}
+.history-best{font-size:11px;color:var(--t3);}
+.rank-filter-wrap{display:flex;gap:8px;align-items:center;}
+.rank-filter-inp{flex:1;padding:9px 12px;border-radius:var(--rsm);border:1.5px solid var(--border);background:var(--surface2);font-size:14px;color:var(--t1);outline:none;font-family:inherit;}
+.rank-filter-inp:focus{border-color:var(--blue);}
+.rank-filter-btn{padding:9px 14px;border-radius:var(--rsm);border:none;background:var(--blue);color:#fff;font-size:13px;font-weight:700;cursor:pointer;font-family:inherit;white-space:nowrap;}
+.rank-filter-btn:active{opacity:.8;}
+</style>
+</head>
+<body>
+
+<!-- ══════ SCREEN 1: NAME ENTRY ══════ -->
+<div id="s-name" class="screen active">
+  <div style="flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:24px 20px;">
+    <div class="logo">🦴</div>
+    <div class="title">肩・上腕 筋肉テスト</div>
+    <div class="subtitle">20問 × 5点 = 100点満点</div>
+    <div class="name-card">
+      <div class="name-lbl">お名前</div>
+      <input class="name-inp" id="name-inp" type="text" placeholder="例：山田 太郎" autocomplete="off" maxlength="30">
+      <button class="btn-primary" onclick="startQuiz()">テスト開始</button>
+    </div>
+    <div class="rank-link" onclick="gotoRanking()">ランキングを見る →</div>
+  </div>
+</div>
+
+<!-- ══════ SCREEN 2: QUIZ ══════ -->
+<div id="s-quiz" class="screen">
+  <div class="quiz-hdr">
+    <div class="q-cnt" id="q-cnt">1 / 20</div>
+    <div class="prog-wrap"><div class="prog-fill" id="prog-fill" style="width:0%"></div></div>
+    <div class="q-score" id="q-score">0点</div>
+  </div>
+  <div class="quiz-body" id="quiz-body"></div>
+  <div class="quiz-footer">
+    <button class="next-btn" id="next-btn" onclick="nextQ()" disabled>次の問題へ</button>
+  </div>
+</div>
+
+<!-- ══════ SCREEN 3: RESULT ══════ -->
+<div id="s-result" class="screen">
+  <div class="result-inner">
+    <div class="result-heading" id="result-heading">テスト結果</div>
+    <div class="score-circle" id="score-circle">
+      <div class="score-num" id="score-num">0</div>
+      <div class="score-denom">/ 100点</div>
+    </div>
+    <div class="grade-badge" id="grade-badge"></div>
+    <div class="breakdown-card" id="breakdown"></div>
+    <div class="result-actions">
+      <button class="btn-primary" id="reg-btn" onclick="submitScore()">ランキングに登録する</button>
+      <div class="submit-status" id="submit-status"></div>
+      <div class="history-section" id="my-history" style="display:none;"></div>
+      <button class="btn-secondary" onclick="gotoRanking()">ランキングを見る</button>
+      <button class="btn-secondary" onclick="restart()">もう一度受ける</button>
+    </div>
+  </div>
+</div>
+
+<!-- ══════ SCREEN 4: RANKING ══════ -->
+<div id="s-ranking" class="screen">
+  <div class="ranking-inner">
+    <div class="ranking-hdr">
+      <div class="ranking-title">🏆 ランキング</div>
+      <button class="refresh-btn" onclick="loadRanking()">更新</button>
+    </div>
+    <div class="rank-filter-wrap">
+      <input class="rank-filter-inp" id="rank-filter-inp" type="text" placeholder="名前で過去の記録を検索..." autocomplete="off" maxlength="30">
+      <button class="rank-filter-btn" onclick="searchHistory()">検索</button>
+    </div>
+    <div id="ranking-content"><div class="ranking-empty">読み込み中...</div></div>
+    <div class="ranking-note" id="ranking-note"></div>
+    <div class="back-link" onclick="show('s-name')">← トップに戻る</div>
+  </div>
+</div>
+
+<script>
+// ランキングAPIはNetlify Functionsが自動処理します（設定不要）
+
+// ────── 問題データ ──────
+const QS = [
+  // Q1 記述: 小菱形筋（初出）
+  { type:'w', clues:{'起始':'C6〜C7の棘突起・項靱帯下部','停止':'肩甲骨内側縁（肩甲棘付着部）','作用':'肩甲骨の内転・挙上・下方回旋','支配神経':'肩甲背神経（C4, C5）'}, answer:'小菱形筋', accepted:['小菱形筋'] },
+
+  // Q2 選択: 三角筋（鎖骨部）の作用（第1弾は肩峰部の作用→異なる部位）
+  { type:'mc', q:'三角筋（鎖骨部）の主な作用はどれか？',
+    opts:['上腕の屈曲・水平内転','上腕の外転（0〜90°）','上腕の伸展・外旋','上腕の内旋','肩甲骨の挙上','上腕の外旋','前腕の回外','肘関節の屈曲','肩甲骨の内転','上腕の内転'], ok:0 },
+
+  // Q3 記述: 鎖骨下筋（初出）
+  { type:'w', clues:{'起始':'第1肋骨（肋軟骨境界）','停止':'鎖骨下面（外側1/3）','作用':'鎖骨を下方・前方に引く','支配神経':'鎖骨下神経（C5, C6）'}, answer:'鎖骨下筋', accepted:['鎖骨下筋'] },
+
+  // Q4 選択: 棘下筋の起始（第1弾は棘下筋を記述問題で出題→MCで異なる問い）
+  { type:'mc', q:'棘下筋の起始はどれか？',
+    opts:['棘下窩（肩甲骨）','棘上窩（肩甲骨）','肩甲骨外側縁（後面）','肩甲下窩（肩甲骨前面）','肩甲骨下角','C6〜C7の棘突起','第1〜8肋骨外側面','鎖骨外側1/3','烏口突起','上腕骨前面下半分'], ok:0 },
+
+  // Q5 記述: 三角筋（肩甲棘部）（第1弾は肩峰部の作用をMCで出題→別の部位を記述）
+  { type:'w', clues:{'起始':'肩甲棘','停止':'三角筋粗面（上腕骨）','作用':'上腕の伸展・外旋','支配神経':'腋窩神経（C5, C6）'}, answer:'三角筋（肩甲棘部）', accepted:['三角筋（肩甲棘部）','三角筋','後部三角筋'] },
+
+  // Q6 選択: 小菱形筋の起始
+  { type:'mc', q:'小菱形筋の起始はどれか？',
+    opts:['C6〜C7の棘突起','T1〜T4の棘突起','C1〜C4の横突起','第1肋骨（前面）','棘上窩','肩甲下窩','烏口突起','鎖骨内側半分','棘下窩','肩峰'], ok:0 },
+
+  // Q7 記述: 僧帽筋（下部）（初出・第1弾は上部のみ）
+  { type:'w', clues:{'起始':'T6〜T12の棘突起','停止':'肩甲棘（内側端）','作用':'肩甲骨の下制・内転・上方回旋','支配神経':'副神経（CN XI）・頸神経叢（C3, C4）'}, answer:'僧帽筋（下部）', accepted:['僧帽筋（下部）','僧帽筋'] },
+
+  // Q8 選択: 棘上筋の停止（第1弾は支配神経をMCで出題→停止に変更）
+  { type:'mc', q:'棘上筋の停止はどれか？',
+    opts:['大結節（上面）','小結節','三角筋粗面','大結節稜','橈骨粗面','肘頭（尺骨）','烏口突起','肩甲骨内側縁','尺骨粗面','小結節稜'], ok:0 },
+
+  // Q9 記述: 上腕二頭筋（第1弾は長頭の起始をMCで出題→全体を記述に）
+  { type:'w', clues:{'起始':'関節上結節（長頭）・烏口突起（短頭）','停止':'橈骨粗面・二頭筋腱膜','作用':'肘関節屈曲・前腕回外・肩関節屈曲補助','支配神経':'筋皮神経（C5, C6）'}, answer:'上腕二頭筋', accepted:['上腕二頭筋'] },
+
+  // Q10 選択: 肩甲下筋の作用（第1弾は肩甲下筋を記述問題で出題→MCで異なる問い）
+  { type:'mc', q:'肩甲下筋の主な作用はどれか？',
+    opts:['上腕の内旋','上腕の外旋','上腕の外転','上腕の内転・伸展','肩甲骨の内転','肩甲骨の挙上','前腕の回内','肘関節の屈曲','肩甲骨の前方突出','上腕の屈曲'], ok:0 },
+
+  // Q11 記述: 大胸筋（胸肋部）（第1弾は鎖骨部の起始をMCで出題→胸肋部を記述に）
+  { type:'w', clues:{'起始':'胸骨・第2〜6肋軟骨','停止':'大結節稜（上腕骨）','作用':'上腕の内転・内旋・水平内転','支配神経':'内側・外側胸筋神経（C5〜T1）'}, answer:'大胸筋（胸肋部）', accepted:['大胸筋（胸肋部）','大胸筋'] },
+
+  // Q12 選択: 大円筋の起始（第1弾は大円筋を記述問題で出題→MCで異なる問い）
+  { type:'mc', q:'大円筋の起始はどれか？',
+    opts:['肩甲骨下角','棘上窩','棘下窩','肩甲骨外側縁（後面）','上腕骨前面下半分','鎖骨内側半分','第1〜8肋骨外側面','C6〜C7の棘突起','烏口突起','肩甲骨内側縁'], ok:0 },
+
+  // Q13 記述: 小円筋（第1弾は停止のみMCで出題→全体を記述に）
+  { type:'w', clues:{'起始':'肩甲骨外側縁（後面）','停止':'大結節（下面）','作用':'上腕の外旋・内転補助','支配神経':'腋窩神経（C5, C6）'}, answer:'小円筋', accepted:['小円筋'] },
+
+  // Q14 選択: 上腕三頭筋の支配神経（第1弾は停止をMCで出題→支配神経に変更）
+  { type:'mc', q:'上腕三頭筋の支配神経はどれか？',
+    opts:['橈骨神経（C6〜C8）','筋皮神経（C5, C6）','腋窩神経（C5, C6）','肩甲上神経（C4〜C6）','正中神経（C6〜T1）','尺骨神経（C8, T1）','肩甲背神経（C4, C5）','胸背神経（C6〜C8）','長胸神経（C5〜C7）','副神経（CN XI）'], ok:0 },
+
+  // Q15 選択: 烏口腕筋の起始（第1弾は支配神経をMCで出題→起始に変更）
+  { type:'mc', q:'烏口腕筋の起始はどれか？',
+    opts:['烏口突起（肩甲骨）','肩甲骨の関節上結節','肩甲骨下角','棘下窩','上腕骨前面下半分','T7〜T12の棘突起','第1〜8肋骨外側面','鎖骨内側半分','大結節（上腕骨）','肩峰'], ok:0 },
+
+  // Q16 選択: 僧帽筋（中部）の作用（第1弾は上部の作用をMCで出題→中部に変更）
+  { type:'mc', q:'僧帽筋（中部）の主な作用はどれか？',
+    opts:['肩甲骨の内転','肩甲骨の挙上・外旋','肩甲骨の下制・上方回旋','肩甲骨の外転','上腕の外転','上腕の外旋','上腕の内旋','前腕の回外','肩甲骨の前方突出','上腕の伸展'], ok:0 },
+
+  // Q17 選択: 上腕二頭筋の主な作用（第1弾は長頭起始をMCで出題→作用に変更）
+  { type:'mc', q:'上腕二頭筋の主な作用はどれか？',
+    opts:['肘関節の屈曲・前腕の回外','肘関節の伸展','前腕の回内','上腕の内転・内旋','肩甲骨の内転','上腕の外転','上腕の外旋','手関節の屈曲','肩甲骨の前方突出','上腕の伸展'], ok:0 },
+
+  // Q18 選択: 肩甲挙筋の支配神経（第1弾は停止をMCで出題→支配神経に変更）
+  { type:'mc', q:'肩甲挙筋の支配神経はどれか？',
+    opts:['肩甲背神経（C4, C5）','副神経（CN XI）','腋窩神経（C5, C6）','肩甲上神経（C4〜C6）','長胸神経（C5〜C7）','筋皮神経（C5, C6）','胸背神経（C6〜C8）','橈骨神経（C6〜C8）','内側胸筋神経（C8, T1）','鎖骨下神経（C5, C6）'], ok:0 },
+
+  // Q19 選択: 大菱形筋の停止（第1弾は起始をMCで出題→停止に変更）
+  { type:'mc', q:'大菱形筋の停止はどれか？',
+    opts:['肩甲骨内側縁（肩甲棘より下）','大結節（上腕骨）','三角筋粗面','肩甲棘','橈骨粗面','鎖骨外側1/3','烏口突起','肘頭（尺骨）','肩甲骨下角','肩峰'], ok:0 },
+
+  // Q20 選択: 前鋸筋の停止（第1弾は支配神経をMCで出題→停止に変更）
+  { type:'mc', q:'前鋸筋の停止はどれか？',
+    opts:['肩甲骨内側縁（肋骨面）','肩甲棘','大結節（上腕骨）','烏口突起','三角筋粗面','橈骨粗面','鎖骨外側1/3','肘頭（尺骨）','肩甲骨下角','小結節稜'], ok:0 }
+];
+
+// ────── 状態 ──────
+let playerName = '';
+let qIdx = 0;
+let answered = false;
+let results = []; // {correct:bool}
+let totalPts = 0;
+let quizQS = []; // 毎回シャッフルされた出題順
+
+// ────── 画面切り替え ──────
+function show(id) {
+  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+}
+
+// ────── クイズ開始 ──────
+function startQuiz() {
+  const v = document.getElementById('name-inp').value.trim();
+  if (!v) { alert('名前を入力してください'); return; }
+  playerName = v;
+  qIdx = 0; results = []; totalPts = 0; answered = false;
+  // 問題順をシャッフル
+  quizQS = [...QS];
+  for (let i = quizQS.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [quizQS[i], quizQS[j]] = [quizQS[j], quizQS[i]];
+  }
+  document.getElementById('q-score').textContent = '0点';
+  show('s-quiz');
+  renderQ();
+}
+
+// ────── 答え正規化 ──────
+function norm(s) { return s.trim().replace(/\s+/g, '').normalize('NFKC'); }
+
+// ────── Fisher-Yates シャッフル ──────
+function shuffle(arr) {
+  const a = [...arr.map((v, i) => ({v, i}))];
+  for (let i = a.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [a[i], a[j]] = [a[j], a[i]];
+  }
+  return a;
+}
+
+// ────── 問題描画 ──────
+function renderQ() {
+  const q = quizQS[qIdx];
+  answered = false;
+  document.getElementById('q-cnt').textContent = `${qIdx + 1} / ${quizQS.length}`;
+  document.getElementById('prog-fill').style.width = `${(qIdx / quizQS.length) * 100}%`;
+  document.getElementById('next-btn').disabled = true;
+  document.getElementById('next-btn').textContent = qIdx === quizQS.length - 1 ? '結果を見る' : '次の問題へ';
+
+  const body = document.getElementById('quiz-body');
+  body.innerHTML = '';
+
+  // タイプバッジ
+  const badge = el('div', `type-badge ${q.type === 'w' ? 'badge-w' : 'badge-mc'}`,
+    q.type === 'w' ? '記述問題' : '選択問題（10択）');
+  body.appendChild(badge);
+
+  if (q.type === 'w') {
+    body.appendChild(el('div', 'q-instruction', '以下の解剖学的特性を持つ筋肉の名称を答えなさい。'));
+
+    // 手がかりカード
+    const card = el('div', 'clue-card');
+    for (const [k, v] of Object.entries(q.clues)) {
+      const row = el('div', 'clue-row');
+      row.appendChild(el('div', 'clue-key', k));
+      row.appendChild(el('div', 'clue-val', v));
+      card.appendChild(row);
+    }
+    body.appendChild(card);
+
+    // 記述入力
+    const wrap = el('div', 'written-wrap');
+    const inp = document.createElement('input');
+    inp.className = 'written-inp'; inp.id = 'w-inp';
+    inp.type = 'text'; inp.placeholder = '筋肉名を入力'; inp.autocomplete = 'off';
+    inp.addEventListener('keydown', e => { if (e.key === 'Enter') checkWritten(); });
+    wrap.appendChild(inp);
+
+    const sbtn = el('div');
+    sbtn.innerHTML = `<button class="submit-btn" id="sub-btn" onclick="checkWritten()">答える</button>`;
+    wrap.appendChild(sbtn.firstChild);
+
+    wrap.appendChild(el('div', 'feedback', '', 'fb-msg'));
+    wrap.appendChild(el('div', 'correct-ans', '', 'fb-ans'));
+    body.appendChild(wrap);
+
+    setTimeout(() => inp.focus(), 80);
+
+  } else {
+    body.appendChild(el('div', 'q-text', q.q));
+
+    // 選択肢シャッフル
+    const shuffled = shuffle(q.opts);
+    const grid = el('div', 'mc-grid');
+    grid.id = 'mc-grid';
+    let selectedBtn = null;
+    shuffled.forEach(({v, i}) => {
+      const btn = document.createElement('button');
+      btn.className = 'mc-btn';
+      btn.textContent = v;
+      btn.dataset.correct = (i === q.ok) ? '1' : '0';
+      btn.onclick = () => {
+        if (answered) return;
+        grid.querySelectorAll('.mc-btn').forEach(b => b.classList.remove('selected'));
+        btn.classList.add('selected');
+        selectedBtn = btn;
+        document.getElementById('mc-confirm-btn').disabled = false;
+      };
+      grid.appendChild(btn);
+    });
+    body.appendChild(grid);
+
+    // 回答確定ボタン
+    const confirmWrap = el('div', 'written-wrap');
+    const confirmBtn = document.createElement('button');
+    confirmBtn.className = 'submit-btn';
+    confirmBtn.id = 'mc-confirm-btn';
+    confirmBtn.textContent = '回答する';
+    confirmBtn.disabled = true;
+    confirmBtn.onclick = () => {
+      if (!selectedBtn || answered) return;
+      checkMC(selectedBtn, grid, q.opts[q.ok]);
+    };
+    confirmWrap.appendChild(confirmBtn);
+    body.appendChild(confirmWrap);
+  }
+
+  body.scrollTop = 0;
+}
+
+// ────── 記述採点 ──────
+function checkWritten() {
+  if (answered) return;
+  const inp = document.getElementById('w-inp');
+  const val = norm(inp.value);
+  if (!val) return;
+
+  const q = quizQS[qIdx];
+  const ok = q.accepted.some(a => norm(a) === val);
+  answered = true;
+  inp.disabled = true;
+  inp.className = 'written-inp ' + (ok ? 'correct' : 'wrong');
+
+  const fb = document.getElementById('fb-msg');
+  fb.className = 'feedback ' + (ok ? 'ok' : 'ng');
+  fb.textContent = ok ? '⭕ 正解！' : '❌ 不正解';
+
+  if (!ok) document.getElementById('fb-ans').textContent = `正解: ${q.answer}`;
+  document.getElementById('sub-btn').style.display = 'none';
+
+  recordResult(ok);
+}
+
+// ────── 選択採点 ──────
+function checkMC(btn, grid, correctText) {
+  if (answered) return;
+  answered = true;
+
+  const confirmBtn = document.getElementById('mc-confirm-btn');
+  if (confirmBtn) confirmBtn.style.display = 'none';
+
+  grid.querySelectorAll('.mc-btn').forEach(b => {
+    b.disabled = true;
+    b.classList.remove('selected');
+    if (b.dataset.correct === '1') b.classList.add('reveal');
+  });
+
+  const ok = btn.dataset.correct === '1';
+  btn.classList.remove('reveal');
+  btn.classList.add(ok ? 'correct' : 'wrong');
+
+  recordResult(ok);
+}
+
+// ────── 結果記録 ──────
+function recordResult(ok) {
+  results.push({correct: ok});
+  if (ok) totalPts += 5;
+  document.getElementById('q-score').textContent = `${totalPts}点`;
+  document.getElementById('next-btn').disabled = false;
+}
+
+// ────── 次の問題 ──────
+function nextQ() {
+  qIdx++;
+  if (qIdx >= QS.length) showResult();
+  else renderQ();
+}
+
+// ────── 結果画面 ──────
+function showResult() {
+  show('s-result');
+  document.getElementById('prog-fill').style.width = '100%';
+  document.getElementById('score-num').textContent = totalPts;
+  document.getElementById('result-heading').textContent = `${playerName}さんの結果`;
+
+  // グレード
+  let grade, color;
+  if (totalPts >= 90)      { grade = 'S'; color = '#c8a84b'; }
+  else if (totalPts >= 80) { grade = 'A'; color = '#1D9E75'; }
+  else if (totalPts >= 70) { grade = 'B'; color = '#5b5bc8'; }
+  else if (totalPts >= 60) { grade = 'C'; color = '#D85A30'; }
+  else                     { grade = 'D'; color = '#aaa99f'; }
+
+  const circle = document.getElementById('score-circle');
+  const num = document.getElementById('score-num');
+  circle.style.borderColor = color;
+  num.style.color = color;
+
+  const gb = document.getElementById('grade-badge');
+  gb.textContent = `Grade ${grade}`;
+  gb.style.cssText = `background:${color}22;color:${color};`;
+
+  // 内訳
+  const bd = document.getElementById('breakdown');
+  bd.innerHTML = '';
+  quizQS.forEach((q, i) => {
+    const row = el('div', 'bd-row');
+    let label;
+    if (q.type === 'w') {
+      label = `Q${i+1}（記述）→ 正解: ${q.answer}`;
+    } else {
+      const t = q.opts[q.ok];
+      label = `Q${i+1}（選択）→ ${t.length > 20 ? t.slice(0,20)+'…' : t}`;
+    }
+    row.appendChild(el('div', 'bd-q', label));
+    const ok = results[i]?.correct;
+    row.appendChild(el('div', `bd-mark ${ok ? 'ok' : 'ng'}`, ok ? '○ +5点' : '✗ +0点'));
+    bd.appendChild(row);
+  });
+
+  // 登録ボタンリセット
+  document.getElementById('reg-btn').style.display = '';
+  document.getElementById('reg-btn').disabled = false;
+  document.getElementById('submit-status').textContent = '';
+}
+
+// ────── スコア送信 ──────
+async function submitScore() {
+  const btn = document.getElementById('reg-btn');
+  const status = document.getElementById('submit-status');
+
+  btn.disabled = true;
+  status.textContent = '送信中...';
+
+  try {
+    const url = `/.netlify/functions/ranking?action=submit&name=${encodeURIComponent(playerName)}&score=${totalPts}`;
+    const res = await fetch(url);
+    const data = await res.json();
+    if (data.success) {
+      status.textContent = `✅ ${playerName}さんの${totalPts}点を登録しました`;
+      btn.style.display = 'none';
+      loadMyHistory(playerName);
+    } else {
+      throw new Error(data.error || 'unknown');
+    }
+  } catch(e) {
+    status.textContent = '❌ 送信に失敗しました。再度お試しください。';
+    btn.disabled = false;
+  }
+}
+
+// ────── 自分の過去記録表示（結果画面） ──────
+async function loadMyHistory(name) {
+  const section = document.getElementById('my-history');
+  section.style.display = 'flex';
+  section.innerHTML = '<div class="history-title">⏱ 読み込み中...</div>';
+
+  try {
+    const res = await fetch(`/.netlify/functions/ranking?action=history&name=${encodeURIComponent(name)}`);
+    const data = await res.json();
+    const history = data.history || [];
+
+    if (history.length === 0) {
+      section.innerHTML = '';
+      section.style.display = 'none';
+      return;
+    }
+
+    const best = Math.max(...history.map(h => h.score));
+    const titleEl = document.createElement('div');
+    titleEl.className = 'history-title';
+    titleEl.textContent = `📋 ${esc(name)}さんの過去の記録（${history.length}回）`;
+
+    const card = document.createElement('div');
+    card.className = 'history-card';
+    history.forEach((h, i) => {
+      const row = document.createElement('div');
+      row.className = 'history-row';
+      const num = document.createElement('div');
+      num.className = 'history-num';
+      num.textContent = `${i + 1}`;
+      const date = document.createElement('div');
+      date.className = 'history-date';
+      date.textContent = h.date || '';
+      const score = document.createElement('div');
+      score.className = 'history-score';
+      score.textContent = `${h.score}点`;
+      if (h.score === best && history.length > 1) {
+        const crown = document.createElement('span');
+        crown.className = 'history-best';
+        crown.textContent = ' 🏆';
+        score.appendChild(crown);
+      }
+      row.appendChild(num);
+      row.appendChild(date);
+      row.appendChild(score);
+      card.appendChild(row);
+    });
+
+    section.innerHTML = '';
+    section.appendChild(titleEl);
+    section.appendChild(card);
+  } catch(e) {
+    section.innerHTML = '';
+    section.style.display = 'none';
+  }
+}
+
+// ────── ランキング画面での名前検索 ──────
+async function searchHistory() {
+  const name = document.getElementById('rank-filter-inp').value.trim();
+  if (!name) { loadRanking(); return; }
+
+  const content = document.getElementById('ranking-content');
+  const note = document.getElementById('ranking-note');
+  content.innerHTML = '<div class="ranking-empty">検索中...</div>';
+  note.textContent = '';
+
+  try {
+    const res = await fetch(`/.netlify/functions/ranking?action=history&name=${encodeURIComponent(name)}`);
+    const data = await res.json();
+    const history = data.history || [];
+
+    if (history.length === 0) {
+      content.innerHTML = `<div class="ranking-empty">「${esc(name)}」の記録が見つかりませんでした。</div>`;
+      return;
+    }
+
+    const best = Math.max(...history.map(h => h.score));
+    const card = document.createElement('div');
+    card.className = 'history-card';
+    history.forEach((h, i) => {
+      const row = document.createElement('div');
+      row.className = 'history-row';
+      const num = document.createElement('div');
+      num.className = 'history-num';
+      num.textContent = `${i + 1}`;
+      const date = document.createElement('div');
+      date.className = 'history-date';
+      date.textContent = h.date || '';
+      const score = document.createElement('div');
+      score.className = 'history-score';
+      score.textContent = `${h.score}点`;
+      if (h.score === best && history.length > 1) {
+        const crown = document.createElement('span');
+        crown.className = 'history-best';
+        crown.textContent = ' 🏆';
+        score.appendChild(crown);
+      }
+      row.appendChild(num);
+      row.appendChild(date);
+      row.appendChild(score);
+      card.appendChild(row);
+    });
+
+    content.innerHTML = '';
+    const titleEl = document.createElement('div');
+    titleEl.className = 'history-title';
+    titleEl.style.marginBottom = '4px';
+    titleEl.textContent = `📋 ${esc(name)}さんの記録（${history.length}回 / 最高 ${best}点）`;
+    content.appendChild(titleEl);
+    content.appendChild(card);
+    note.textContent = '← ランキング全体に戻るには「更新」を押してください';
+  } catch(e) {
+    content.innerHTML = '<div class="ranking-empty">読み込みに失敗しました。</div>';
+  }
+}
+
+// ────── ランキング表示 ──────
+function gotoRanking() {
+  show('s-ranking');
+  // 検索欄に自分の名前を初期セット
+  const inp = document.getElementById('rank-filter-inp');
+  if (inp && playerName) inp.value = playerName;
+  loadRanking();
+}
+
+// ランキング画面でEnterキー検索
+document.addEventListener('keydown', e => {
+  if (e.key === 'Enter' && document.getElementById('s-ranking').classList.contains('active')) {
+    const inp = document.getElementById('rank-filter-inp');
+    if (document.activeElement === inp) searchHistory();
+  }
+});
+
+async function loadRanking() {
+  const content = document.getElementById('ranking-content');
+  const note = document.getElementById('ranking-note');
+  content.innerHTML = '<div class="ranking-empty">読み込み中...</div>';
+  note.textContent = '';
+
+  try {
+    const res = await fetch('/.netlify/functions/ranking');
+    const data = await res.json();
+
+    if (!data.rankings || data.rankings.length === 0) {
+      content.innerHTML = '<div class="ranking-empty">まだスコアがありません。<br>テストを受けて最初に登録しましょう！</div>';
+      return;
+    }
+
+    const card = el('div', 'ranking-card');
+    data.rankings.forEach((entry, i) => {
+      const row = el('div', `rank-row${entry.name === playerName ? ' highlight-row' : ''}`);
+      const posClass = i === 0 ? 'gold' : i === 1 ? 'silver' : i === 2 ? 'bronze' : '';
+      const posText = i === 0 ? '🥇' : i === 1 ? '🥈' : i === 2 ? '🥉' : `${i + 1}`;
+
+      row.appendChild(el('div', `rank-pos ${posClass}`, posText));
+      const nameDiv = el('div', 'rank-name', esc(entry.name));
+      row.appendChild(nameDiv);
+      const info = el('div', 'rank-info');
+      info.appendChild(el('div', 'rank-score', `${entry.score}点`));
+      info.appendChild(el('div', 'rank-date', entry.date || ''));
+      row.appendChild(info);
+      card.appendChild(row);
+    });
+
+    content.innerHTML = '';
+    content.appendChild(card);
+    note.textContent = `全${data.rankings.length}件 ／ 最高点順`;
+  } catch(e) {
+    content.innerHTML = '<div class="ranking-empty">読み込みに失敗しました。<br>更新ボタンを押してください。</div>';
+  }
+}
+
+// ────── やり直し ──────
+function restart() {
+  document.getElementById('name-inp').value = '';
+  show('s-name');
+}
+
+// ────── ユーティリティ ──────
+function el(tag, cls = '', text = '', id = '') {
+  const e = document.createElement(tag);
+  if (cls) e.className = cls;
+  if (text) e.textContent = text;
+  if (id) e.id = id;
+  return e;
+}
+function esc(s) {
+  return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
+</script>
+</body>
+</html>

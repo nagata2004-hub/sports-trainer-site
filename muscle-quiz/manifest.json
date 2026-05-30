@@ -1,0 +1,14 @@
+{
+  "name": "肩・上腕 筋肉カード",
+  "short_name": "筋肉カード",
+  "description": "肩関節・上腕の筋肉を起始・停止・支配神経・作用で覚えるフラッシュカードアプリ",
+  "start_url": "./index.html",
+  "display": "standalone",
+  "background_color": "#1a1a18",
+  "theme_color": "#1a1a18",
+  "orientation": "portrait",
+  "icons": [
+    { "src": "icons/icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any maskable" },
+    { "src": "icons/icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any maskable" }
+  ]
+}
