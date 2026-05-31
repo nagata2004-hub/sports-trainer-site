@@ -1,0 +1,23 @@
+[build]
+  publish = "."
+  functions = "netlify/functions"
+
+[functions]
+  node_bundler = "esbuild"
+
+# 筋肉テスト（肩・上腕）
+[[redirects]]
+  from = "/quiz"
+  to = "/muscle-quiz/quiz.html"
+  status = 200
+
+# 筋肉テスト（肘・前腕）
+[[redirects]]
+  from = "/elbow"
+  to = "/muscle-quiz/quiz2.html"
+  status = 200
+
+[[headers]]
+  for = "/*"
+  [headers.values]
+    X-Content-Type-Options = "nosniff"
