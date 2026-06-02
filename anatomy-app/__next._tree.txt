@@ -1,2 +1,2 @@
-:HL["/anatomy-app/_next/static/css/3e36d3954c080b8f.css","style"]
-0:{"tree":{"name":"","param":null,"prefetchHints":16,"slots":{"children":{"name":"__PAGE__","param":null,"prefetchHints":0,"slots":null}}},"staleTime":300,"buildId":"VkA_xk3USiGEovyuu9Tuv"}
+:HL["/anatomy-app/_next/static/css/27aae32850dbba99.css","style"]
+0:{"tree":{"name":"","param":null,"prefetchHints":16,"slots":{"children":{"name":"__PAGE__","param":null,"prefetchHints":0,"slots":null}}},"staleTime":300,"buildId":"RFzW_DnVbzo4S4B6qwe5t"}
