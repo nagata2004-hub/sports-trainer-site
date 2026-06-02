@@ -16,8 +16,11 @@ exports.handler = async (event) => {
   const dataKey = quizId ? `data-${quizId}` : 'data';
 
   try {
-    // Netlify環境では自動的にコンテキストが設定される
-    const store = getStore('quiz-rankings');
+    const store = getStore({
+      name: 'quiz-rankings',
+      siteID: process.env.BLOBS_SITE_ID,
+      token: process.env.NETLIFY_API_TOKEN,
+    });
 
     if (action === 'submit') {
       const name = ((event.queryStringParameters || {}).name || '名無し').slice(0, 30);
@@ -52,7 +55,6 @@ exports.handler = async (event) => {
       return { statusCode: 200, headers, body: JSON.stringify({ history }) };
     }
 
-    // デフォルト: ランキング取得
     let rankings = [];
     try {
       const data = await store.get(dataKey, { type: 'json' });

@@ -41,6 +41,7 @@ const defaultMemory = [
   { id: 'm5', title: 'スポーツ外傷の分類', category: 'injury', count: '60問', progress: 55, desc: '捻挫・骨折・肉離れの分類・症状・応急処置のポイント。', isNew: false },
   { id: 'm6', title: 'RICE処置と応急対応', category: 'injury', count: '45問', progress: 90, desc: 'Rest・Ice・Compression・Elevationの具体的手順と注意点。', isNew: false },
   { id: 'm7', title: '肩・上腕 筋肉カード', category: 'anatomy', count: '20問', progress: 0, desc: '肩・上腕帯の筋肉（起始・停止・作用・支配神経）を暗記カードまたはテストで学習できます。', isNew: true, urlMemory: 'muscle-quiz/index.html', urlQuiz: 'muscle-quiz/quiz.html' },
+  { id: 'm8', title: '3D解剖学ビューワー', category: 'anatomy', count: '', progress: 0, desc: '3Dモデルで骨格・筋肉の位置と動きをインタラクティブに学習できます。', isNew: true, url: 'anatomy-app/index.html' },
 ];
 
 const defaultBoard = [
