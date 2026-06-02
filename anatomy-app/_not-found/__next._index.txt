@@ -2,4 +2,4 @@
 2:I[7121,[],""]
 3:I[4581,[],""]
 :HL["/anatomy-app/_next/static/css/27aae32850dbba99.css","style"]
-0:{"rsc":["$","$1","c",{"children":[[["$","link","0",{"rel":"stylesheet","href":"/anatomy-app/_next/static/css/27aae32850dbba99.css","precedence":"next"}]],["$","html",null,{"lang":"en","className":"h-full antialiased","children":["$","body",null,{"className":"min-h-full flex flex-col","children":["$","$L2",null,{"parallelRouterKey":"children","template":["$","$L3",null,{}]}]}]}]]}],"isPartial":false,"staleTime":300,"varyParams":null,"buildId":"RFzW_DnVbzo4S4B6qwe5t"}
+0:{"rsc":["$","$1","c",{"children":[[["$","link","0",{"rel":"stylesheet","href":"/anatomy-app/_next/static/css/27aae32850dbba99.css","precedence":"next"}]],["$","html",null,{"lang":"en","className":"h-full antialiased","children":["$","body",null,{"className":"min-h-full flex flex-col","children":["$","$L2",null,{"parallelRouterKey":"children","template":["$","$L3",null,{}]}]}]}]]}],"isPartial":false,"staleTime":300,"varyParams":null,"buildId":"tRV_2RyAc2CKSQlczyrw4"}
