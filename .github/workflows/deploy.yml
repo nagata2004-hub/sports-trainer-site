@@ -15,6 +15,28 @@ jobs:
       - name: Install dependencies
         run: npm install
 
+      - name: Configure ranking storage (Blobs env vars)
+        continue-on-error: true
+        env:
+          NF_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
+          NF_SITE: ${{ secrets.NETLIFY_SITE_ID }}
+        run: |
+          ACCT=$(curl -s -H "Authorization: Bearer $NF_TOKEN" https://api.netlify.com/api/v1/accounts | jq -r '.[0].id')
+          echo "Account: $ACCT  Site: $NF_SITE"
+          set_env () {
+            KEY="$1"; VAL="$2"
+            curl -s -o /dev/null -w "  $KEY create: %{http_code}\n" \
+              -X POST "https://api.netlify.com/api/v1/accounts/$ACCT/env?site_id=$NF_SITE" \
+              -H "Authorization: Bearer $NF_TOKEN" -H "Content-Type: application/json" \
+              -d "[{\"key\":\"$KEY\",\"values\":[{\"value\":\"$VAL\",\"context\":\"all\"}]}]"
+            curl -s -o /dev/null -w "  $KEY update: %{http_code}\n" \
+              -X PUT "https://api.netlify.com/api/v1/accounts/$ACCT/env/$KEY?site_id=$NF_SITE" \
+              -H "Authorization: Bearer $NF_TOKEN" -H "Content-Type: application/json" \
+              -d "{\"key\":\"$KEY\",\"values\":[{\"value\":\"$VAL\",\"context\":\"all\"}]}"
+          }
+          set_env QUIZ_SITE_ID "$NF_SITE"
+          set_env NETLIFY_API_TOKEN "$NF_TOKEN"
+
       - name: Deploy to Netlify
         uses: netlify/actions/cli@master
         with:
