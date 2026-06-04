@@ -503,10 +503,11 @@
 
     // ===== ログイン =====
     function isAdminLoggedIn() { return sessionStorage.getItem(ADMIN_KEY) === 'true'; }
-    function adminLogin() {
+    async function adminLogin() {
       sessionStorage.setItem(ADMIN_KEY, 'true');
       document.getElementById('login-screen').style.display = 'none';
       document.getElementById('admin-body').classList.add('show');
+      await syncFromServer();
       renderAll();
     }
     function adminLogout() {
@@ -546,7 +547,32 @@
       const raw = localStorage.getItem(key);
       return raw ? JSON.parse(raw) : defaults;
     }
-    function saveData(key, data) { localStorage.setItem(key, JSON.stringify(data)); }
+    // サーバー保存対象キー
+    const SERVER_KEYS = ['st_news', 'st_videos', 'st_lectures', 'st_memory'];
+    function saveData(key, data) {
+      localStorage.setItem(key, JSON.stringify(data));
+      // サーバーにも保存 → 全端末・全メンバーに反映
+      if (SERVER_KEYS.includes(key)) {
+        fetch(`/.netlify/functions/content?key=${key}&pw=${encodeURIComponent(ADMIN_PASSWORD)}`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(data),
+        })
+          .then(r => r.json())
+          .then(j => { if (!j.success) showToast('⚠ サーバー保存に失敗しました'); })
+          .catch(() => showToast('⚠ サーバー保存に失敗（通信エラー）'));
+      }
+    }
+    // ログイン時にサーバーから最新を取得して localStorage を更新
+    async function syncFromServer() {
+      await Promise.all(SERVER_KEYS.map(async (key) => {
+        try {
+          const r = await fetch(`/.netlify/functions/content?key=${key}`);
+          const j = await r.json();
+          if (j && Array.isArray(j.data)) localStorage.setItem(key, JSON.stringify(j.data));
+        } catch (_) {}
+      }));
+    }
     function genId() { return Date.now().toString(36) + Math.random().toString(36).slice(2); }
     function formatDate(iso) {
       if (!iso) return '';
@@ -919,7 +945,7 @@
       showToast(isEditing ? '暗記セットを更新しました' : '暗記セットを追加しました');
     });
 
-    if (isAdminLoggedIn()) renderAll();
+    if (isAdminLoggedIn()) syncFromServer().then(renderAll);
   </script>
 </body>
 </html>

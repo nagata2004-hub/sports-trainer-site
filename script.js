@@ -576,6 +576,32 @@ initFilter('videos-grid');
 initFilter('lectures-grid');
 initFilter('memory-grid');
 
+// ===== サーバーから最新コンテンツを取得して再描画 =====
+// まずlocalStorage/既定値で即表示 → サーバーの最新で上書き（全端末で共有）
+(async function syncContentFromServer() {
+  const keys = ['st_news', 'st_videos', 'st_lectures', 'st_memory'];
+  let changed = false;
+  await Promise.all(keys.map(async (key) => {
+    try {
+      const res = await fetch(`/.netlify/functions/content?key=${key}`);
+      const json = await res.json();
+      if (json && Array.isArray(json.data)) {
+        localStorage.setItem(key, JSON.stringify(json.data));
+        changed = true;
+      }
+    } catch (_) { /* オフライン時は既存表示のまま */ }
+  }));
+  if (changed) {
+    renderNewsSection();
+    renderVideosSection();
+    renderLecturesSection();
+    renderMemorySection();
+    initFilter('videos-grid');
+    initFilter('lectures-grid');
+    initFilter('memory-grid');
+  }
+})();
+
 // ===== 動画モーダル =====
 const videoModal = document.getElementById('video-modal');
 const videoIframe = document.getElementById('video-iframe');

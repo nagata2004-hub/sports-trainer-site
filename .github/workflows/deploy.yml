@@ -36,6 +36,7 @@ jobs:
           }
           set_env QUIZ_SITE_ID "$NF_SITE"
           set_env NETLIFY_API_TOKEN "$NF_TOKEN"
+          set_env CONTENT_KEY "75315987"
 
       - name: Deploy to Netlify
         uses: netlify/actions/cli@master
