@@ -29,6 +29,12 @@
   to = "/anatomy-app/models/:splat"
   status = 200
 
+# v2 アレンジ版
+[[redirects]]
+  from = "/v2"
+  to = "/v2/index.html"
+  status = 200
+
 [[headers]]
   for = "/*"
   [headers.values]
