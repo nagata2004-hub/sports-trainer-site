@@ -1,0 +1,439 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>スポーツトレーナー同好会 公式サイト</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+JP:wght@400;700;900&family=Noto+Sans+JP:wght@300;400;500;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+  <!-- ===== ページローダー ===== -->
+  <div id="loader">
+    <div class="loader__inner">
+      <span class="loader__logo">ST</span>
+      <span class="loader__name">SPORTS TRAINER CLUB</span>
+      <div class="loader__bar"><i id="lbar"></i></div>
+    </div>
+  </div>
+
+  <!-- ===== ログインモーダル ===== -->
+  <div class="modal-overlay" id="login-modal" aria-hidden="true">
+    <div class="modal">
+      <button class="modal__close" id="modal-close" aria-label="閉じる">✕</button>
+      <p class="section-eyebrow">MEMBER LOGIN</p>
+      <h2 class="modal__title">メンバーログイン</h2>
+      <p class="modal__desc">動画・講義・暗記学習は同好会メンバー限定のコンテンツです。</p>
+      <form class="modal__form" id="login-form">
+        <div class="form-group">
+          <label for="login-password">メンバーパスワード</label>
+          <input type="password" id="login-password" placeholder="パスワードを入力" autocomplete="current-password" />
+        </div>
+        <p class="modal__error" id="login-error">パスワードが違います。</p>
+        <button type="submit" class="btn btn--primary btn--full">ログイン</button>
+      </form>
+      <p class="modal__hint">パスワードは同好会の代表者にお問い合わせください。</p>
+    </div>
+  </div>
+
+  <!-- ===== ヘッダー ===== -->
+  <header class="header" id="header">
+    <div class="header__inner">
+      <a class="header__logo" href="#hero">
+        <span class="logo-main">ST</span>
+        <span class="logo-sub">スポーツトレーナー同好会</span>
+      </a>
+      <nav class="header__nav" id="nav">
+        <a href="#news" class="nav-link">お知らせ</a>
+        <a href="#content" class="nav-link" data-tab="videos">動画一覧</a>
+        <a href="#content" class="nav-link" data-tab="lectures">講義一覧</a>
+        <a href="#content" class="nav-link" data-tab="memory">暗記学習</a>
+        <a href="#board" class="nav-link">掲示板</a>
+        <a href="#about" class="nav-link">同好会について</a>
+        <a href="#contact" class="nav-link nav-link--cta">お問い合わせ</a>
+      </nav>
+      <div class="header__auth">
+        <button class="btn btn--ghost btn--sm" id="auth-btn">ログイン</button>
+      </div>
+      <button class="hamburger" id="hamburger" aria-label="メニューを開く" aria-expanded="false">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+  </header>
+
+  <!-- ===== ヒーロー ===== -->
+  <section class="hero" id="hero">
+    <div class="hero__bg-text" aria-hidden="true">TRAINER</div>
+    <div class="hero__inner">
+      <div class="hero__content">
+        <p class="hero__eyebrow"><span class="eyebrow-line"></span>SPORTS TRAINER CLUB</p>
+        <h1 class="hero__title">
+          <span class="title-catch">スポーツ現場を見据えた、実践的な学び</span>
+          <span class="title-divider"></span>
+          <span class="title-jp">スポーツ</span>
+          <span class="title-jp title-jp--accent">トレーナー</span>
+          <span class="title-jp">同好会</span>
+        </h1>
+        <p class="hero__sub">動画・講義・暗記学習を一箇所で。</p>
+        <div class="hero__actions">
+          <a href="#content" class="btn btn--primary" data-scroll-tab="videos">動画を見る</a>
+          <a href="#content" class="btn btn--ghost" data-scroll-tab="lectures">講義を見る</a>
+        </div>
+      </div>
+      <div class="hero__visual">
+        <div class="hero__img-wrap">
+          <img src="https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?w=600&h=750&fit=crop&q=80" alt="トレーナー活動" />
+          <div class="hero__img-badge">
+            <span class="badge-num">48</span>
+            <span class="badge-label">Videos</span>
+          </div>
+        </div>
+        <div class="hero__vertical-text" aria-hidden="true">SPORTS TRAINER</div>
+      </div>
+    </div>
+    <div class="hero__stats">
+      <div class="stat rv">
+        <span class="stat__num">48</span>
+        <span class="stat__label">動画コンテンツ</span>
+      </div>
+      <div class="stat rv">
+        <span class="stat__num">320</span>
+        <span class="stat__label">暗記カード</span>
+      </div>
+      <div class="stat rv">
+        <span class="stat__num">32</span>
+        <span class="stat__label">講義コンテンツ</span>
+      </div>
+      <div class="stat rv">
+        <span class="stat__num">14</span>
+        <span class="stat__label">部員数</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== お知らせ ===== -->
+  <section class="news-section" id="news">
+    <div class="container">
+      <div class="section-header section-header--row rv">
+        <div>
+          <p class="section-eyebrow">NEWS</p>
+          <h2 class="section-title">お知らせ</h2>
+        </div>
+      </div>
+      <div class="news-list" id="news-list"></div>
+    </div>
+  </section>
+
+  <!-- ===== コンテンツタブ（メンバー限定） ===== -->
+  <section class="content-section" id="content">
+    <div class="container">
+      <div class="section-header section-header--row rv">
+        <div>
+          <p class="section-eyebrow">CONTENTS <span class="member-only-label">メンバー限定</span></p>
+          <h2 class="section-title">コンテンツ一覧</h2>
+        </div>
+        <!-- 検索バー -->
+        <div class="search-wrap">
+          <input type="search" class="search-bar" id="search-input" placeholder="コンテンツを検索…" aria-label="コンテンツを検索" />
+          <span class="search-icon">🔍</span>
+        </div>
+      </div>
+
+      <div class="tab-bar">
+        <button class="tab-btn active" data-tab="videos">
+          <span class="tab-icon">▶</span>動画一覧
+          <span class="lock-icon" aria-hidden="true">🔒</span>
+        </button>
+        <button class="tab-btn" data-tab="lectures">
+          <span class="tab-icon">◻</span>講義一覧
+          <span class="lock-icon" aria-hidden="true">🔒</span>
+        </button>
+        <button class="tab-btn" data-tab="memory">
+          <span class="tab-icon">◈</span>暗記学習一覧
+          <span class="lock-icon" aria-hidden="true">🔒</span>
+        </button>
+      </div>
+
+      <!-- 非メンバー向けロック画面 -->
+      <div class="content-locked" id="content-locked">
+        <div class="content-locked__inner">
+          <div class="content-locked__icon">🔒</div>
+          <h3>メンバー限定コンテンツです</h3>
+          <p>動画・講義・暗記学習は同好会メンバーのみ閲覧できます。<br>ログインしてコンテンツをご利用ください。</p>
+          <button class="btn btn--primary" id="locked-login-btn">ログインする</button>
+        </div>
+      </div>
+
+      <!-- タブコンテンツ（ログイン時のみ表示） -->
+      <div class="tab-content" id="tab-content">
+
+        <!-- 動画一覧 -->
+        <div class="tab-panel active" id="tab-videos">
+          <div class="panel-header">
+            <div class="filter-group">
+              <button class="filter-btn active" data-filter="all">All</button>
+              <button class="filter-btn" data-filter="basics">基礎</button>
+              <button class="filter-btn" data-filter="stretch">ストレッチ</button>
+              <button class="filter-btn" data-filter="taping">テーピング</button>
+              <button class="filter-btn" data-filter="rehab">リハビリ</button>
+            </div>
+          </div>
+          <div class="cards-grid" id="videos-grid"></div>
+        </div>
+
+        <!-- 講義一覧 -->
+        <div class="tab-panel" id="tab-lectures">
+          <div class="panel-header">
+            <div class="filter-group">
+              <button class="filter-btn active" data-filter="all">All</button>
+              <button class="filter-btn" data-filter="anatomy">解剖学</button>
+              <button class="filter-btn" data-filter="nutrition">栄養学</button>
+              <button class="filter-btn" data-filter="taping">テーピング</button>
+              <button class="filter-btn" data-filter="rehab">リハビリ</button>
+              <button class="filter-btn" data-filter="sc">S&amp;C</button>
+            </div>
+          </div>
+          <div class="cards-grid" id="lectures-grid"></div>
+        </div>
+
+        <!-- 暗記学習一覧 -->
+        <div class="tab-panel" id="tab-memory">
+          <div class="panel-header">
+            <div class="filter-group">
+              <button class="filter-btn active" data-filter="all">All</button>
+              <button class="filter-btn" data-filter="anatomy">解剖学</button>
+              <button class="filter-btn" data-filter="nutrition">栄養学</button>
+              <button class="filter-btn" data-filter="injury">スポーツ障害</button>
+            </div>
+          </div>
+          <div class="cards-grid" id="memory-grid"></div>
+        </div>
+
+      </div><!-- /tab-content -->
+    </div>
+  </section>
+
+  <!-- ===== 掲示板 ===== -->
+  <section class="board-section" id="board">
+    <div class="container">
+      <div class="section-header section-header--row rv">
+        <div>
+          <p class="section-eyebrow">BOARD <span class="member-only-label">メンバー限定</span></p>
+          <h2 class="section-title">掲示板</h2>
+        </div>
+        <button class="btn btn--primary btn--sm" id="board-new-btn">＋ 新規投稿</button>
+      </div>
+
+      <!-- 非ログイン時ロック -->
+      <div class="board-locked">
+        <div class="content-locked__inner">
+          <div class="content-locked__icon">🔒</div>
+          <h3>メンバー限定コンテンツです</h3>
+          <p>掲示板はメンバーのみ閲覧・投稿できます。<br>ログインしてご利用ください。</p>
+          <button class="btn btn--primary" id="board-locked-login-btn">ログインする</button>
+        </div>
+      </div>
+
+      <!-- ログイン時コンテンツ -->
+      <div class="board-content">
+        <!-- 新規投稿フォーム -->
+        <div class="board-new-wrap" id="board-new-wrap" style="display:none">
+          <h3 class="board-form__heading">新規投稿</h3>
+          <form id="board-post-form" class="board-form">
+            <div class="form-group">
+              <label>投稿者名（任意）</label>
+              <input type="text" id="bp-author" placeholder="名前（省略すると「匿名」になります）" maxlength="30" />
+            </div>
+            <div class="form-group">
+              <label>タイトル</label>
+              <input type="text" id="bp-title" placeholder="タイトルを入力してください" required maxlength="80" />
+            </div>
+            <div class="form-group">
+              <label>内容</label>
+              <textarea id="bp-body" rows="4" placeholder="内容を入力してください" required maxlength="500"></textarea>
+            </div>
+            <div class="board-form__footer">
+              <button type="button" class="btn btn--ghost btn--sm" id="board-post-cancel">キャンセル</button>
+              <button type="submit" class="btn btn--primary btn--sm">投稿する</button>
+            </div>
+          </form>
+        </div>
+        <!-- 投稿一覧 -->
+        <div class="board-list" id="board-list"></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== 同好会について ===== -->
+  <section class="about" id="about">
+    <div class="container about__inner">
+      <div class="about__img reveal">
+        <img src="S__65421325.jpg" alt="同好会の活動" />
+      </div>
+      <div class="about__text rv">
+        <p class="section-eyebrow">ABOUT US</p>
+        <h2 class="section-title">スポーツトレーナー<br>同好会について</h2>
+        <p>スポーツトレーナーを目指す学生が集まり、互いの知識・技術を高め合うコミュニティです。定期的な勉強会・実技練習会を通じて、現場で活躍できるトレーナーの育成を目指しています。</p>
+        <div class="about__tags">
+          <span class="about__tag"># 解剖学</span>
+          <span class="about__tag"># テーピング</span>
+          <span class="about__tag"># 栄養学</span>
+          <span class="about__tag"># スポーツ障害</span>
+          <span class="about__tag"># リハビリ</span>
+          <span class="about__tag"># S&amp;C</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== お問い合わせ ===== -->
+  <section class="contact" id="contact">
+    <div class="contact__inner">
+      <div class="contact__left rv">
+        <p class="section-eyebrow">CONTACT</p>
+        <h2 class="section-title">お問い合わせ・<br>入会案内</h2>
+        <p>入会・活動内容についてのお問い合わせはフォームよりご連絡ください。</p>
+        <div class="contact__info">
+          <div class="info-item">
+            <span class="info-label">活動場所</span>
+            <span>北海道医療大学</span>
+          </div>
+          <div class="info-item">
+            <span class="info-label">活動日</span>
+            <span>月に1回程度（学業優先）</span>
+          </div>
+          <div class="info-item">
+            <span class="info-label">会費</span>
+            <span>無料</span>
+          </div>
+          <div class="info-item">
+            <span class="info-label">Instagram</span>
+            <a href="https://www.instagram.com/hsuh_sports_trainer" target="_blank" rel="noopener" class="contact__sns">
+              @hsuh_sports_trainer
+            </a>
+          </div>
+        </div>
+      </div>
+      <div class="contact__right rv">
+        <form
+          class="contact-form"
+          id="contact-form"
+          action="https://api.web3forms.com/submit"
+          method="POST"
+        >
+          <!-- Web3Forms 設定 -->
+          <input type="hidden" name="access_key" value="d4fb0816-73da-4d9c-a55d-3ebab674558a" />
+          <input type="hidden" name="subject" value="【ST同好会】お問い合わせが届きました" />
+          <input type="hidden" name="from_name" value="スポーツトレーナー同好会" />
+
+          <div class="form-row">
+            <div class="form-group">
+              <label for="name">お名前</label>
+              <input type="text" id="name" name="name" placeholder="山田 太郎" required />
+            </div>
+            <div class="form-group">
+              <label for="email">メールアドレス</label>
+              <input type="email" id="email" name="email" placeholder="example@email.com" required />
+            </div>
+          </div>
+          <div class="form-group">
+            <label for="subject">件名</label>
+            <select id="subject" name="subject">
+              <option value="">選択してください</option>
+              <option value="join">入会について</option>
+              <option value="event">イベント・勉強会について</option>
+              <option value="content">コンテンツについて</option>
+              <option value="other">その他</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label for="message">メッセージ</label>
+            <textarea id="message" name="message" rows="5" placeholder="お問い合わせ内容をご記入ください。" required></textarea>
+          </div>
+          <div class="form-status" id="form-status" aria-live="polite"></div>
+          <button type="submit" class="btn btn--primary btn--full" id="submit-btn">送信する →</button>
+        </form>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== フッター ===== -->
+  <footer class="footer">
+    <div class="container footer__inner">
+      <div class="footer__brand">
+        <span class="footer__logo">ST同好会</span>
+        <p>スポーツトレーナー同好会</p>
+        <p class="footer__copy">© 2025 スポーツトレーナー同好会</p>
+      </div>
+      <div class="footer__nav-group">
+        <p class="footer__nav-label">コンテンツ</p>
+        <a href="#content" data-scroll-tab="videos">動画一覧</a>
+        <a href="#content" data-scroll-tab="lectures">講義一覧</a>
+        <a href="#content" data-scroll-tab="memory">暗記学習</a>
+        <a href="#board">掲示板</a>
+      </div>
+      <div class="footer__nav-group">
+        <p class="footer__nav-label">同好会</p>
+        <a href="#news">お知らせ</a>
+        <a href="#about">同好会について</a>
+        <a href="#contact">お問い合わせ</a>
+      </div>
+      <div class="footer__nav-group">
+        <p class="footer__nav-label">SNS</p>
+        <a href="https://www.instagram.com/hsuh_sports_trainer" target="_blank" rel="noopener" class="footer__sns">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/></svg>
+          @hsuh_sports_trainer
+        </a>
+      </div>
+    </div>
+    <button class="back-to-top" id="backToTop" aria-label="トップへ戻る">↑ TOP</button>
+  </footer>
+
+  <!-- ===== 学習モード選択モーダル ===== -->
+  <div class="mode-modal" id="mode-modal" aria-hidden="true">
+    <div class="mode-modal__inner">
+      <p class="mode-modal__label">STUDY MODE</p>
+      <p class="mode-modal__title" id="mode-modal-title"></p>
+      <p class="mode-modal__sub">学習方法を選んでください</p>
+      <div class="mode-modal__btns">
+        <a id="mode-btn-memory" href="#" target="_blank" class="btn btn--primary btn--full mode-modal__btn" onclick="closeModeModal()">
+          <span class="mode-modal__btn-icon">🃏</span>
+          <span>
+            <strong>暗記カードで学ぶ</strong>
+            <small>起始・停止・作用・支配神経を1枚ずつ確認</small>
+          </span>
+        </a>
+        <a id="mode-btn-quiz" href="#" target="_blank" class="btn btn--ghost btn--full mode-modal__btn" onclick="closeModeModal()">
+          <span class="mode-modal__btn-icon">✏️</span>
+          <span>
+            <strong>テストで確認する</strong>
+            <small>記述＆選択問題で理解度をチェック</small>
+          </span>
+        </a>
+      </div>
+      <button class="mode-modal__close" id="mode-modal-close">キャンセル</button>
+    </div>
+  </div>
+
+  <!-- ===== 動画プレーヤーモーダル ===== -->
+  <div class="video-modal" id="video-modal" aria-hidden="true">
+    <div class="video-modal__inner">
+      <div class="video-modal__header">
+        <p class="video-modal__title" id="video-modal-title"></p>
+        <button class="video-modal__close" id="video-modal-close" aria-label="閉じる">✕</button>
+      </div>
+      <div class="video-modal__player">
+        <iframe id="video-iframe" src="" allowfullscreen allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"></iframe>
+      </div>
+    </div>
+  </div>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+  <script src="https://unpkg.com/lenis@1.1.14/dist/lenis.min.js"></script>
+  <script src="script.js"></script>
+</body>
+</html>
