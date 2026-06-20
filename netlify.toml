@@ -17,6 +17,12 @@
   to = "/muscle-quiz/quiz2.html"
   status = 200
 
+# 筋肉テスト（骨盤・大腿）
+[[redirects]]
+  from = "/pelvis"
+  to = "/muscle-quiz/quiz3.html"
+  status = 200
+
 # 3D解剖学アプリ：モデルの絶対パス(/models/...)を anatomy-app 配下へ転送
 [[redirects]]
   from = "/models/*"
