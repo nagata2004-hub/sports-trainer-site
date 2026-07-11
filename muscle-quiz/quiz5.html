@@ -6,7 +6,7 @@
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="theme-color" content="#1a1a18">
-<title>筋肉テスト | 肘・前腕</title>
+<title>筋肉テスト | 足部</title>
 
 <style>
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent;}
@@ -27,11 +27,9 @@
 html,body{height:100%;overflow:hidden;}
 body{font-family:-apple-system,BlinkMacSystemFont,"Hiragino Sans","Noto Sans JP",sans-serif;background:var(--bg);color:var(--t1);display:flex;flex-direction:column;padding-top:var(--safe-top);}
 
-/* ── SCREEN SYSTEM ── */
 .screen{display:none;flex-direction:column;flex:1;overflow:hidden;}
 .screen.active{display:flex;}
 
-/* ── NAME SCREEN ── */
 #s-name{align-items:center;justify-content:center;padding:24px 20px;}
 .logo{font-size:48px;margin-bottom:6px;}
 .title{font-size:22px;font-weight:700;text-align:center;}
@@ -48,7 +46,6 @@ body{font-family:-apple-system,BlinkMacSystemFont,"Hiragino Sans","Noto Sans JP"
 .other-quiz-link{margin-top:8px;font-size:12px;color:var(--t3);text-align:center;}
 .other-quiz-link a{color:var(--t3);text-decoration:underline;text-underline-offset:3px;}
 
-/* ── QUIZ SCREEN ── */
 .quiz-hdr{flex-shrink:0;padding:10px 16px;background:var(--surface);border-bottom:0.5px solid var(--border);display:flex;align-items:center;gap:12px;}
 .q-cnt{font-size:13px;color:var(--t2);white-space:nowrap;}
 .prog-wrap{flex:1;height:4px;background:var(--surface2);border-radius:99px;overflow:hidden;}
@@ -92,7 +89,6 @@ body{font-family:-apple-system,BlinkMacSystemFont,"Hiragino Sans","Noto Sans JP"
 .next-btn:active{opacity:.75;}
 .next-btn:disabled{opacity:.3;cursor:default;}
 
-/* ── RESULT SCREEN ── */
 #s-result{overflow-y:auto;-webkit-overflow-scrolling:touch;}
 .result-inner{padding:28px 20px calc(28px + var(--safe-bot));display:flex;flex-direction:column;align-items:center;gap:18px;}
 .result-heading{font-size:20px;font-weight:700;}
@@ -110,7 +106,6 @@ body{font-family:-apple-system,BlinkMacSystemFont,"Hiragino Sans","Noto Sans JP"
 .result-actions{width:100%;max-width:380px;display:flex;flex-direction:column;gap:10px;}
 .submit-status{font-size:13px;color:var(--t2);text-align:center;min-height:18px;}
 
-/* ── RANKING SCREEN ── */
 #s-ranking{overflow-y:auto;-webkit-overflow-scrolling:touch;}
 .ranking-inner{padding:14px 16px calc(20px + var(--safe-bot));display:flex;flex-direction:column;gap:12px;}
 .ranking-hdr{display:flex;align-items:center;gap:12px;padding:10px 0 4px;}
@@ -132,8 +127,6 @@ body{font-family:-apple-system,BlinkMacSystemFont,"Hiragino Sans","Noto Sans JP"
 .back-link{text-align:center;font-size:14px;color:var(--t2);cursor:pointer;text-decoration:underline;text-underline-offset:3px;padding:4px;}
 .highlight-row{background:var(--green-bg);}
 .highlight-row .rank-name{color:var(--green);}
-
-/* ── HISTORY ── */
 .history-section{width:100%;max-width:380px;display:flex;flex-direction:column;gap:8px;}
 .history-title{font-size:14px;font-weight:700;color:var(--t2);}
 .history-card{background:var(--surface);border:0.5px solid var(--border);border-radius:var(--r);overflow:hidden;}
@@ -152,11 +145,10 @@ body{font-family:-apple-system,BlinkMacSystemFont,"Hiragino Sans","Noto Sans JP"
 </head>
 <body>
 
-<!-- ══════ SCREEN 1: NAME ENTRY ══════ -->
 <div id="s-name" class="screen active">
   <div style="flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:24px 20px;">
-    <div class="logo">💪</div>
-    <div class="title">肘・前腕 筋肉テスト</div>
+    <div class="logo">🦶</div>
+    <div class="title">足部 筋肉テスト</div>
     <div class="subtitle">20問 × 5点 = 100点満点</div>
     <div class="name-card">
       <div class="name-lbl">お名前</div>
@@ -168,7 +160,6 @@ body{font-family:-apple-system,BlinkMacSystemFont,"Hiragino Sans","Noto Sans JP"
   </div>
 </div>
 
-<!-- ══════ SCREEN 2: QUIZ ══════ -->
 <div id="s-quiz" class="screen">
   <div class="quiz-hdr">
     <div class="q-cnt" id="q-cnt">1 / 20</div>
@@ -181,7 +172,6 @@ body{font-family:-apple-system,BlinkMacSystemFont,"Hiragino Sans","Noto Sans JP"
   </div>
 </div>
 
-<!-- ══════ SCREEN 3: RESULT ══════ -->
 <div id="s-result" class="screen">
   <div class="result-inner">
     <div class="result-heading" id="result-heading">テスト結果</div>
@@ -201,7 +191,6 @@ body{font-family:-apple-system,BlinkMacSystemFont,"Hiragino Sans","Noto Sans JP"
   </div>
 </div>
 
-<!-- ══════ SCREEN 4: RANKING ══════ -->
 <div id="s-ranking" class="screen">
   <div class="ranking-inner">
     <div class="ranking-hdr">
@@ -219,85 +208,65 @@ body{font-family:-apple-system,BlinkMacSystemFont,"Hiragino Sans","Noto Sans JP"
 </div>
 
 <script>
-const QUIZ_ID = 'elbow'; // このテストのID（ランキング分離に使用）
+const QUIZ_ID = 'foot';
 
-// ────── 問題データ（肘・前腕）── PDF表26.2/26.3/26.4で全答え検証済み ──────
-const QS = [
-  // Q1 記述: 円回内筋
-  { type:'w', clues:{'起始':'上腕骨の内側上顆・尺骨の鈎状突起','停止':'橈骨の外側面（中央部）','作用':'前腕の回内、肘関節の弱い屈曲','支配神経':'正中神経（C6, C7）'}, answer:'円回内筋', accepted:['円回内筋'] },
-
-  // Q2 選択: 橈側手根屈筋の支配神経 → 正中神経（C6, C7）
-  { type:'mc', q:'橈側手根屈筋の支配神経はどれか？',
-    opts:['正中神経（C6, C7）','正中神経（C7, C8）','正中神経（C8, T1）','尺骨神経（C7〜T1）','尺骨神経（C8, T1）','橈骨神経（C5, C6）','橈骨神経（C6, C7）','橈骨神経（C7, C8）','筋皮神経（C5, C6）','腋窩神経（C5, C6）'], ok:0 },
-
-  // Q3 記述: 尺側手根屈筋
-  { type:'w', clues:{'起始':'上腕骨の内側上顆・尺骨の肘頭','停止':'豆状骨・有鈎骨鈎・第5中手骨底','作用':'手関節の屈曲・内転（尺側偏位）','支配神経':'尺骨神経（C7〜T1）'}, answer:'尺側手根屈筋', accepted:['尺側手根屈筋'] },
-
-  // Q4 選択: 長掌筋の停止 → 手掌腱膜
-  { type:'mc', q:'長掌筋の停止はどれか？',
-    opts:['手掌腱膜','第2中手骨底','第3中手骨底','第5中手骨底','第1中手骨底','豆状骨・有鈎骨鈎・第5中手骨底','第2〜5指の中節骨','第2〜5指の末節骨','橈骨の茎状突起','母指の基節骨底'], ok:0 },
-
-  // Q5 選択: 長掌筋の支配神経 → 正中神経（C7, C8）
-  { type:'mc', q:'長掌筋の支配神経はどれか？',
-    opts:['正中神経（C7, C8）','正中神経（C6, C7）','正中神経（C8, T1）','尺骨神経（C7〜T1）','尺骨神経（C8, T1）','橈骨神経（C5, C6）','橈骨神経（C6, C7）','橈骨神経（C7, C8）','筋皮神経（C5, C6）','前骨間神経（C8, T1）'], ok:0 },
-
-  // Q6 記述: 浅指屈筋
-  { type:'w', clues:{'起始':'上腕骨の内側上顆・尺骨の鈎状突起・橈骨前縁の上半部','停止':'第2〜5指の中節骨（両縁）','作用':'第2〜5指のMCP関節・PIP関節の屈曲','支配神経':'正中神経（C8, T1）'}, answer:'浅指屈筋', accepted:['浅指屈筋'] },
-
-  // Q7 選択: 深指屈筋の停止 → 第2〜5指の末節骨
-  { type:'mc', q:'深指屈筋の停止はどれか？',
-    opts:['第2〜5指の末節骨（掌側面）','第2〜5指の中節骨（両縁）','第2〜5指の基節骨','第1中手骨底','豆状骨・有鈎骨鈎・第5中手骨底','手掌腱膜','第2中手骨底','第3中手骨底','母指の末節骨','橈骨の茎状突起'], ok:0 },
-
-  // Q8 記述: 方形回内筋
-  { type:'w', clues:{'起始':'尺骨前面（遠位1/4）','停止':'橈骨前面（遠位1/4）','作用':'前腕の回内（最深層）、下橈尺関節の安定化','支配神経':'正中神経（C8, T1）'}, answer:'方形回内筋', accepted:['方形回内筋'] },
-
-  // Q9 選択: 長母指屈筋の起始 → 橈骨前面（中央1/3）・骨間膜
-  { type:'mc', q:'長母指屈筋の起始はどれか？',
-    opts:['橈骨前面（中央1/3）・骨間膜','尺骨前面（近位2/3）・骨間膜','尺骨前面（遠位1/4）','上腕骨の内側上顆','上腕骨の外側上顆','橈骨・尺骨の後面・骨間膜','尺骨の後面・骨間膜','橈骨の後面・骨間膜','上腕骨遠位部（前外側面）','上腕骨の外側上顆稜'], ok:0 },
-
-  // Q10 選択: 長母指屈筋の停止 → 母指の末節骨（掌側面）
-  { type:'mc', q:'長母指屈筋の停止はどれか？',
-    opts:['母指の末節骨（掌側面）','母指の基節骨底','第1中手骨底','母指の末節骨底（背側）','第2〜5指の末節骨','第2〜5指の中節骨','手掌腱膜','橈骨の茎状突起','第2中手骨底','示指の指背腱膜'], ok:0 },
-
-  // Q11 記述: 腕橈骨筋
-  { type:'w', clues:{'起始':'上腕骨遠位部（前外側面）・外側筋間中隔','停止':'橈骨の茎状突起','作用':'肘関節の屈曲、前腕を半回内位にする','支配神経':'橈骨神経（C5, C6）'}, answer:'腕橈骨筋', accepted:['腕橈骨筋'] },
-
-  // Q12 選択: 長橈側手根伸筋の停止 → 第2中手骨底
-  { type:'mc', q:'長橈側手根伸筋の停止はどれか？',
-    opts:['第2中手骨底','第3中手骨底','第5中手骨底','第1中手骨底','手掌腱膜','橈骨の茎状突起','第2〜5指の指背腱膜','母指の基節骨底','豆状骨・第5中手骨底','母指の末節骨底'], ok:0 },
-
-  // Q13 選択: 短橈側手根伸筋の停止 → 第3中手骨底
-  { type:'mc', q:'短橈側手根伸筋の停止はどれか？',
-    opts:['第3中手骨底','第2中手骨底','第5中手骨底','第1中手骨底','手掌腱膜','橈骨の茎状突起','第2〜5指の指背腱膜','母指の基節骨底','第4中手骨底','母指の末節骨底'], ok:0 },
-
-  // Q14 記述: 回外筋
-  { type:'w', clues:{'起始':'上腕骨の外側上顆・肘頭・外側側副靱帯・橈骨輪状靱帯','停止':'橈骨近位（橈骨粗面と円回内筋停止部の間）','作用':'前腕の回外','支配神経':'橈骨神経（C6, C7）'}, answer:'回外筋', accepted:['回外筋'] },
-
-  // Q15 選択: 指伸筋（総指伸筋）の支配神経 → 橈骨神経（C7, C8）
-  { type:'mc', q:'指伸筋（総指伸筋）の支配神経はどれか？',
-    opts:['橈骨神経（C7, C8）','橈骨神経（C5, C6）','橈骨神経（C6, C7）','正中神経（C7, C8）','正中神経（C8, T1）','正中神経（C6, C7）','尺骨神経（C7〜T1）','尺骨神経（C8, T1）','筋皮神経（C5, C6）','腋窩神経（C5, C6）'], ok:0 },
-
-  // Q16 選択: 尺側手根伸筋の作用 → 手関節の伸展・内転（尺側偏位）
-  { type:'mc', q:'尺側手根伸筋の主な作用はどれか？',
-    opts:['手関節の伸展・内転（尺側偏位）','手関節の伸展・外転（橈側偏位）','手関節の屈曲・内転（尺側偏位）','手関節の屈曲・外転（橈側偏位）','前腕の回内','前腕の回外','母指の外転','第5指の伸展','母指のIP関節の伸展','肘関節の屈曲'], ok:0 },
-
-  // Q17 記述: 長母指外転筋
-  { type:'w', clues:{'起始':'橈骨・尺骨の後面・骨間膜','停止':'第1中手骨底','作用':'母指の外転（手関節の外転補助）','支配神経':'橈骨神経（C7, C8）'}, answer:'長母指外転筋', accepted:['長母指外転筋'] },
-
-  // Q18 選択: 短母指伸筋の停止 → 母指の基節骨底
-  { type:'mc', q:'短母指伸筋の停止はどれか？',
-    opts:['母指の基節骨底','母指の末節骨底（背側）','第1中手骨底','第2中手骨底','手掌腱膜','橈骨の茎状突起','第2〜5指の指背腱膜','母指の末節骨（掌側）','第5中手骨底','第3中手骨底'], ok:0 },
-
-  // Q19 選択: 長母指伸筋の停止 → 母指の末節骨底（背側）
-  { type:'mc', q:'長母指伸筋の停止はどれか？',
-    opts:['母指の末節骨底（背側）','母指の基節骨底','第1中手骨底','第2中手骨底','手掌腱膜','橈骨の茎状突起','第2〜5指の指背腱膜','母指の末節骨（掌側）','第3中手骨底','第5中手骨底'], ok:0 },
-
-  // Q20 選択: 示指伸筋の起始 → 尺骨の後面・骨間膜
-  { type:'mc', q:'示指伸筋の起始はどれか？',
-    opts:['尺骨の後面・骨間膜','橈骨の後面・骨間膜','橈骨・尺骨の後面・骨間膜','上腕骨の外側上顆','上腕骨の内側上顆・尺骨の鈎状突起','橈骨前面（中央1/3）・骨間膜','尺骨前面（遠位1/4）','上腕骨遠位部（前外側面）','上腕骨の外側上顆・橈骨輪状靱帯','尺骨前面（近位2/3）・骨間膜'], ok:0 }
+const POOL_W = [
+  { type:'w', clues:{'起始':'踵骨(足背面)','停止':'第2-4趾の趾背腱膜、中節骨底','支配神経':'深腓骨神経(L5, S1)'}, answer:'短趾伸筋', accepted:['短趾伸筋'] },
+  { type:'w', clues:{'起始':'踵骨(足背面)','停止':'第1趾の趾背腱膜と基節骨底','支配神経':'深腓骨神経(L5, S1)'}, answer:'短母趾伸筋', accepted:['短母趾伸筋'] },
+  { type:'w', clues:{'起始':'踵骨隆起(内側突起)、屈筋支帯、足底腱膜','停止':'第1趾(内側種子骨を介して基節骨底)','作用':'第1趾MTP関節の屈曲と外転、縦足弓の保持'}, answer:'母趾外転筋', accepted:['母趾外転筋'] },
+  { type:'w', clues:{'起始':'踵骨隆起(内側結節)、足底腱膜','停止':'第2-5趾の中節骨(側面)','支配神経':'内側足底神経(S1, S2)'}, answer:'短趾屈筋', accepted:['短趾屈筋'] },
+  { type:'w', clues:{'起始':'踵骨隆起(内側結節)、足底腱膜','停止':'第5趾の基節骨底、第5中足骨(粗面)','支配神経':'外側足底神経(S1〜S3)'}, answer:'小趾外転筋', accepted:['小趾外転筋'] },
+  { type:'w', clues:{'起始':'長趾屈筋腱(内側縁)','停止':'第2-5趾の趾背腱膜(内側縁)','作用':'第2-5趾MTP関節の屈曲、IP関節の伸展'}, answer:'虫様筋', accepted:['虫様筋'] },
+  { type:'w', clues:{'起始':'踵骨底面(内側頭と外側頭)','停止':'長趾屈筋腱(外側縁)','作用':'長趾屈筋の力の方向を変える'}, answer:'足底方形筋', accepted:['足底方形筋'] },
+  { type:'w', clues:{'起始':'内側楔状骨・立方骨・外側楔状骨(足底面)','停止':'第1趾基節骨底(内側・外側の種子骨を介して)','支配神経':'内側足底神経(S1, S2)'}, answer:'短母趾屈筋', accepted:['短母趾屈筋'] },
+  { type:'w', clues:{'起始':'斜頭:第2-4中足骨底　横頭:第3-5趾のMTP関節包','停止':'第1趾基節骨底(外側種子骨を介して)','支配神経':'外側足底神経 深枝(S2, S3)'}, answer:'母趾内転筋', accepted:['母趾内転筋'] },
+  { type:'w', clues:{'起始':'第5中足骨底、長腓骨筋腱鞘','停止':'第5趾の基節骨底','支配神経':'外側足底神経 浅枝(S2, S3)'}, answer:'短小趾屈筋', accepted:['短小趾屈筋'] },
+  { type:'w', clues:{'起始':'第1-5中足骨(隣接する2側から起始)','停止':'第2-4趾基節骨底、趾背腱膜','作用':'第2-4趾MTP関節の屈曲、IP関節の伸展(外転)'}, answer:'背側骨間筋', accepted:['背側骨間筋'] },
+  { type:'w', clues:{'起始':'第3-5中足骨(内側面)','停止':'第3-5趾の基節骨底(内側面)','作用':'第3-5趾MTP関節の屈曲、第3-5趾を第2趾に近づける(内転)'}, answer:'底側骨間筋', accepted:['底側骨間筋'] }
 ];
 
-// ────── 状態 ──────
+const POOL_MC = [
+  { type:'mc', q:'短趾伸筋の支配神経はどれか？',
+    opts:['深腓骨神経(L5, S1)','浅腓骨神経(L5, S1)','内側足底神経(S1, S2)','外側足底神経(S1〜S3)','脛骨神経(L4〜S3)','外側足底神経 深枝(S2, S3)','外側足底神経 浅枝(S2, S3)','大腿神経(L2〜L4)','閉鎖神経(L2〜L4)','坐骨神経(L5〜S2)'], ok:0 },
+  { type:'mc', q:'母趾外転筋の支配神経はどれか？',
+    opts:['内側足底神経(S1, S2)','外側足底神経(S1〜S3)','深腓骨神経(L5, S1)','外側足底神経 深枝(S2, S3)','外側足底神経 浅枝(S2, S3)','浅腓骨神経(L5, S1)','脛骨神経(L4〜S3)','坐骨神経(L5〜S2)','大腿神経(L2〜L4)','閉鎖神経(L2〜L4)'], ok:0 },
+  { type:'mc', q:'小趾外転筋の支配神経はどれか？',
+    opts:['外側足底神経(S1〜S3)','内側足底神経(S1, S2)','深腓骨神経(L5, S1)','外側足底神経 深枝(S2, S3)','外側足底神経 浅枝(S2, S3)','浅腓骨神経(L5, S1)','脛骨神経(L4〜S3)','坐骨神経(L5〜S2)','大腿神経(L2〜L4)','閉鎖神経(L2〜L4)'], ok:0 },
+  { type:'mc', q:'母趾内転筋の支配神経はどれか？',
+    opts:['外側足底神経 深枝(S2, S3)','内側足底神経(S1, S2)','外側足底神経(S1〜S3)','深腓骨神経(L5, S1)','外側足底神経 浅枝(S2, S3)','浅腓骨神経(L5, S1)','脛骨神経(L4〜S3)','坐骨神経(L5〜S2)','大腿神経(L2〜L4)','閉鎖神経(L2〜L4)'], ok:0 },
+  { type:'mc', q:'短小趾屈筋の支配神経はどれか？',
+    opts:['外側足底神経 浅枝(S2, S3)','内側足底神経(S1, S2)','外側足底神経(S1〜S3)','深腓骨神経(L5, S1)','外側足底神経 深枝(S2, S3)','浅腓骨神経(L5, S1)','脛骨神経(L4〜S3)','坐骨神経(L5〜S2)','大腿神経(L2〜L4)','閉鎖神経(L2〜L4)'], ok:0 },
+  { type:'mc', q:'背側骨間筋の支配神経はどれか？',
+    opts:['外側足底神経(S2, S3)','内側足底神経(S1, S2)','深腓骨神経(L5, S1)','外側足底神経 深枝(S2, S3)','外側足底神経 浅枝(S2, S3)','浅腓骨神経(L5, S1)','脛骨神経(L4〜S3)','坐骨神経(L5〜S2)','大腿神経(L2〜L4)','閉鎖神経(L2〜L4)'], ok:0 },
+
+  { type:'mc', q:'母趾外転筋の起始に含まれないのはどれか？',
+    opts:['長趾屈筋腱','踵骨隆起(内側突起)','屈筋支帯','足底腱膜','踵骨(内側結節)','踵骨隆起','踵骨底面','踵骨の足底面','踵骨(足背面)','第5中足骨底'], ok:0 },
+  { type:'mc', q:'足底方形筋の起始はどれか？',
+    opts:['踵骨底面(内側頭と外側頭)','踵骨隆起(内側突起)','踵骨隆起(内側結節)','長趾屈筋腱(内側縁)','踵骨(足背面)','第3-5中足骨(内側面)','第1-5中足骨','内側楔状骨・立方骨(足底面)','第5中足骨底','斜頭:第2-4中足骨底'], ok:0 },
+  { type:'mc', q:'背側骨間筋の起始はどれか？',
+    opts:['第1-5中足骨(隣接する2側から起始)','第3-5中足骨(内側面)','踵骨底面(内側頭と外側頭)','長趾屈筋腱(内側縁)','踵骨(足背面)','踵骨隆起(内側突起)','踵骨隆起(内側結節)','内側楔状骨・立方骨(足底面)','第5中足骨底','斜頭:第2-4中足骨底'], ok:0 },
+
+  { type:'mc', q:'短趾屈筋の停止はどれか？',
+    opts:['第2-5趾の中節骨(側面)','第2-5趾の趾背腱膜(内側縁)','第1趾基節骨底','第5趾の基節骨底','第2-4趾の趾背腱膜、中節骨底','第1趾(内側種子骨を介して基節骨底)','長趾屈筋腱(外側縁)','第3-5趾の基節骨底(内側面)','第2-4趾基節骨底、趾背腱膜','第1趾の趾背腱膜と基節骨底'], ok:0 },
+  { type:'mc', q:'母趾内転筋の停止はどれか？',
+    opts:['第1趾基節骨底(外側種子骨を介して)','第1趾(内側種子骨を介して基節骨底)','第1趾基節骨底(内側・外側の種子骨を介して)','第5趾の基節骨底','第2-5趾の中節骨(側面)','長趾屈筋腱(外側縁)','第2-5趾の趾背腱膜(内側縁)','第3-5趾の基節骨底(内側面)','第2-4趾基節骨底、趾背腱膜','第1趾の趾背腱膜と基節骨底'], ok:0 },
+  { type:'mc', q:'足底方形筋の停止はどれか？',
+    opts:['長趾屈筋腱(外側縁)','第2-5趾の中節骨(側面)','第2-5趾の趾背腱膜(内側縁)','第1趾基節骨底','踵骨底面(内側頭と外側頭)','第5趾の基節骨底','第1趾(内側種子骨を介して基節骨底)','第3-5趾の基節骨底(内側面)','第2-4趾基節骨底、趾背腱膜','第1趾の趾背腱膜と基節骨底'], ok:0 },
+
+  { type:'mc', q:'縦足弓の保持に関与しない筋はどれか？',
+    opts:['短趾伸筋','母趾外転筋','短趾屈筋','小趾外転筋','足底方形筋','短母趾屈筋','母趾内転筋','底側骨間筋','背側骨間筋','虫様筋'], ok:0 },
+  { type:'mc', q:'短母趾伸筋の作用はどれか？',
+    opts:['第1趾のMTP関節を伸展','第2-4趾のMTP・PIP関節を伸展','第1趾MTP関節の屈曲','第1趾MTP関節の屈曲と外転','第2-5趾MTP関節の屈曲','第5趾MTP関節の屈曲','第2-5趾IP関節の伸展','横足弓の保持','第3-5趾を第2趾に近づける','第2-4趾の外転'], ok:0 },
+  { type:'mc', q:'虫様筋のMTP関節への作用はどれか？',
+    opts:['屈曲','伸展','外転','内転','屈曲と外転','伸展と外転','屈曲と内転','伸展と内転','作用しない','底屈'], ok:0 },
+  { type:'mc', q:'底側骨間筋の作用に含まれるのはどれか？',
+    opts:['第3-5趾を第2趾に近づける(内転)','第2-4趾の外転','横足弓の保持','縦足弓の保持','第1趾MTP関節の屈曲','第2-5趾IP関節の屈曲','長趾屈筋の力の方向を変える','第1趾の外転','第5趾の外転','距骨下関節の外反'], ok:0 },
+  { type:'mc', q:'横足弓の保持に関与する筋はどれか？',
+    opts:['母趾内転筋','母趾外転筋','短趾屈筋','小趾外転筋','短趾伸筋','短母趾伸筋','足底方形筋','虫様筋','底側骨間筋','短小趾屈筋'], ok:0 },
+  { type:'mc', q:'足底の第1層に含まれない筋はどれか？',
+    opts:['虫様筋','母趾外転筋','短趾屈筋','小趾外転筋','足底方形筋','短母趾屈筋','母趾内転筋','短小趾屈筋','背側骨間筋','底側骨間筋'], ok:0 }
+];
+
 let playerName = '';
 let qIdx = 0;
 let answered = false;
@@ -305,32 +274,35 @@ let results = [];
 let totalPts = 0;
 let quizQS = [];
 
-// ────── 画面切り替え ──────
 function show(id) {
   document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
   document.getElementById(id).classList.add('active');
 }
 
-// ────── クイズ開始 ──────
 function startQuiz() {
   const v = document.getElementById('name-inp').value.trim();
   if (!v) { alert('名前を入力してください'); return; }
   playerName = v;
   qIdx = 0; results = []; totalPts = 0; answered = false;
-  quizQS = [...QS];
-  for (let i = quizQS.length - 1; i > 0; i--) {
-    const j = Math.floor(Math.random() * (i + 1));
-    [quizQS[i], quizQS[j]] = [quizQS[j], quizQS[i]];
-  }
+  const w = pickN(POOL_W, 8);
+  const mc = pickN(POOL_MC, 12);
+  quizQS = pickN([...w, ...mc], 20);
   document.getElementById('q-score').textContent = '0点';
   show('s-quiz');
   renderQ();
 }
 
-// ────── 答え正規化 ──────
 function norm(s) { return s.trim().replace(/\s+/g, '').normalize('NFKC'); }
 
-// ────── Fisher-Yates シャッフル ──────
+function pickN(arr, n) {
+  const a = [...arr];
+  for (let i = a.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [a[i], a[j]] = [a[j], a[i]];
+  }
+  return a.slice(0, n);
+}
+
 function shuffle(arr) {
   const a = [...arr.map((v, i) => ({v, i}))];
   for (let i = a.length - 1; i > 0; i--) {
@@ -340,7 +312,6 @@ function shuffle(arr) {
   return a;
 }
 
-// ────── 問題描画 ──────
 function renderQ() {
   const q = quizQS[qIdx];
   answered = false;
@@ -358,7 +329,6 @@ function renderQ() {
 
   if (q.type === 'w') {
     body.appendChild(el('div', 'q-instruction', '以下の解剖学的特性を持つ筋肉の名称を答えなさい。'));
-
     const card = el('div', 'clue-card');
     for (const [k, v] of Object.entries(q.clues)) {
       const row = el('div', 'clue-row');
@@ -367,27 +337,21 @@ function renderQ() {
       card.appendChild(row);
     }
     body.appendChild(card);
-
     const wrap = el('div', 'written-wrap');
     const inp = document.createElement('input');
     inp.className = 'written-inp'; inp.id = 'w-inp';
     inp.type = 'text'; inp.placeholder = '筋肉名を入力'; inp.autocomplete = 'off';
     inp.addEventListener('keydown', e => { if (e.key === 'Enter') checkWritten(); });
     wrap.appendChild(inp);
-
     const sbtn = el('div');
     sbtn.innerHTML = `<button class="submit-btn" id="sub-btn" onclick="checkWritten()">答える</button>`;
     wrap.appendChild(sbtn.firstChild);
-
     wrap.appendChild(el('div', 'feedback', '', 'fb-msg'));
     wrap.appendChild(el('div', 'correct-ans', '', 'fb-ans'));
     body.appendChild(wrap);
-
     setTimeout(() => inp.focus(), 80);
-
   } else {
     body.appendChild(el('div', 'q-text', q.q));
-
     const shuffled = shuffle(q.opts);
     const grid = el('div', 'mc-grid');
     grid.id = 'mc-grid';
@@ -407,7 +371,6 @@ function renderQ() {
       grid.appendChild(btn);
     });
     body.appendChild(grid);
-
     const confirmWrap = el('div', 'written-wrap');
     const confirmBtn = document.createElement('button');
     confirmBtn.className = 'submit-btn';
@@ -421,11 +384,9 @@ function renderQ() {
     confirmWrap.appendChild(confirmBtn);
     body.appendChild(confirmWrap);
   }
-
   body.scrollTop = 0;
 }
 
-// ────── 3D連携: 出題された筋名を推定して「3Dで見る」リンクを表示 ──────
 function muscleNameOf(q) {
   if (q.type === 'w') return q.answer || '';
   const m = (q.q || '').split(/[のはを？]/)[0].trim();
@@ -446,53 +407,42 @@ function appendView3D(container, q) {
   container.appendChild(wrap);
 }
 
-// ────── 記述採点 ──────
 function checkWritten() {
   if (answered) return;
   const inp = document.getElementById('w-inp');
   const val = norm(inp.value);
   if (!val) return;
-
   const q = quizQS[qIdx];
   const ok = q.accepted.some(a => norm(a) === val);
   answered = true;
   inp.disabled = true;
   inp.className = 'written-inp ' + (ok ? 'correct' : 'wrong');
-
   const fb = document.getElementById('fb-msg');
   fb.className = 'feedback ' + (ok ? 'ok' : 'ng');
   fb.textContent = ok ? '⭕ 正解！' : '❌ 不正解';
-
   if (!ok) document.getElementById('fb-ans').textContent = `正解: ${q.answer}`;
   document.getElementById('sub-btn').style.display = 'none';
   appendView3D(document.getElementById('quiz-body'), q);
-
   recordResult(ok);
 }
 
-// ────── 選択採点 ──────
 function checkMC(btn, grid, correctText) {
   if (answered) return;
   answered = true;
-
   const confirmBtn = document.getElementById('mc-confirm-btn');
   if (confirmBtn) confirmBtn.style.display = 'none';
-
   grid.querySelectorAll('.mc-btn').forEach(b => {
     b.disabled = true;
     b.classList.remove('selected');
     if (b.dataset.correct === '1') b.classList.add('reveal');
   });
-
   const ok = btn.dataset.correct === '1';
   btn.classList.remove('reveal');
   btn.classList.add(ok ? 'correct' : 'wrong');
   appendView3D(document.getElementById('quiz-body'), quizQS[qIdx]);
-
   recordResult(ok);
 }
 
-// ────── 結果記録 ──────
 function recordResult(ok) {
   results.push({correct: ok});
   if (ok) totalPts += 5;
@@ -500,66 +450,52 @@ function recordResult(ok) {
   document.getElementById('next-btn').disabled = false;
 }
 
-// ────── 次の問題 ──────
 function nextQ() {
   qIdx++;
   if (qIdx >= quizQS.length) showResult();
   else renderQ();
 }
 
-// ────── 結果画面 ──────
 function showResult() {
   show('s-result');
   document.getElementById('prog-fill').style.width = '100%';
   document.getElementById('score-num').textContent = totalPts;
   document.getElementById('result-heading').textContent = `${playerName}さんの結果`;
-
   let grade, color;
   if (totalPts >= 90)      { grade = 'S'; color = '#c8a84b'; }
   else if (totalPts >= 80) { grade = 'A'; color = '#1D9E75'; }
   else if (totalPts >= 70) { grade = 'B'; color = '#5b5bc8'; }
   else if (totalPts >= 60) { grade = 'C'; color = '#D85A30'; }
   else                     { grade = 'D'; color = '#aaa99f'; }
-
   const circle = document.getElementById('score-circle');
   const num = document.getElementById('score-num');
   circle.style.borderColor = color;
   num.style.color = color;
-
   const gb = document.getElementById('grade-badge');
   gb.textContent = `Grade ${grade}`;
   gb.style.cssText = `background:${color}22;color:${color};`;
-
   const bd = document.getElementById('breakdown');
   bd.innerHTML = '';
   quizQS.forEach((q, i) => {
     const row = el('div', 'bd-row');
     let label;
-    if (q.type === 'w') {
-      label = `Q${i+1}（記述）→ 正解: ${q.answer}`;
-    } else {
-      const t = q.opts[q.ok];
-      label = `Q${i+1}（選択）→ ${t.length > 20 ? t.slice(0,20)+'…' : t}`;
-    }
+    if (q.type === 'w') { label = `Q${i+1}（記述）→ 正解: ${q.answer}`; }
+    else { const t = q.opts[q.ok]; label = `Q${i+1}（選択）→ ${t.length > 20 ? t.slice(0,20)+'…' : t}`; }
     row.appendChild(el('div', 'bd-q', label));
     const ok = results[i]?.correct;
     row.appendChild(el('div', `bd-mark ${ok ? 'ok' : 'ng'}`, ok ? '○ +5点' : '✗ +0点'));
     bd.appendChild(row);
   });
-
   document.getElementById('reg-btn').style.display = '';
   document.getElementById('reg-btn').disabled = false;
   document.getElementById('submit-status').textContent = '';
 }
 
-// ────── スコア送信 ──────
 async function submitScore() {
   const btn = document.getElementById('reg-btn');
   const status = document.getElementById('submit-status');
-
   btn.disabled = true;
   status.textContent = '送信中...';
-
   try {
     const url = `/.netlify/functions/ranking?quiz=${QUIZ_ID}&action=submit&name=${encodeURIComponent(playerName)}&score=${totalPts}`;
     const res = await fetch(url);
@@ -568,73 +504,70 @@ async function submitScore() {
       status.textContent = `✅ ${playerName}さんの${totalPts}点を登録しました`;
       btn.style.display = 'none';
       loadMyHistory(playerName);
-    } else {
-      throw new Error(data.error || 'unknown');
-    }
+    } else { throw new Error(data.error || 'unknown'); }
   } catch(e) {
     status.textContent = '❌ 送信に失敗しました。再度お試しください。';
     btn.disabled = false;
   }
 }
 
-// ────── 自分の過去記録表示（結果画面） ──────
 async function loadMyHistory(name) {
   const section = document.getElementById('my-history');
   section.style.display = 'flex';
   section.innerHTML = '<div class="history-title">⏱ 読み込み中...</div>';
-
   try {
     const res = await fetch(`/.netlify/functions/ranking?quiz=${QUIZ_ID}&action=history&name=${encodeURIComponent(name)}`);
     const data = await res.json();
     const history = data.history || [];
-
-    if (history.length === 0) {
-      section.innerHTML = '';
-      section.style.display = 'none';
-      return;
-    }
-
+    if (history.length === 0) { section.innerHTML = ''; section.style.display = 'none'; return; }
     const best = Math.max(...history.map(h => h.score));
     const titleEl = document.createElement('div');
     titleEl.className = 'history-title';
     titleEl.textContent = `📋 ${esc(name)}さんの過去の記録（${history.length}回）`;
-
-    const card = document.createElement('div');
-    card.className = 'history-card';
+    const card = document.createElement('div'); card.className = 'history-card';
     history.forEach((h, i) => {
-      const row = document.createElement('div');
-      row.className = 'history-row';
-      const num = document.createElement('div');
-      num.className = 'history-num';
-      num.textContent = `${i + 1}`;
-      const date = document.createElement('div');
-      date.className = 'history-date';
-      date.textContent = h.date || '';
-      const score = document.createElement('div');
-      score.className = 'history-score';
-      score.textContent = `${h.score}点`;
-      if (h.score === best && history.length > 1) {
-        const crown = document.createElement('span');
-        crown.className = 'history-best';
-        crown.textContent = ' 🏆';
-        score.appendChild(crown);
-      }
-      row.appendChild(num);
-      row.appendChild(date);
-      row.appendChild(score);
-      card.appendChild(row);
+      const row = document.createElement('div'); row.className = 'history-row';
+      const num = document.createElement('div'); num.className = 'history-num'; num.textContent = `${i + 1}`;
+      const date = document.createElement('div'); date.className = 'history-date'; date.textContent = h.date || '';
+      const score = document.createElement('div'); score.className = 'history-score'; score.textContent = `${h.score}点`;
+      if (h.score === best && history.length > 1) { const crown = document.createElement('span'); crown.className = 'history-best'; crown.textContent = ' 🏆'; score.appendChild(crown); }
+      row.appendChild(num); row.appendChild(date); row.appendChild(score); card.appendChild(row);
     });
-
     section.innerHTML = '';
-    section.appendChild(titleEl);
-    section.appendChild(card);
-  } catch(e) {
-    section.innerHTML = '';
-    section.style.display = 'none';
-  }
+    section.appendChild(titleEl); section.appendChild(card);
+  } catch(e) { section.innerHTML = ''; section.style.display = 'none'; }
 }
 
-// ────── ランキング表示 ──────
+async function searchHistory() {
+  const name = document.getElementById('rank-filter-inp').value.trim();
+  if (!name) { loadRanking(); return; }
+  const content = document.getElementById('ranking-content');
+  const note = document.getElementById('ranking-note');
+  content.innerHTML = '<div class="ranking-empty">検索中...</div>';
+  note.textContent = '';
+  try {
+    const res = await fetch(`/.netlify/functions/ranking?quiz=${QUIZ_ID}&action=history&name=${encodeURIComponent(name)}`);
+    const data = await res.json();
+    const history = data.history || [];
+    if (history.length === 0) { content.innerHTML = `<div class="ranking-empty">「${esc(name)}」の記録が見つかりませんでした。</div>`; return; }
+    const best = Math.max(...history.map(h => h.score));
+    const card = document.createElement('div'); card.className = 'history-card';
+    history.forEach((h, i) => {
+      const row = document.createElement('div'); row.className = 'history-row';
+      const num = document.createElement('div'); num.className = 'history-num'; num.textContent = `${i + 1}`;
+      const date = document.createElement('div'); date.className = 'history-date'; date.textContent = h.date || '';
+      const score = document.createElement('div'); score.className = 'history-score'; score.textContent = `${h.score}点`;
+      if (h.score === best && history.length > 1) { const crown = document.createElement('span'); crown.className = 'history-best'; crown.textContent = ' 🏆'; score.appendChild(crown); }
+      row.appendChild(num); row.appendChild(date); row.appendChild(score); card.appendChild(row);
+    });
+    content.innerHTML = '';
+    const titleEl = document.createElement('div'); titleEl.className = 'history-title'; titleEl.style.marginBottom = '4px';
+    titleEl.textContent = `📋 ${esc(name)}さんの記録（${history.length}回 / 最高 ${best}点）`;
+    content.appendChild(titleEl); content.appendChild(card);
+    note.textContent = '← ランキング全体に戻るには「更新」を押してください';
+  } catch(e) { content.innerHTML = '<div class="ranking-empty">読み込みに失敗しました。</div>'; }
+}
+
 function gotoRanking() {
   show('s-ranking');
   const inp = document.getElementById('rank-filter-inp');
@@ -642,37 +575,38 @@ function gotoRanking() {
   loadRanking();
 }
 
+document.addEventListener('keydown', e => {
+  if (e.key === 'Enter' && document.getElementById('s-ranking').classList.contains('active')) {
+    const inp = document.getElementById('rank-filter-inp');
+    if (document.activeElement === inp) searchHistory();
+  }
+});
+
 async function loadRanking() {
   const content = document.getElementById('ranking-content');
   const note = document.getElementById('ranking-note');
   content.innerHTML = '<div class="ranking-empty">読み込み中...</div>';
   note.textContent = '';
-
   try {
     const res = await fetch(`/.netlify/functions/ranking?quiz=${QUIZ_ID}`);
     const data = await res.json();
-
     if (!data.rankings || data.rankings.length === 0) {
       content.innerHTML = '<div class="ranking-empty">まだスコアがありません。<br>テストを受けて最初に登録しましょう！</div>';
       return;
     }
-
     const card = el('div', 'ranking-card');
     data.rankings.forEach((entry, i) => {
       const row = el('div', `rank-row${entry.name === playerName ? ' highlight-row' : ''}`);
       const posClass = i === 0 ? 'gold' : i === 1 ? 'silver' : i === 2 ? 'bronze' : '';
       const posText = i === 0 ? '🥇' : i === 1 ? '🥈' : i === 2 ? '🥉' : `${i + 1}`;
-
       row.appendChild(el('div', `rank-pos ${posClass}`, posText));
-      const nameDiv = el('div', 'rank-name', esc(entry.name));
-      row.appendChild(nameDiv);
+      row.appendChild(el('div', 'rank-name', esc(entry.name)));
       const info = el('div', 'rank-info');
       info.appendChild(el('div', 'rank-score', `${entry.score}点`));
       info.appendChild(el('div', 'rank-date', entry.date || ''));
       row.appendChild(info);
       card.appendChild(row);
     });
-
     content.innerHTML = '';
     content.appendChild(card);
     note.textContent = `全${data.rankings.length}件 ／ 最高点順`;
@@ -681,73 +615,11 @@ async function loadRanking() {
   }
 }
 
-// ────── ランキング画面での名前検索 ──────
-async function searchHistory() {
-  const name = document.getElementById('rank-filter-inp').value.trim();
-  if (!name) { loadRanking(); return; }
-
-  const content = document.getElementById('ranking-content');
-  const note = document.getElementById('ranking-note');
-  content.innerHTML = '<div class="ranking-empty">検索中...</div>';
-  note.textContent = '';
-
-  try {
-    const res = await fetch(`/.netlify/functions/ranking?quiz=${QUIZ_ID}&action=history&name=${encodeURIComponent(name)}`);
-    const data = await res.json();
-    const history = data.history || [];
-
-    if (history.length === 0) {
-      content.innerHTML = `<div class="ranking-empty">「${esc(name)}」の記録が見つかりませんでした。</div>`;
-      return;
-    }
-
-    const best = Math.max(...history.map(h => h.score));
-    const card = document.createElement('div');
-    card.className = 'history-card';
-    history.forEach((h, i) => {
-      const row = document.createElement('div');
-      row.className = 'history-row';
-      const num = document.createElement('div');
-      num.className = 'history-num';
-      num.textContent = `${i + 1}`;
-      const date = document.createElement('div');
-      date.className = 'history-date';
-      date.textContent = h.date || '';
-      const score = document.createElement('div');
-      score.className = 'history-score';
-      score.textContent = `${h.score}点`;
-      if (h.score === best && history.length > 1) {
-        const crown = document.createElement('span');
-        crown.className = 'history-best';
-        crown.textContent = ' 🏆';
-        score.appendChild(crown);
-      }
-      row.appendChild(num);
-      row.appendChild(date);
-      row.appendChild(score);
-      card.appendChild(row);
-    });
-
-    content.innerHTML = '';
-    const titleEl = document.createElement('div');
-    titleEl.className = 'history-title';
-    titleEl.style.marginBottom = '4px';
-    titleEl.textContent = `📋 ${esc(name)}さんの記録（${history.length}回 / 最高 ${best}点）`;
-    content.appendChild(titleEl);
-    content.appendChild(card);
-    note.textContent = '← ランキング全体に戻るには「更新」を押してください';
-  } catch(e) {
-    content.innerHTML = '<div class="ranking-empty">読み込みに失敗しました。</div>';
-  }
-}
-
-// ────── やり直し ──────
 function restart() {
   document.getElementById('name-inp').value = '';
   show('s-name');
 }
 
-// ────── ユーティリティ ──────
 function el(tag, cls = '', text = '', id = '') {
   const e = document.createElement(tag);
   if (cls) e.className = cls;
@@ -758,14 +630,6 @@ function el(tag, cls = '', text = '', id = '') {
 function esc(s) {
   return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
 }
-
-// ランキング画面でEnterキー検索
-document.addEventListener('keydown', e => {
-  if (e.key === 'Enter' && document.getElementById('s-ranking').classList.contains('active')) {
-    const inp = document.getElementById('rank-filter-inp');
-    if (document.activeElement === inp) searchHistory();
-  }
-});
 </script>
 </body>
 </html>

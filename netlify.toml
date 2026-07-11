@@ -23,6 +23,30 @@
   to = "/muscle-quiz/quiz3.html"
   status = 200
 
+# 解剖学テスト一覧（ハブ）
+[[redirects]]
+  from = "/tests"
+  to = "/muscle-quiz/tests.html"
+  status = 200
+
+# 筋肉テスト（下腿）
+[[redirects]]
+  from = "/lower-leg"
+  to = "/muscle-quiz/quiz4.html"
+  status = 200
+
+# 筋肉テスト（足部）
+[[redirects]]
+  from = "/foot"
+  to = "/muscle-quiz/quiz5.html"
+  status = 200
+
+# 筋肉テスト（体幹）
+[[redirects]]
+  from = "/trunk"
+  to = "/muscle-quiz/quiz6.html"
+  status = 200
+
 # 3D解剖学アプリ：モデルの絶対パス(/models/...)を anatomy-app 配下へ転送
 [[redirects]]
   from = "/models/*"
