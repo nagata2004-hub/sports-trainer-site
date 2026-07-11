@@ -1,0 +1,17 @@
+{
+  "version": "0.0.1",
+  "configurations": [
+    {
+      "name": "site",
+      "runtimeExecutable": "npx",
+      "runtimeArgs": ["serve", ".", "-l", "3000"],
+      "port": 3000
+    },
+    {
+      "name": "v2",
+      "runtimeExecutable": "npx",
+      "runtimeArgs": ["serve", "v2", "-l", "3001"],
+      "port": 3001
+    }
+  ]
+}
