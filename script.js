@@ -42,20 +42,8 @@ const defaultMemory = [
   { id: 'm6', title: 'RICE処置と応急対応', category: 'injury', count: '45問', progress: 90, desc: 'Rest・Ice・Compression・Elevationの具体的手順と注意点。', isNew: false },
   { id: 'm7', title: '肩・上腕 筋肉カード', category: 'anatomy', count: '20問', progress: 0, desc: '肩・上腕帯の筋肉（起始・停止・作用・支配神経）を暗記カードまたはテストで学習できます。', isNew: true, urlMemory: 'muscle-quiz/index.html', urlQuiz: 'muscle-quiz/quiz.html' },
   { id: 'm8', title: '3D解剖学ビューワー', category: 'anatomy', count: '', progress: 0, desc: '3Dモデルで骨格・筋肉の位置と動きをインタラクティブに学習できます。', isNew: true, url: 'anatomy-app/' },
-];
-
-// 解剖学テストへの導線カード（コード側で定義する組み込み機能）。
-// 管理ページ(Blobs)のデータに含まれていなくても、暗記学習一覧に常に表示する。
-const BUILTIN_MEMORY = [
   { id: 'mq_tests', title: '筋肉テスト', category: 'anatomy', count: '6部位', progress: 0, desc: '肩・肘・骨盤・下腿・足部・体幹の筋肉テスト。部位を選んで挑戦できます。', isNew: true, url: 'muscle-quiz/tests.html' },
 ];
-// 読み込んだ暗記データに、未収録の組み込みカードを補完してマージする
-function mergeBuiltinMemory(list) {
-  const arr = Array.isArray(list) ? list.slice() : [];
-  const ids = new Set(arr.map(m => m && m.id));
-  BUILTIN_MEMORY.forEach(b => { if (!ids.has(b.id)) arr.push(b); });
-  return arr;
-}
 
 const defaultBoard = [
   {
@@ -202,7 +190,7 @@ function renderLecturesSection() {
 function renderMemorySection() {
   const el = document.getElementById('memory-grid');
   if (!el) return;
-  const memory = mergeBuiltinMemory(getData('st_memory', defaultMemory));
+  const memory = getData('st_memory', defaultMemory);
   el.innerHTML = memory.map(m => `
     <div class="memory-card reveal${m.urlMemory ? ' card--mode-select' : (m.url ? ' card--has-url' : '')}" data-title="${m.title}" data-category="${m.category}"${m.urlMemory ? ` data-url-memory="${m.urlMemory}" data-url-quiz="${m.urlQuiz}"` : (m.url ? ` data-url="${m.url}"` : '')}>
       <div class="memory-card__header">
