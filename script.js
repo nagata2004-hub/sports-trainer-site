@@ -47,12 +47,7 @@ const defaultMemory = [
 // 解剖学テストへの導線カード（コード側で定義する組み込み機能）。
 // 管理ページ(Blobs)のデータに含まれていなくても、暗記学習一覧に常に表示する。
 const BUILTIN_MEMORY = [
-  { id: 'mq_tests',   title: '解剖学テスト一覧', category: 'anatomy', count: '6部位', progress: 0, desc: '肩・肘・骨盤・下腿・足部・体幹の筋肉テストをまとめて選べます。', isNew: true, url: 'muscle-quiz/tests.html' },
-  { id: 'mq_elbow',   title: '肘・前腕 筋肉テスト', category: 'anatomy', count: '20問', progress: 0, desc: '前腕の屈筋・伸筋群を記述＆選択問題でチェック。', isNew: false, url: 'muscle-quiz/quiz2.html' },
-  { id: 'mq_pelvis',  title: '骨盤・大腿 筋肉テスト', category: 'anatomy', count: '20問', progress: 0, desc: '殿筋・大腿四頭筋・内転筋群のテスト。', isNew: false, url: 'muscle-quiz/quiz3.html' },
-  { id: 'mq_lowerleg',title: '下腿 筋肉テスト', category: 'anatomy', count: '20問', progress: 0, desc: '腓骨筋・前脛骨筋など下腿の筋のテスト。', isNew: true, url: 'muscle-quiz/quiz4.html' },
-  { id: 'mq_foot',    title: '足部 筋肉テスト', category: 'anatomy', count: '20問', progress: 0, desc: '足背・足底の内在筋のテスト。', isNew: true, url: 'muscle-quiz/quiz5.html' },
-  { id: 'mq_trunk',   title: '体幹 筋肉テスト', category: 'anatomy', count: '20問', progress: 0, desc: '横隔膜・腹壁の筋（腹部含む）のテスト。', isNew: true, url: 'muscle-quiz/quiz6.html' },
+  { id: 'mq_tests', title: '筋肉テスト', category: 'anatomy', count: '6部位', progress: 0, desc: '肩・肘・骨盤・下腿・足部・体幹の筋肉テスト。部位を選んで挑戦できます。', isNew: true, url: 'muscle-quiz/tests.html' },
 ];
 // 読み込んだ暗記データに、未収録の組み込みカードを補完してマージする
 function mergeBuiltinMemory(list) {

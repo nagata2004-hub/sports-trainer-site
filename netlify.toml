@@ -23,11 +23,11 @@
   to = "/muscle-quiz/quiz3.html"
   status = 200
 
-# 解剖学テスト一覧（ハブ）
+# 筋肉テスト一覧（ハブ）※相対リンクを効かせるため実URLへ301
 [[redirects]]
   from = "/tests"
   to = "/muscle-quiz/tests.html"
-  status = 200
+  status = 301
 
 # 筋肉テスト（下腿）
 [[redirects]]
