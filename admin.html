@@ -471,6 +471,10 @@
                 <label for="m-desc">説明</label>
                 <textarea id="m-desc" rows="2" placeholder="暗記セットの内容説明"></textarea>
               </div>
+              <div class="form-group full">
+                <label for="m-url">リンク先URL（任意）</label>
+                <input type="text" id="m-url" placeholder="例：muscle-quiz/tests.html ※入力すると「押して開く」カードになります" />
+              </div>
               <div class="form-group check-group">
                 <input type="checkbox" id="m-new" />
                 <label for="m-new">NEWバッジを表示</label>
@@ -808,6 +812,7 @@
       document.getElementById('m-count').value = item.count || '';
       document.getElementById('m-progress').value = item.progress || 0;
       document.getElementById('m-desc').value = item.desc || '';
+      document.getElementById('m-url').value = item.url || '';
       document.getElementById('m-new').checked = !!item.isNew;
       setEditMode('memory', item.title);
       document.getElementById('memory-form').scrollIntoView({ behavior: 'smooth', block: 'center' });
@@ -918,27 +923,27 @@
       e.preventDefault();
       const memory = getData('st_memory', defaultMemory);
       const isEditing = !!editingId.memory;
+      const url = document.getElementById('m-url').value.trim();
+      const fields = {
+        title: document.getElementById('m-title').value,
+        category: document.getElementById('m-category').value,
+        count: document.getElementById('m-count').value,
+        progress: parseInt(document.getElementById('m-progress').value) || 0,
+        desc: document.getElementById('m-desc').value,
+        isNew: document.getElementById('m-new').checked,
+      };
       if (isEditing) {
         const idx = memory.findIndex(m => m.id === editingId.memory);
-        if (idx !== -1) memory[idx] = { ...memory[idx],
-          title: document.getElementById('m-title').value,
-          category: document.getElementById('m-category').value,
-          count: document.getElementById('m-count').value,
-          progress: parseInt(document.getElementById('m-progress').value) || 0,
-          desc: document.getElementById('m-desc').value,
-          isNew: document.getElementById('m-new').checked,
-        };
+        if (idx !== -1) {
+          memory[idx] = { ...memory[idx], ...fields };
+          if (url) memory[idx].url = url; else delete memory[idx].url;
+        }
         editingId.memory = null;
         setEditMode('memory', '');
       } else {
-        memory.unshift({ id: genId(),
-          title: document.getElementById('m-title').value,
-          category: document.getElementById('m-category').value,
-          count: document.getElementById('m-count').value,
-          progress: parseInt(document.getElementById('m-progress').value) || 0,
-          desc: document.getElementById('m-desc').value,
-          isNew: document.getElementById('m-new').checked,
-        });
+        const item = { id: genId(), ...fields };
+        if (url) item.url = url;
+        memory.unshift(item);
       }
       saveData('st_memory', memory);
       e.target.reset();

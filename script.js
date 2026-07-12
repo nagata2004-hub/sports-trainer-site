@@ -535,7 +535,7 @@ function initFilter(gridId) {
   });
 }
 
-// ===== IntersectionObserver: Reveal =====
+// ===== IntersectionObserver: Reveal (CSS fallback + dynamic elements) =====
 const observer = new IntersectionObserver(entries => {
   entries.forEach(entry => {
     if (!entry.isIntersecting) return;
@@ -543,7 +543,7 @@ const observer = new IntersectionObserver(entries => {
       el => el.classList.contains('reveal')
     );
     const idx = siblings.indexOf(entry.target);
-    entry.target.style.transitionDelay = `${(idx % 6) * 80}ms`;
+    entry.target.style.transitionDelay = `${(idx % 6) * 100}ms`;
     entry.target.classList.add('visible');
     observer.unobserve(entry.target);
   });
@@ -708,3 +708,140 @@ contactForm.addEventListener('submit', async e => {
     submitBtn.textContent = '送信する →';
   }
 });
+
+// ===== ローダー安全網 =====
+// 演出（GSAP）が何らかの理由で走らない・進まない場合でも、
+// ローダーで画面が固まってログイン不能にならないよう、タイマーで必ず解除する。
+setTimeout(() => {
+  const l = document.getElementById('loader');
+  if (l && l.style.display !== 'none' && getComputedStyle(l).opacity !== '0') {
+    l.style.transition = 'opacity .4s ease';
+    l.style.opacity = '0';
+    setTimeout(() => { if (l) l.style.display = 'none'; }, 450);
+  }
+}, 2800);
+
+// ===== GSAP + Lenis アニメーション =====
+(function() {
+  const hasGsap = typeof gsap !== 'undefined';
+  if (hasGsap) gsap.registerPlugin(ScrollTrigger);
+
+  // --- Lenis 慣性スクロール ---
+  let lenis = null;
+  if (typeof Lenis !== 'undefined') {
+    lenis = new Lenis({ lerp: 0.08, wheelMultiplier: 1.0 });
+    if (hasGsap) {
+      lenis.on('scroll', ScrollTrigger.update);
+      gsap.ticker.add(t => lenis.raf(t * 1000));
+      gsap.ticker.lagSmoothing(0);
+    } else {
+      (function raf(t) { lenis.raf(t); requestAnimationFrame(raf); })(0);
+    }
+  }
+
+  // アンカーリンクをLenis経由で滑らかに
+  document.querySelectorAll('a[href^="#"]').forEach(a => {
+    a.addEventListener('click', e => {
+      const el = document.querySelector(a.getAttribute('href'));
+      if (!el) return;
+      e.preventDefault();
+      if (lenis) lenis.scrollTo(el, { offset: -70, duration: 1.6 });
+      else el.scrollIntoView({ behavior: 'smooth' });
+    });
+  });
+
+  // --- ローダー → ヒーロー演出 ---
+  function heroIntro() {
+    if (!hasGsap) {
+      const loader = document.getElementById('loader');
+      if (loader) loader.style.display = 'none';
+      document.querySelectorAll('.rv').forEach(el => {
+        el.style.opacity = 1; el.style.transform = 'none';
+      });
+      return;
+    }
+
+    const tl = gsap.timeline();
+    tl.to('#lbar', { width: '100%', duration: 0.9, ease: 'power2.inOut' })
+      .to('#loader', { autoAlpha: 0, duration: 0.7, ease: 'power2.inOut' }, '+=0.15')
+      // ヒーローのeyebrow
+      .fromTo('.hero__eyebrow',
+        { opacity: 0, y: 20 },
+        { opacity: 1, y: 0, duration: 1, ease: 'power3.out' }, '-=0.3')
+      // タイトル各行
+      .fromTo('.title-jp',
+        { opacity: 0, y: 50 },
+        { opacity: 1, y: 0, duration: 1.4, ease: 'power4.out', stagger: 0.12 }, '-=0.7')
+      .fromTo('.title-catch, .title-divider',
+        { opacity: 0, y: 16 },
+        { opacity: 1, y: 0, duration: 0.8, ease: 'power3.out' }, '-=1.2')
+      // サブテキスト
+      .fromTo('.hero__sub',
+        { opacity: 0, y: 24 },
+        { opacity: 1, y: 0, duration: 1.1, ease: 'power3.out' }, '-=0.9')
+      // ボタン
+      .fromTo('.hero__actions',
+        { opacity: 0, y: 24 },
+        { opacity: 1, y: 0, duration: 1.1, ease: 'power3.out' }, '-=0.8')
+      // ヒーロー画像
+      .fromTo('.hero__visual',
+        { opacity: 0, y: 60, scale: 0.96 },
+        { opacity: 1, y: 0, scale: 1, duration: 1.4, ease: 'power3.out' }, '-=1.2')
+      // 背景テキスト
+      .fromTo('.hero__bg-text',
+        { opacity: 0 },
+        { opacity: 1, duration: 1.5 }, '-=1.0');
+  }
+
+  if (document.readyState === 'complete') heroIntro();
+  else window.addEventListener('load', heroIntro);
+
+  if (!hasGsap) return;
+
+  // --- ヒーローの視差（パララックス） ---
+  gsap.to('.hero__bg-text', {
+    yPercent: 30, ease: 'none',
+    scrollTrigger: { trigger: '.hero', start: 'top top', end: 'bottom top', scrub: true }
+  });
+
+  // --- 汎用リビール（.rv 要素） ---
+  gsap.utils.toArray('.rv').forEach(el => {
+    gsap.fromTo(el,
+      { opacity: 0, y: 46 },
+      {
+        opacity: 1, y: 0, duration: 1.3, ease: 'power3.out',
+        scrollTrigger: { trigger: el, start: 'top 86%', once: true }
+      });
+  });
+
+  // --- 数字カウントアップ ---
+  gsap.utils.toArray('.stat__num').forEach(el => {
+    const target = parseInt(el.textContent, 10);
+    if (isNaN(target)) return;
+    const obj = { v: 0 };
+    gsap.to(obj, {
+      v: target, duration: 2, ease: 'power2.out',
+      scrollTrigger: { trigger: el, start: 'top 88%', once: true },
+      onUpdate() {
+        el.textContent = Math.round(obj.v).toLocaleString('ja-JP');
+      }
+    });
+  });
+
+  // --- ハイライトカードのスタガードリビール ---
+  gsap.utils.toArray('.highlight-card').forEach((card, i) => {
+    gsap.fromTo(card,
+      { opacity: 0, y: 40 },
+      {
+        opacity: 1, y: 0, duration: 1.2, ease: 'power3.out',
+        delay: i * 0.15,
+        scrollTrigger: { trigger: card, start: 'top 88%', once: true }
+      });
+  });
+
+  // フォント読み込み後にスクロール位置を再計算
+  if (document.fonts && document.fonts.ready) {
+    document.fonts.ready.then(() => ScrollTrigger.refresh());
+  }
+  window.addEventListener('load', () => ScrollTrigger.refresh());
+})();
