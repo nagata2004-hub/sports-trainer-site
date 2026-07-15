@@ -1,5 +1,5 @@
 @echo off
-cd /d "C:\Users\Owner\OneDrive\Desktop\sports-trainer-site"
+cd /d "%~dp0"
 echo.
 echo ===== サイトを更新中... =====
 echo.
