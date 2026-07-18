@@ -1,6 +1,13 @@
 const { getStore } = require('@netlify/blobs');
 
 function makeStore() {
+  if (process.env.QUIZ_SITE_ID && process.env.NETLIFY_API_TOKEN) {
+    return getStore({
+      name: 'site-content',
+      siteID: process.env.QUIZ_SITE_ID,
+      token: process.env.NETLIFY_API_TOKEN,
+    });
+  }
   return getStore('site-content');
 }
 
