@@ -187,19 +187,10 @@ function renderLecturesSection() {
   el.querySelectorAll('.reveal').forEach(el => observer.observe(el));
 }
 
-// 古いキャッシュ(localStorage)やサーバーデータに、コード定義の既定カードが
-// 欠けていたら補完する。これで「筋肉テスト」等の新カードが常に一覧に出る。
-function withDefaultCards(list) {
-  const arr = Array.isArray(list) ? list.slice() : defaultMemory.slice();
-  const ids = new Set(arr.map(m => m && m.id));
-  defaultMemory.forEach(d => { if (!ids.has(d.id)) arr.push(d); });
-  return arr;
-}
-
 function renderMemorySection() {
   const el = document.getElementById('memory-grid');
   if (!el) return;
-  const memory = withDefaultCards(getData('st_memory', defaultMemory));
+  const memory = getData('st_memory', defaultMemory);
   el.innerHTML = memory.map(m => `
     <div class="memory-card reveal${m.urlMemory ? ' card--mode-select' : (m.url ? ' card--has-url' : '')}" data-title="${m.title}" data-category="${m.category}"${m.urlMemory ? ` data-url-memory="${m.urlMemory}" data-url-quiz="${m.urlQuiz}"` : (m.url ? ` data-url="${m.url}"` : '')}>
       <div class="memory-card__header">
