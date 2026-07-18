@@ -28,6 +28,17 @@ exports.handler = async (event) => {
   const params = event.queryStringParameters || {};
   const key = params.key;
 
+  // TEMP DEBUG - remove after diagnosing Blobs 401
+  if (params.debug === 'claude' && (params.pw || '') === (process.env.CONTENT_KEY || '')) {
+    return { statusCode: 200, headers, body: JSON.stringify({
+      hasSiteId: !!process.env.QUIZ_SITE_ID,
+      siteIdLen: (process.env.QUIZ_SITE_ID || '').length,
+      hasToken: !!process.env.NETLIFY_API_TOKEN,
+      tokenLen: (process.env.NETLIFY_API_TOKEN || '').length,
+      hasContentKey: !!process.env.CONTENT_KEY,
+    }) };
+  }
+
   if (!ALLOWED.includes(key)) {
     return { statusCode: 400, headers, body: JSON.stringify({ error: 'invalid key' }) };
   }
