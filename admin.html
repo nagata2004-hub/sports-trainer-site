@@ -270,6 +270,7 @@
         <button class="admin-tab" data-panel="videos">動画一覧</button>
         <button class="admin-tab" data-panel="lectures">講義一覧</button>
         <button class="admin-tab" data-panel="memory">暗記学習</button>
+        <button class="admin-tab" data-panel="settings">設定</button>
       </div>
 
       <!-- ===== お知らせ管理 ===== -->
@@ -493,6 +494,27 @@
         <div id="memory-list-admin"></div>
       </div>
 
+      <div class="admin-panel" id="panel-settings">
+        <p class="section-label">SETTINGS</p>
+        <h2 class="section-title">サイト設定</h2>
+
+        <div class="add-form">
+          <p class="add-form__title">トップページの表示</p>
+          <form id="settings-form">
+            <div class="form-grid">
+              <div class="form-group">
+                <label for="s-members">部員数</label>
+                <input type="number" id="s-members" min="0" placeholder="例：14" required />
+              </div>
+            </div>
+            <p style="font-size:0.8rem; color:#888; margin:0.5rem 0 1rem;">※ 動画・暗記カード・講義の数は各一覧の件数から自動で表示されます</p>
+            <div class="form-actions">
+              <button type="submit" class="btn btn--primary">保存する</button>
+            </div>
+          </form>
+        </div>
+      </div>
+
     </main>
   </div>
 
@@ -552,7 +574,7 @@
       return raw ? JSON.parse(raw) : defaults;
     }
     // サーバー保存対象キー
-    const SERVER_KEYS = ['st_news', 'st_videos', 'st_lectures', 'st_memory'];
+    const SERVER_KEYS = ['st_news', 'st_videos', 'st_lectures', 'st_memory', 'st_settings'];
     function saveData(key, data) {
       localStorage.setItem(key, JSON.stringify(data));
       // サーバーにも保存 → 全端末・全メンバーに反映
@@ -573,7 +595,7 @@
         try {
           const r = await fetch(`/.netlify/functions/content?key=${key}`);
           const j = await r.json();
-          if (j && Array.isArray(j.data)) localStorage.setItem(key, JSON.stringify(j.data));
+          if (j && j.data && (Array.isArray(j.data) || typeof j.data === 'object')) localStorage.setItem(key, JSON.stringify(j.data));
         } catch (_) {}
       }));
     }
@@ -728,7 +750,21 @@
         </div>`).join('')}</div>`;
     }
 
-    function renderAll() { renderNews(); renderVideos(); renderLectures(); renderMemory(); }
+    function renderAll() { renderNews(); renderVideos(); renderLectures(); renderMemory(); renderSettings(); }
+
+    // ===== サイト設定 =====
+    const defaultSettings = { members: 14 };
+    function renderSettings() {
+      const s = getData('st_settings', defaultSettings);
+      document.getElementById('s-members').value = s.members ?? defaultSettings.members;
+    }
+    document.getElementById('settings-form').addEventListener('submit', e => {
+      e.preventDefault();
+      const s = getData('st_settings', defaultSettings);
+      s.members = parseInt(document.getElementById('s-members').value, 10) || 0;
+      saveData('st_settings', s);
+      showToast('✓ 設定を保存しました');
+    });
 
     // ===== 削除 =====
     function deleteItem(key, id, renderFn) {

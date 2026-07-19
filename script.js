@@ -567,10 +567,13 @@ const progressObserver = new IntersectionObserver(entries => {
 
 // ===== ヒーロー統計（実データの件数を表示） =====
 const statDefaults = { st_videos: defaultVideos, st_lectures: defaultLectures, st_memory: defaultMemory };
+const defaultSettings = { members: 14 };
 function updateHeroStats() {
   document.querySelectorAll('.stat__num[data-stat]').forEach(el => {
     const key = el.dataset.stat;
-    const n = getData(key, statDefaults[key] || []).length;
+    const n = key === 'st_settings'
+      ? (getData(key, defaultSettings).members ?? defaultSettings.members)
+      : getData(key, statDefaults[key] || []).length;
     el.dataset.count = n;
     el.textContent = n.toLocaleString('ja-JP');
   });
@@ -592,13 +595,13 @@ initFilter('memory-grid');
 // ===== サーバーから最新コンテンツを取得して再描画 =====
 // まずlocalStorage/既定値で即表示 → サーバーの最新で上書き（全端末で共有）
 (async function syncContentFromServer() {
-  const keys = ['st_news', 'st_videos', 'st_lectures', 'st_memory'];
+  const keys = ['st_news', 'st_videos', 'st_lectures', 'st_memory', 'st_settings'];
   let changed = false;
   await Promise.all(keys.map(async (key) => {
     try {
       const res = await fetch(`/.netlify/functions/content?key=${key}`);
       const json = await res.json();
-      if (json && Array.isArray(json.data)) {
+      if (json && json.data && (Array.isArray(json.data) || typeof json.data === 'object')) {
         localStorage.setItem(key, JSON.stringify(json.data));
         changed = true;
       }
