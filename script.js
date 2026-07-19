@@ -565,7 +565,19 @@ const progressObserver = new IntersectionObserver(entries => {
   });
 }, { threshold: 0.3 });
 
+// ===== ヒーロー統計（実データの件数を表示） =====
+const statDefaults = { st_videos: defaultVideos, st_lectures: defaultLectures, st_memory: defaultMemory };
+function updateHeroStats() {
+  document.querySelectorAll('.stat__num[data-stat]').forEach(el => {
+    const key = el.dataset.stat;
+    const n = getData(key, statDefaults[key] || []).length;
+    el.dataset.count = n;
+    el.textContent = n.toLocaleString('ja-JP');
+  });
+}
+
 // ===== 初期レンダリング =====
+updateHeroStats();
 renderNewsSection();
 renderVideosSection();
 renderLecturesSection();
@@ -593,6 +605,7 @@ initFilter('memory-grid');
     } catch (_) { /* オフライン時は既存表示のまま */ }
   }));
   if (changed) {
+    updateHeroStats();
     renderNewsSection();
     renderVideosSection();
     renderLecturesSection();
@@ -816,14 +829,19 @@ setTimeout(() => {
 
   // --- 数字カウントアップ ---
   gsap.utils.toArray('.stat__num').forEach(el => {
-    const target = parseInt(el.textContent, 10);
-    if (isNaN(target)) return;
-    const obj = { v: 0 };
+    if (!el.dataset.count) {
+      const initial = parseInt(el.textContent, 10);
+      if (isNaN(initial)) return;
+      el.dataset.count = initial;
+    }
+    // 目標値は毎フレームdata-countから読む（サーバー同期で件数が変わっても追従）
+    const obj = { p: 0 };
     gsap.to(obj, {
-      v: target, duration: 2, ease: 'power2.out',
+      p: 1, duration: 2, ease: 'power2.out',
       scrollTrigger: { trigger: el, start: 'top 88%', once: true },
       onUpdate() {
-        el.textContent = Math.round(obj.v).toLocaleString('ja-JP');
+        const target = parseInt(el.dataset.count, 10) || 0;
+        el.textContent = Math.round(obj.p * target).toLocaleString('ja-JP');
       }
     });
   });
