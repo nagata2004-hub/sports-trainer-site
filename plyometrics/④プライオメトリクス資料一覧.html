@@ -121,8 +121,8 @@
       flex: 1; background: var(--accent); color: var(--white);
       padding: 20px 16px; text-align: center; position: relative;
     }
-    .ssc-step:nth-child(2) { background: var(--yellow); }
-    .ssc-step:nth-child(3) { background: var(--green); border-radius: 0 8px 8px 0; }
+    .ssc-step.s2 { background: var(--yellow); }
+    .ssc-step.s3 { background: var(--green); border-radius: 0 8px 8px 0; }
     .ssc-step:first-child  { border-radius: 8px 0 0 8px; }
     .ssc-step h4 { font-size: 1rem; font-weight: bold; margin-bottom: 6px; }
     .ssc-step p  { font-size: 0.83rem; line-height: 1.4; }
@@ -151,6 +151,12 @@
     .accordion summary::after { content: '+'; font-size: 1.3rem; }
     .accordion[open] summary::after { content: '−'; }
     .accordion-body { padding: 16px 18px; background: var(--white); }
+    .info-box, .accordion-body { overflow-x: auto; }
+    .note { margin-top: 12px; padding: 10px 14px; background: #FEF9E7; border-left: 4px solid #F39C12; border-radius: 6px; font-size: 0.88rem; line-height: 1.7; }
+    .note strong { color: #B7770D; }
+    .key { margin-top: 12px; padding: 10px 14px; background: var(--light); border-left: 4px solid var(--accent); border-radius: 6px; font-size: 0.9rem; line-height: 1.7; }
+    .info-box p.lead { line-height: 1.8; font-size: 0.95rem; margin-bottom: 12px; }
+    .info-box ul.plain { list-style: disc; padding-left: 22px; line-height: 1.9; font-size: 0.92rem; }
 
     /* ── Quiz ── */
     .quiz-q {
@@ -214,7 +220,7 @@
 <!-- ═══════════════════ HOME ═══════════════════ -->
 <section id="home" class="active">
   <p class="sec-title">資料一覧</p>
-  <p style="margin-bottom:20px;color:var(--gray);">以下の7種類の資料を用意しました。各ファイルを開いてご活用ください。</p>
+  <p style="margin-bottom:20px;color:var(--gray);">以下の6種類の資料を用意しました。各ファイルを開いてご活用ください。</p>
   <div class="card-grid">
     <a class="card" href="①プライオメトリクス入門テキスト.docx" target="_blank">
       <div class="card-header" style="border-top:4px solid #1F5C8B;">
@@ -231,7 +237,7 @@
       <div class="card-header" style="border-top:4px solid #27AE60;">
         <div class="card-icon">📊</div>
         <div class="card-title">②内容まとめ（Excel）</div>
-        <div class="card-desc">概要・プログラムデザイン・ドリル一覧（下半身41種・上半身7種）・安全基準を5シートにまとめたスプレッドシート。</div>
+        <div class="card-desc">概要・プログラムデザイン・ドリル一覧（下半身41種・上半身と体幹7種）・安全基準を5シートにまとめたスプレッドシート。</div>
       </div>
       <div class="card-footer">
         <span class="tag tag-xlsx">Excel (.xlsx)</span>
@@ -242,7 +248,7 @@
       <div class="card-header" style="border-top:4px solid #E67E22;">
         <div class="card-icon">🖼️</div>
         <div class="card-title">③インフォグラフィック（PNG）</div>
-        <div class="card-desc">SSCの3段階・力学モデル・強度ピラミッド・ドリルカテゴリを1枚のビジュアルにまとめた画像。SNSやスライドに活用可。</div>
+        <div class="card-desc">SSCの3つの局面・力学モデル・強度ピラミッド・ドリルカテゴリを1枚のビジュアルにまとめた画像。SNSやスライドに活用可。</div>
       </div>
       <div class="card-footer">
         <span class="tag tag-png">画像 (.png)</span>
@@ -264,7 +270,7 @@
       <div class="card-header" style="border-top:4px solid #2E86C1;">
         <div class="card-icon">📑</div>
         <div class="card-title">⑤講義用スライド（PowerPoint）</div>
-        <div class="card-desc">全20スライド構成の自習用プレゼンテーション。図解・表・ドリル写真説明を含む。オンライン共有に最適。</div>
+        <div class="card-desc">全20スライド構成の自習用プレゼンテーション。図解・表・全48ドリルの解説を含む。オンライン共有に最適。</div>
       </div>
       <div class="card-footer">
         <span class="tag tag-pptx">PowerPoint (.pptx)</span>
@@ -275,11 +281,11 @@
       <div class="card-header" style="border-top:4px solid #6C3483;">
         <div class="card-icon">✏️</div>
         <div class="card-title">⑥理解度クイズ（HTML内蔵）</div>
-        <div class="card-desc">全15問の選択式クイズ。このWebページの「理解度クイズ」タブから即座に解答・採点できます。</div>
+        <div class="card-desc">全18問の選択式クイズ。このWebページの「理解度クイズ」タブから即座に解答・採点できます。</div>
       </div>
       <div class="card-footer">
         <span class="tag tag-quiz">クイズ（HTML内蔵）</span>
-        <span style="font-size:0.82rem;color:var(--gray);">全15問 → クイズへ</span>
+        <span style="font-size:0.82rem;color:var(--gray);">全18問 → クイズへ</span>
       </div>
     </a>
   </div>
@@ -288,11 +294,11 @@
   <div class="info-box">
     <h3>本講義の学習目標（S&C領域 プライオメトリクス）</h3>
     <ul style="list-style:disc; padding-left:22px; line-height:2.0; font-size:0.95rem;">
-      <li>プライオメトリクスの生理学を説明することができる</li>
-      <li>ストレッチ・ショートニングサイクル（中間〜短縮サイクル）の各局面を区別することができる</li>
-      <li>プライオメトリクストレーニングプログラムの構成要素を識別することができる</li>
-      <li>安全で適切なプライオメトリックトレーニングのプログラムをデザインすることができる</li>
-      <li>下記を参照および上半身プライオメトリックエクササイズを正しく実施する方法について支援することができる</li>
+      <li>プライオメトリクスの仕組み（力学的・神経生理学的なしくみ）を説明できる</li>
+      <li>ストレッチ・ショートニングサイクル（SSC）の3つの局面を区別できる</li>
+      <li>プライオメトリックトレーニングのプログラムを構成する要素を挙げられる</li>
+      <li>安全で効果的なプライオメトリックトレーニングのプログラムをデザインできる</li>
+      <li>下半身・上半身のプライオメトリックエクササイズを正しく行えるよう指導できる</li>
     </ul>
   </div>
 </section>
@@ -303,60 +309,74 @@
 
   <div class="info-box">
     <h3>プライオメトリクスとは</h3>
-    <p style="line-height:1.8;font-size:0.95rem;margin-bottom:14px;">
-      <strong>プライオメトリクス</strong>とは、筋肉が素早く伸ばされた直後に収縮することで最大の力を発揮できるトレーニング方法です。
-      ギリシャ語の「プリオ（plio：多く）」と「メトリック（metric：長さ）」が語源です。
+    <p class="lead">
+      <strong>プライオメトリクス</strong>とは、筋ができるだけ短い時間で最大の力を発揮できるようにするための運動です。
+      反動動作（<strong>ストレッチ・ショートニングサイクル：SSC</strong>）を使った、素早くパワフルな動きが特徴です。
     </p>
-    <p style="line-height:1.8;font-size:0.95rem;">
-      目的は <strong>ストレッチ・ショートニングサイクル（SSC）</strong> を活用して、筋の反応速度とパワー発揮能力を向上させることです。
+    <p class="lead">
+      語源はギリシャ語で「長さが伸びること」（plio＝さらに、metric＝長さ）。
+    </p>
+    <p class="lead" style="margin-bottom:0;">
+      ねらいは、<strong>筋・腱の弾性</strong>と<strong>伸張反射</strong>の両方を利用して、そのあとに続く動作のパワーを大きくすることです。
+      パワー（力×スピード）の向上に役立つことが示されており、そのしくみは「力学的モデル」と「神経生理学的モデル」の2つで説明されます。
     </p>
   </div>
 
   <div class="info-box">
-    <h3>ストレッチ・ショートニングサイクル（SSC）の3段階</h3>
+    <h3>ストレッチ・ショートニングサイクル（SSC）の3つの局面</h3>
     <div class="ssc-flow">
       <div class="ssc-step">
-        <h4>第1段階<br>伸張性局面</h4>
-        <p>主動筋が引き伸ばされる<br>弾性エネルギーを蓄積</p>
+        <h4>第Ⅰ局面<br>伸張性局面</h4>
+        <p>主働筋が引き伸ばされる<br>腱などに弾性エネルギーが蓄積<br>筋紡錘が刺激される</p>
       </div>
       <div class="ssc-arrow">▶</div>
-      <div class="ssc-step">
-        <h4>第2段階<br>アモルチゼーション相</h4>
-        <p>伸張から短縮への<br>切り替えの瞬間（極めて短時間）</p>
+      <div class="ssc-step s2">
+        <h4>第Ⅱ局面<br>償却局面</h4>
+        <p>伸張から短縮への切り返し<br>（Ⅰ・Ⅲの間の「休止」）<br>脊髄で信号が中継される</p>
       </div>
       <div class="ssc-arrow">▶</div>
-      <div class="ssc-step">
-        <h4>第3段階<br>短縮性局面</h4>
-        <p>筋肉が収縮して<br>エネルギーを解放・パワー発揮</p>
+      <div class="ssc-step s3">
+        <h4>第Ⅲ局面<br>短縮性局面</h4>
+        <p>主働筋が短縮する<br>蓄えた弾性エネルギーを放出<br>反射で筋活動が増幅</p>
       </div>
     </div>
-    <p style="font-size:0.88rem;color:var(--gray);margin-top:10px;">
-      ★ 第1段階（伸張）から第3段階（短縮）への移行時間が短いほど、蓄えたエネルギーをより多く利用できます。
+    <div class="key">
+      <strong>★ 最も重要なのは償却局面</strong>：できるだけ短くすることがポイント。償却局面が長引くと、蓄えたエネルギーは熱として失われ、伸張反射による増幅も得られなくなります。
+    </div>
+    <p class="lead" style="margin-top:14px;">
+      <strong>例：走り幅跳びの踏み切り</strong>　接地で腓腹筋が急に引き伸ばされ（伸張性局面）→ 一瞬動きが止まり（償却局面）→ 足関節を底屈させて地面を押し出す（短縮性局面）。
+    </p>
+    <p class="lead" style="margin-bottom:0;">
+      <strong>伸張の速さも大切</strong>：反動なしの「静的スクワットジャンプ」より「反動をつけたジャンプ」、さらに「助走からのジャンプ」の方が高く跳べます。伸張が速いほど、筋の動員と短縮性局面の筋活動が大きくなるためです。
     </p>
   </div>
 
   <div class="info-box">
-    <h3>力学的モデル（弾性要素）</h3>
+    <h3>力学的モデル（筋と腱のバネ）</h3>
     <table class="styled-table">
-      <thead><tr><th>要素</th><th>略称</th><th>役割</th><th>プライオメトリクスでの重要度</th></tr></thead>
+      <thead><tr><th>要素</th><th>略称</th><th>主な中身</th><th>はたらき</th></tr></thead>
       <tbody>
-        <tr><td><strong>直列弾性要素</strong></td><td>SEC</td><td>腱・腱膜に蓄えられる弾性エネルギー</td><td style="color:var(--red);font-weight:bold;">主役 ★★★</td></tr>
-        <tr><td><strong>並列弾性要素</strong></td><td>PEC</td><td>筋膜などの受動的な弾性</td><td>補助的 ★</td></tr>
+        <tr><td><strong>直列弾性要素</strong></td><td>SEC</td><td>大部分は腱（筋の要素も一部含む）</td><td>引き伸ばされるとバネのように弾性エネルギーを蓄え、直後の短縮で放出して力を上乗せする。<strong style="color:var(--red);">プライオメトリクスで重要な役割</strong></td></tr>
+        <tr><td><strong>収縮要素</strong></td><td>CC</td><td>アクチン・ミオシン・クロスブリッジ</td><td>短縮性筋活動のときに主に力を発揮する</td></tr>
+        <tr><td><strong>並列弾性要素</strong></td><td>PEC</td><td>筋外膜・筋周膜・筋内膜・筋鞘</td><td>刺激を受けていない筋が伸ばされたときに、受動的に力を発揮する</td></tr>
       </tbody>
     </table>
+    <div class="key">伸張の直後に短縮しなかったり、伸張性局面が長すぎたり、関節の動く範囲が大きすぎたりすると、蓄えたエネルギーは熱として失われます。</div>
   </div>
 
   <div class="info-box">
     <h3>神経生理学的モデル（伸張反射）</h3>
-    <p style="line-height:1.8;font-size:0.95rem;">
-      骨格筋の中には <strong>筋紡錘</strong> という感覚受容器があります。
-      筋肉が急激に引き伸ばされると、筋紡錘が感知し、脊髄を経由して「筋肉を収縮させよ！」という信号を瞬時に送ります。
-      これが <strong>伸張反射</strong> です。プライオメトリクスではこの反射を訓練することで、より素早く強い反応が得られるようになります。
+    <p class="lead">
+      筋の中にある <strong>筋紡錘</strong> は、伸張の速さと大きさを感知する受容器です。
+      筋が素早く引き伸ばされると、筋紡錘からの信号が <strong>Ia線維</strong> を通って脊髄へ送られ、<strong>α運動神経</strong> を介して主働筋に「縮め」という信号が返ってきます。
+      これが <strong>伸張反射</strong>（意思とは関係なく起こる反応）で、主働筋の活動が高まり、発揮される力が大きくなります（増強効果）。
     </p>
-    <p style="margin-top:12px;line-height:1.8;font-size:0.95rem;">
-      また、<strong>ゴルジ腱器官（GTO）</strong> は過度の張力から筋を守る保護機構として働きます。
-      プライオメトリクスのトレーニングにより、GTOの抑制閾値が上昇し、より大きな力の発揮が可能になります。
-    </p>
+    <ul class="plain">
+      <li>伸張から短縮までの時間が長すぎたり、動作が大きすぎたりすると、反射による上乗せは得られない</li>
+      <li>伸張反射の潜伏時間（刺激から筋活動まで）の目安：大腿四頭筋 20〜30ms、腓腹筋 30〜45ms（脊髄から遠いほど長い）</li>
+      <li>力の増大には力学的・神経生理学的の両方が関わると考えられているが、それぞれがどの程度寄与するかはまだ明らかではない</li>
+    </ul>
+    <div class="note"><strong>まぎらわしい用語：</strong>ゴルジ腱器官は腱の張力を感知する受容器です。素早い伸張を検出して伸張反射を起こすのは<strong>筋紡錘</strong>です。</div>
   </div>
 
   <div class="info-box">
@@ -364,14 +384,20 @@
     <table class="styled-table">
       <thead><tr><th>用語</th><th>説明</th></tr></thead>
       <tbody>
-        <tr><td><strong>プライオメトリクス</strong></td><td>伸張・短縮サイクルを利用した爆発的トレーニング</td></tr>
-        <tr><td><strong>SSC</strong></td><td>筋が伸ばされた後に短縮する一連のサイクル</td></tr>
-        <tr><td><strong>SEC（直列弾性要素）</strong></td><td>腱や腱膜などに蓄えられる弾性エネルギー</td></tr>
-        <tr><td><strong>伸張反射</strong></td><td>筋紡錘が急激な伸張を感知して収縮を促す反射</td></tr>
-        <tr><td><strong>デプスジャンプ</strong></td><td>高い台から降りて即座に跳ぶ、最高強度のドリル</td></tr>
-        <tr><td><strong>筋紡錘</strong></td><td>筋肉内の感覚受容器。伸張反射を起こす</td></tr>
-        <tr><td><strong>GTO（ゴルジ腱器官）</strong></td><td>過度の張力から筋を守る保護機構</td></tr>
-        <tr><td><strong>漸進性（Progressive Overload）</strong></td><td>少しずつ負荷を高めていくトレーニング原則</td></tr>
+        <tr><td><strong>プライオメトリクス</strong></td><td>反動動作（SSC）を使い、短い時間で大きな力を発揮する能力を高める運動</td></tr>
+        <tr><td><strong>パワー</strong></td><td>力とスピードの関係を表す用語。プライオメトリクスで高めたい能力</td></tr>
+        <tr><td><strong>SSC（ストレッチ・ショートニングサイクル）</strong></td><td>伸張性局面 → 償却局面 → 短縮性局面の一連の流れ</td></tr>
+        <tr><td><strong>伸張性局面</strong></td><td>主働筋が引き伸ばされ、弾性エネルギーが蓄えられる局面</td></tr>
+        <tr><td><strong>償却局面</strong></td><td>伸張性局面と短縮性局面の間の切り返し。短いほどよい</td></tr>
+        <tr><td><strong>短縮性局面</strong></td><td>主働筋が短縮し、蓄えたエネルギーが放出される局面</td></tr>
+        <tr><td><strong>SEC（直列弾性要素）</strong></td><td>主に腱。バネのように弾性エネルギーを蓄えて放出する</td></tr>
+        <tr><td><strong>筋紡錘</strong></td><td>伸張の速さと大きさを感知する筋内の受容器。伸張反射を起こす</td></tr>
+        <tr><td><strong>伸張反射</strong></td><td>筋を引き伸ばす刺激に対して、意思とは関係なく筋が収縮する反応</td></tr>
+        <tr><td><strong>増強効果</strong></td><td>伸張反射などによって、続く短縮性筋活動の力が高まること</td></tr>
+        <tr><td><strong>デプスジャンプ</strong></td><td>ボックスから降りて着地し、ただちに跳ぶドリル。強度が高い</td></tr>
+        <tr><td><strong>コンプレックス（複合）トレーニング</strong></td><td>高強度のレジスタンストレーニングの後にプライオメトリクスを行う方法</td></tr>
+        <tr><td><strong>バランス</strong></td><td>一定時間、動かずに姿勢を保つ能力。下半身プライオメトリクスの前提条件</td></tr>
+        <tr><td><strong>漸進的過負荷（Progressive Overload）</strong></td><td>頻度・量・強度を組み合わせて、体系的に負荷を上げていく原則</td></tr>
       </tbody>
     </table>
   </div>
@@ -383,138 +409,177 @@
 
   <div class="info-box">
     <h3>プログラムの変数</h3>
+    <p class="lead">プログラムには、レジスタンストレーニングと同じように <strong>様式・強度・頻度・回復・量・継続期間・漸進・ウォームアップ</strong> のすべてを含めます。まずは競技・ポジション・トレーニング状態から選手の<strong>ニーズ分析</strong>を行います。</p>
     <div class="var-grid">
-      <div class="var-card"><div class="val">6〜10週</div><div class="lbl">プログラム期間</div></div>
-      <div class="var-card"><div class="val">48〜72時間</div><div class="lbl">セッション間の回復時間の目安</div></div>
-      <div class="var-card"><div class="val">80〜140</div><div class="lbl">1セッションあたりの回数</div></div>
-    </div>
-    <div style="margin-top:16px; padding:14px 16px; background:#FEF9E7; border-left:4px solid #F39C12; border-radius:6px; font-size:0.9rem; line-height:1.8;">
-      <strong style="color:#B7770D;">頻度について：</strong>プライオメトリクスの頻度に関して適切なガイドラインを示せるほど十分な研究は行われていない。頻度は競技の種類によって異なり、またシーズン中とオフシーズンでも変わる（オフシーズンでより多く実施する）。そのため、<strong>適切な回復時間を設けることと実践的な経験が最善の判断材料</strong>となる。
+      <div class="var-card"><div class="val">週1〜3回</div><div class="lbl">頻度の目安（競技・時期・経験で変わる）</div></div>
+      <div class="var-card"><div class="val">48〜72時間</div><div class="lbl">セッション間の回復の目安</div></div>
+      <div class="var-card"><div class="val">80〜140</div><div class="lbl">開始時の量（1セッションの接地回数）</div></div>
+      <div class="var-card"><div class="val">6〜10週</div><div class="lbl">プログラム期間の目安</div></div>
     </div>
   </div>
 
   <div class="info-box">
-    <h3>回復について（p.520）</h3>
-    <p style="font-size:0.93rem;line-height:1.8;margin-bottom:14px;">プライオメトリクスドリルでは、無酸素性パワーを向上させるために最大努力が行われるので、<strong>完全かつ適切な回復</strong>（反復回数間・セット間・ワークアウト間）が必要となる。</p>
+    <h3>頻度</h3>
+    <p class="lead">頻度＝週あたりのセッション数。通常は<strong>週1〜3回</strong>です。セッション間に典型的な回復時間（<strong>48〜72時間</strong>）をとると、週2〜3回になります。</p>
+    <table class="styled-table">
+      <thead><tr><th>例</th><th>シーズン中</th><th>オフシーズン</th></tr></thead>
+      <tbody>
+        <tr><td>アメリカンフットボール選手</td><td>週1回</td><td>週2〜3回</td></tr>
+        <tr><td>陸上競技選手</td><td>週2〜3回</td><td>週3〜4回</td></tr>
+      </tbody>
+    </table>
+    <div class="note"><strong>研究の現状：</strong>頻度について明確なガイドラインを示せるほどの研究はまだありません。セッション間に適切な回復をとることと、実践での経験が最善の判断材料です。</div>
+  </div>
+
+  <div class="info-box">
+    <h3>回復</h3>
+    <p class="lead">プライオメトリクスはパワーを高めるために<strong>最大努力</strong>で行うので、反復の間・セットの間・ワークアウトの間に、十分な回復が必要です。</p>
     <table class="styled-table">
       <thead><tr><th>回復の種類</th><th>目安</th><th>備考</th></tr></thead>
       <tbody>
-        <tr><td><strong>反復回数間</strong></td><td>5〜10秒</td><td>デプスジャンプの場合</td></tr>
-        <tr><td><strong>セット間</strong></td><td>2〜3分</td><td>デプスジャンプの場合</td></tr>
-        <tr><td><strong>ワークアウト間</strong></td><td>2〜4日間</td><td>競技・時期によって異なる</td></tr>
+        <tr><td><strong>反復の間</strong></td><td>5〜10秒</td><td>デプスジャンプの例</td></tr>
+        <tr><td><strong>セットの間</strong></td><td>2〜3分</td><td>デプスジャンプの例。運動‐休息比で決める</td></tr>
+        <tr><td><strong>ワークアウトの間</strong></td><td>2〜4日</td><td>競技や時期によって変える</td></tr>
       </tbody>
     </table>
-    <ul style="margin-top:12px;padding-left:22px;line-height:2.0;font-size:0.9rem;">
-      <li>運動-休息比は <strong>1:1〜1:10</strong>。実施するドリルの量とタイプによって異なる</li>
-      <li>プライオメトリクスは<strong>心肺系コンディショニングではなく、パワートレーニング</strong>として考える</li>
-      <li>同じ身体部位のドリルを<strong>2日連続で実施しない</strong></li>
+    <ul class="plain" style="margin-top:12px;">
+      <li>運動‐休息比は <strong>1:5〜1:10</strong>（ドリルの量とタイプによって変わる）</li>
+      <li>プライオメトリクスは心肺系のコンディショニングではなく、<strong>パワートレーニング</strong>として扱う</li>
+      <li>同じ身体部位のドリルを<strong>2日連続で行わない</strong></li>
     </ul>
-    <div style="margin-top:12px;padding:10px 14px;background:#FEF9E7;border-left:4px solid #F39C12;border-radius:6px;font-size:0.85rem;line-height:1.7;">
-      <strong style="color:#B7770D;">研究の現状：</strong>回復時間の設定に関するプライオメトリクスの研究は近い将来数多く行われることが求められる。回復のためのより具体的な時間を示すには、この分野におけるさらなる研究が必要である。
-    </div>
   </div>
 
   <div class="info-box">
-    <h3>経験レベル別 トレーニング量</h3>
+    <h3>量（ボリューム）</h3>
+    <p class="lead">下半身の量は、1回のワークアウトでの<strong>足の接地回数</strong>で数えます（片足でも両足でも1回）。バウンドは距離で数えることもあります（例：ダブルレッグ・バウンドを1回30mから始め、100mへ伸ばす）。上半身は投てき・キャッチの回数で数えます。</p>
     <table class="styled-table">
-      <thead><tr><th>経験レベル</th><th>1セッションあたりの回数</th></tr></thead>
+      <thead><tr><th>プライオメトリクスの経験</th><th>開始時の量（1セッションの接地回数）</th></tr></thead>
       <tbody>
-        <tr><td>初心者（経験なし）</td><td><strong>80〜100回</strong></td></tr>
-        <tr><td>中級者（少し経験あり）</td><td><strong>100〜120回</strong></td></tr>
-        <tr><td>上級者（かなり経験あり）</td><td><strong>120〜140回</strong></td></tr>
+        <tr><td>初心者（未経験）</td><td><strong>80〜100</strong></td></tr>
+        <tr><td>中級者（少し経験あり）</td><td><strong>100〜120</strong></td></tr>
+        <tr><td>上級者（かなりの経験あり）</td><td><strong>120〜140</strong></td></tr>
+      </tbody>
+    </table>
+    <div class="key">一般に、<strong>強度を上げたら量は減らします</strong>。</div>
+  </div>
+
+  <div class="info-box">
+    <h3>強度</h3>
+    <p class="lead">強度＝筋・結合組織・関節にかかるストレスの大きさ。ドリルのタイプで大きく変わり、スキップは比較的低く、デプスジャンプは筋と関節に大きなストレスがかかります。</p>
+    <table class="styled-table">
+      <thead><tr><th>強度</th><th>ドリル例（数字は下の「ドリル一覧」の番号）</th></tr></thead>
+      <tbody>
+        <tr><td><span class="int-low">低</span></td><td>スキップ(18.20)、トゥーフット・アンクルホップ(18.1)、スクワットジャンプ(18.3)、立ち幅跳び(18.13)、プッシュオフ系(18.26〜28)</td></tr>
+        <tr><td><span class="int-mid">中</span></td><td>タックジャンプ(18.5)、障害物飛び越え(18.12)、ダブルレッグ・ホップ(18.14)、バリアホップ(18.17・18)</td></tr>
+        <tr><td><span class="int-high">高</span></td><td>デプスジャンプ(18.35〜41)、シングルレッグ・バーティカルジャンプ(18.11)、シングルレッグ・ホップ(18.16)、ジグザグホップ(18.15)</td></tr>
+      </tbody>
+    </table>
+    <h3 style="margin-top:22px;">強度に影響する要因（下半身）</h3>
+    <table class="styled-table">
+      <thead><tr><th>要因</th><th>影響</th></tr></thead>
+      <tbody>
+        <tr><td><strong>接地点</strong></td><td>片脚で行うと、両脚より筋・結合組織・関節へのストレスが大きい</td></tr>
+        <tr><td><strong>スピード</strong></td><td>速いほど強度が高い</td></tr>
+        <tr><td><strong>ドリルの高さ</strong></td><td>身体の重心が高くなるほど、着地の力が大きい</td></tr>
+        <tr><td><strong>体重</strong></td><td>重いほどストレスが大きい。ウェイトベスト・アンクルウェイトなどで強度を上げることもできる</td></tr>
       </tbody>
     </table>
   </div>
 
   <div class="info-box">
-    <h3>強度レベル</h3>
-    <table class="styled-table">
-      <thead><tr><th>強度</th><th>内容</th><th>主なドリル例</th></tr></thead>
-      <tbody>
-        <tr><td><span class="int-low">低</span></td><td>衝撃が小さい</td><td>アンクルホップ、スクワットジャンプ</td></tr>
-        <tr><td><span class="int-mid">中</span></td><td>中程度の衝撃</td><td>スタンディングジャンプ、ボックスジャンプ</td></tr>
-        <tr><td><span class="int-high">高</span></td><td>大きな衝撃</td><td>デプスジャンプ（最高強度）</td></tr>
-      </tbody>
-    </table>
-    <p style="font-size:0.85rem;color:var(--gray);margin-top:10px;">
-      強度に影響する要因：体重（重いほど強度増）・スピード（速いほど強度増）・ドリルの高さ（高いほど強度増）
-    </p>
+    <h3>漸進（だんだん負荷を上げる）</h3>
+    <p class="lead">プライオメトリクスはレジスタンストレーニングの一種なので、<strong>漸進的過負荷</strong>の原則に従います。頻度・量・強度を組み合わせて体系的に上げていき、通常は強度を上げたら量を減らします。</p>
+    <div class="key"><strong>例（オフシーズンのアメフト・週2回）：</strong>低強度×少〜中程度の量 → 中強度×少〜中程度の量 → 高強度×少〜中程度の量</div>
+    <p class="lead" style="margin-top:14px;margin-bottom:0;">プログラム期間は多くが<strong>6〜10週間</strong>。ただし垂直跳びの高さは、開始から4週間ほどの短期間でも向上することがあります。</p>
   </div>
 
   <div class="info-box">
     <h3>プログラム実施のステップ</h3>
     <ol style="list-style:decimal;padding-left:22px;line-height:2.2;font-size:0.95rem;">
-      <li>姿勢およびトレーニング分野で選手の適切なポジションを確認する</li>
-      <li>競技種目およびポジション別の適切なプライオメトリクスのデザインを確認する</li>
-      <li>適切なプライオメトリクストレーニングのデザイン（強度・回数・量・プログラムの継続期間・ウォームアップ）を設定する</li>
-      <li>選手に対して適切なテクニックと安全に留意した実施方法を指導する</li>
-      <li>選手に対して、適切なプライオメトリクスプログラムを適時に確認する</li>
+      <li>競技歴・トレーニング歴を含めて選手を評価する</li>
+      <li>競技・ポジション・選手個人に合った目標を決める</li>
+      <li>プログラムの変数（強度・頻度・回復・量・期間）を設定する</li>
+      <li>ジャンプ・着地・投てきの正しいテクニックを指導する</li>
+      <li>プログラムを適切に進めていく（漸進させる）</li>
     </ol>
   </div>
 
   <div class="info-box">
     <h3>ウォームアップドリル</h3>
+    <p class="lead">一般的なウォームアップとストレッチのあと、<strong>低強度のダイナミックな動き</strong>で構成する特異的ウォームアップを行います。</p>
     <table class="styled-table">
-      <thead><tr><th>ドリル</th><th>目的</th><th>実施方法</th></tr></thead>
+      <thead><tr><th>ドリル</th><th>ねらい・やり方</th></tr></thead>
       <tbody>
-        <tr><td>マーチング</td><td>ランニング動作の準備・股関節動作の調整</td><td>その場または移動しながら</td></tr>
-        <tr><td>ジョギング</td><td>下半身の連続動作の準備</td><td>軽いペースで継続</td></tr>
-        <tr><td>スキップ</td><td>上肢の反動動作の準備</td><td>リズミカルに連続</td></tr>
-        <tr><td>フットワーク</td><td>方向転換の準備</td><td>素早い足の動きを意識</td></tr>
-        <tr><td>ランジ</td><td>大腿・臀部の動的ストレッチ</td><td>フォワードステップ形式</td></tr>
+        <tr><td>マーチング</td><td>ランニング動作をまねる。姿勢と動作テクニックを強調し、走るための下半身の動きを促す</td></tr>
+        <tr><td>ジョギング</td><td>着地の衝撃と高強度ドリルへの準備。つま先ジョギング（かかとをつけない）、膝をあまり曲げないストレートレッグ・ジョギング、かかとでお尻を蹴るバットキック</td></tr>
+        <tr><td>スキップ</td><td>腕と脚の交互の動きを強調。素早い離地と着地を意識する</td></tr>
+        <tr><td>フットワーク</td><td>方向転換の準備（例：シャトル、シャッフル、パターン、ストライドドリル）</td></tr>
+        <tr><td>ランジ</td><td>フォワードステップ・ランジが基本。前方・側方・後方など複数方向でも行える</td></tr>
       </tbody>
     </table>
   </div>
 
   <div class="info-box">
-    <h3>レジスタンストレーニングとの組み合わせ（週スケジュール例）</h3>
+    <h3>レジスタンストレーニングとの組み合わせ</h3>
+    <ul class="plain">
+      <li><strong>下半身のレジスタンス × 上半身のプライオ</strong>、<strong>上半身のレジスタンス × 下半身のプライオ</strong>のように組み合わせる</li>
+      <li>高重量のレジスタンストレーニングとプライオメトリクスを<strong>同じ日に行うことは通常すすめられない</strong></li>
+      <li>ただし、高強度レジスタンスの後にプライオを行う<strong>コンプレックス（複合）トレーニング</strong>で効果が出る選手もいる（間に十分な回復をとる）</li>
+      <li>1RMの30%程度の負荷をかけたスクワットジャンプのように、レジスタンス種目にプライオ動作を組み合わせる方法もある（高強度プライオの経験がある選手に限る）</li>
+    </ul>
+    <h3 style="margin-top:22px;">週スケジュール例</h3>
     <table class="styled-table">
-      <thead><tr><th>曜日</th><th>レジスタンス</th><th>プライオメトリクス</th></tr></thead>
+      <thead><tr><th>曜日</th><th>レジスタンストレーニング</th><th>プライオメトリクス</th></tr></thead>
       <tbody>
         <tr><td>月</td><td>高強度・上半身</td><td>低強度・下半身</td></tr>
-        <tr><td>火</td><td>低強度・上半身</td><td>高強度・下半身</td></tr>
-        <tr><td>水</td><td>高強度・上半身</td><td>低強度・下半身</td></tr>
-        <tr><td>木</td><td colspan="2" style="text-align:center;color:var(--gray);">休息</td></tr>
+        <tr><td>火</td><td>低強度・下半身</td><td>高強度・上半身</td></tr>
+        <tr><td>水</td><td>低強度・上半身</td><td>高強度・下半身</td></tr>
         <tr><td>金</td><td>高強度・下半身</td><td>低強度・上半身</td></tr>
       </tbody>
     </table>
+    <div class="key">同じ日には「高強度×低強度」「上半身×下半身」になるように組み合わせるのがポイントです。</div>
+    <h3 style="margin-top:22px;">有酸素性運動との組み合わせ</h3>
+    <p class="lead" style="margin-bottom:0;">有酸素性運動はパワー発揮にマイナスに働く可能性があるため、プライオメトリクスは<strong>有酸素性持久力トレーニングの前</strong>に行うのが得策です。</p>
   </div>
 </section>
 
 <!-- ═══════════════════ DRILLS ═══════════════════ -->
 <section id="drills">
   <p class="sec-title">ドリル一覧</p>
+  <p style="margin-bottom:18px;color:var(--gray);font-size:0.9rem;">強度レベルは元の資料の表記に合わせています。同じカテゴリの中でも強度は低〜高まで幅があります。</p>
 
   <details class="accordion" open>
-    <summary>下半身 ─ その場ジャンプ（強度：低〜中）</summary>
+    <summary>下半身 ─ その場ジャンプ（強度：低〜高）</summary>
     <div class="accordion-body">
+      <p style="font-size:0.88rem;color:var(--gray);margin-bottom:10px;">同じ場所で跳んで着地する。垂直方向を強調し、休まず連続して行う（ジャンプとジャンプの間が償却局面）。</p>
       <table class="styled-table">
         <thead><tr><th>No.</th><th>ドリル名</th><th>強度</th><th>ポイント</th></tr></thead>
         <tbody>
-          <tr><td>18.1</td><td>トゥーフット・アンクルホップ</td><td><span class="int-low">低</span></td><td>足首の素早い動き。膝をほとんど使わない</td></tr>
-          <tr><td>18.2</td><td>シングルレッグ・アンクルホップ</td><td><span class="int-low">低</span></td><td>片脚バランスと足首強化</td></tr>
-          <tr><td>18.3</td><td>スクワットジャンプ</td><td><span class="int-low">低</span></td><td>スクワット姿勢から最大高さへ。SSC活用</td></tr>
-          <tr><td>18.4</td><td>ジャンプ＆リーチ</td><td><span class="int-low">低</span></td><td>目標にタッチするように跳ぶ</td></tr>
-          <tr><td>18.5</td><td>ダブルレッグ・タックジャンプ</td><td><span class="int-mid">中</span></td><td>空中で膝を引き寄せる</td></tr>
-          <tr><td>18.6</td><td>スプリット・スクワットジャンプ</td><td><span class="int-mid">中</span></td><td>脚を前後に開いた状態から跳ぶ</td></tr>
-          <tr><td>18.7</td><td>サイクルド・スプリットスクワットジャンプ</td><td><span class="int-high">高</span></td><td>空中で前後の脚を入れ替える</td></tr>
-          <tr><td>18.8</td><td>シングルレッグ・タックジャンプ</td><td><span class="int-high">高</span></td><td>片脚で最大高さへ跳び膝を引き寄せる</td></tr>
-          <tr><td>18.9</td><td>バイクジャンプ</td><td><span class="int-high">高</span></td><td>空中で自転車こぎ動作。高い調整力が必要</td></tr>
+          <tr><td>18.1</td><td>トゥーフット・アンクルホップ</td><td><span class="int-low">低</span></td><td>主に足関節を使って連続で跳ぶ。前後左右に移動しない</td></tr>
+          <tr><td>18.2</td><td>シングルレッグ・アンクルホップ</td><td><span class="int-mid">中</span></td><td>片脚で主に足関節を使って連続ホップ。反対の脚でも行う</td></tr>
+          <tr><td>18.3</td><td>スクワットジャンプ</td><td><span class="int-low">低</span></td><td>両手を頭の後ろで組み、スクワット姿勢から反動なしで跳ぶ。着地したらただちに繰り返す</td></tr>
+          <tr><td>18.4</td><td>ジャンプ＆リーチ</td><td><span class="int-low">低</span></td><td>頂点で目標にタッチ。ジャンプ間の遅れを最小限に</td></tr>
+          <tr><td>18.5</td><td>ダブルレッグ・タックジャンプ</td><td><span class="int-mid">中</span></td><td>膝を胸に引きつけて抱え込み、着地前に離す</td></tr>
+          <tr><td>18.6</td><td>スプリット・スクワットジャンプ</td><td><span class="int-mid">中</span></td><td>ランジ姿勢から跳び、同じ脚を前にして着地。セットごとに脚を入れ替える</td></tr>
+          <tr><td>18.7</td><td>サイクルド・スプリットスクワットジャンプ</td><td><span class="int-high">高</span></td><td>空中で前後の脚を入れ替える。ランジが深くなりすぎるとSSCがうまく働かない</td></tr>
+          <tr><td>18.8</td><td>シングルレッグ・タックジャンプ</td><td><span class="int-high">高</span></td><td>片脚で跳び、膝を引きつけて抱え込む</td></tr>
+          <tr><td>18.9</td><td>パイクジャンプ</td><td><span class="int-high">高</span></td><td>両脚をそろえて伸ばしたまま前に上げ、つま先に両手でタッチするように跳ぶ</td></tr>
         </tbody>
       </table>
     </div>
   </details>
 
   <details class="accordion">
-    <summary>下半身 ─ スタンディングジャンプ（強度：中〜高）</summary>
+    <summary>下半身 ─ スタンディングジャンプ（強度：低〜高）</summary>
     <div class="accordion-body">
+      <p style="font-size:0.88rem;color:var(--gray);margin-bottom:10px;">水平・垂直方向を強調。1回ごとに回復をはさみ、最大努力で行う。</p>
       <table class="styled-table">
         <thead><tr><th>No.</th><th>ドリル名</th><th>強度</th><th>ポイント</th></tr></thead>
         <tbody>
-          <tr><td>18.10</td><td>ダブルレッグ・バーティカルジャンプ</td><td><span class="int-mid">中</span></td><td>最大高さを目指す。反動から開始</td></tr>
-          <tr><td>18.11</td><td>シングルレッグ・バーティカルジャンプ</td><td><span class="int-high">高</span></td><td>片脚で最大高さへ</td></tr>
-          <tr><td>18.12</td><td>障害物飛び越え（ジャンプ・オーバー・バリア）</td><td><span class="int-high">高</span></td><td>前進しながら障害物を越える</td></tr>
-          <tr><td>18.13</td><td>立ち幅跳び</td><td><span class="int-mid">中</span></td><td>前方への最大距離ジャンプ</td></tr>
+          <tr><td>18.10</td><td>ダブルレッグ・バーティカルジャンプ</td><td><span class="int-low">低</span></td><td>腕を振り上げて目標へ最大努力で跳ぶ。ジャンプ間に回復をとる</td></tr>
+          <tr><td>18.11</td><td>シングルレッグ・バーティカルジャンプ</td><td><span class="int-high">高</span></td><td>片脚で目標へ跳ぶ。ジャンプ間に回復をとる</td></tr>
+          <tr><td>18.12</td><td>障害物飛び越え（ジャンプ・オーバー・バリア）</td><td><span class="int-mid">中</span></td><td>股・膝を曲げて両脚で越える。高さはコーン→ハードルと段階的に</td></tr>
+          <tr><td>18.13</td><td>立ち幅跳び</td><td><span class="int-low">低</span></td><td>腕振りを使って前方へ最大距離。ジャンプ間に回復をとる</td></tr>
         </tbody>
       </table>
     </div>
@@ -523,51 +588,55 @@
   <details class="accordion">
     <summary>下半身 ─ 連続ホップ＆ジャンプ（強度：中〜高）</summary>
     <div class="accordion-body">
+      <p style="font-size:0.88rem;color:var(--gray);margin-bottom:10px;">その場ジャンプとスタンディングジャンプを組み合わせた反復動作。</p>
       <table class="styled-table">
         <thead><tr><th>No.</th><th>ドリル名</th><th>強度</th><th>用具</th><th>ポイント</th></tr></thead>
         <tbody>
-          <tr><td>18.14</td><td>ダブルレッグ・ホップ</td><td><span class="int-mid">中</span></td><td>なし</td><td>連続して前方へホップ。素早く</td></tr>
-          <tr><td>18.15</td><td>ダブルレッグ・ジグザグホップ</td><td><span class="int-high">高</span></td><td>ハードル</td><td>10個のハードルを45〜60cmのジグザグで越える</td></tr>
-          <tr><td>18.16</td><td>シングルレッグ・ホップ</td><td><span class="int-high">高</span></td><td>なし</td><td>片脚で前方へ連続ホップ。短い接地時間</td></tr>
-          <tr><td>18.17</td><td>フロント・バリアホップ</td><td><span class="int-mid">中</span></td><td>コーン</td><td>障害物を前方から越えて連続ホップ</td></tr>
-          <tr><td>18.18</td><td>ラテラル・バリアホップ</td><td><span class="int-mid">中</span></td><td>コーン</td><td>横方向に障害物を越えて連続ホップ</td></tr>
-          <tr><td>18.19</td><td>4ハードルドリル</td><td><span class="int-high">高</span></td><td>ハードル×4</td><td>4つのハードルを連続で越えるコンビネーション</td></tr>
+          <tr><td>18.14</td><td>ダブルレッグ・ホップ</td><td><span class="int-mid">中</span></td><td>なし</td><td>前方へできるだけ大きく跳び、着地したらただちに繰り返す</td></tr>
+          <tr><td>18.15</td><td>ダブルレッグ・ジグザグホップ</td><td><span class="int-high">高</span></td><td>ハードル約10個（45〜60cm間隔）</td><td>ジグザグに置いたハードルの外側を斜めに跳び進む。一直線に並べると強度↓、片脚で行うと強度↑</td></tr>
+          <tr><td>18.16</td><td>シングルレッグ・ホップ</td><td><span class="int-high">高</span></td><td>なし</td><td>片脚で前方へ跳び、同じ脚で着地してただちに繰り返す</td></tr>
+          <tr><td>18.17</td><td>フロント・バリアホップ</td><td><span class="int-mid">中</span></td><td>コーン・ハードル（2個）</td><td>前方の障害物を連続で越える。高さを上げる・片脚で行うと高強度に</td></tr>
+          <tr><td>18.18</td><td>ラテラル・バリアホップ</td><td><span class="int-mid">中</span></td><td>コーン・ハードル</td><td>障害物を横に越えて往復。高さを上げる・片脚で行うと高強度に</td></tr>
+          <tr><td>18.19</td><td>4ハードルドリル</td><td><span class="int-high">高</span></td><td>ハードル4個（2組）</td><td>片脚立ちで、横に並べたハードルを側方へ跳び越えていく</td></tr>
         </tbody>
       </table>
     </div>
   </details>
 
   <details class="accordion">
-    <summary>下半身 ─ バウンド（強度：中〜高）</summary>
+    <summary>下半身 ─ バウンド（強度：低〜中）</summary>
     <div class="accordion-body">
+      <p style="font-size:0.88rem;color:var(--gray);margin-bottom:10px;">水平方向のスピードを強調。量は距離で数えるのが一般的で、通常30m以上の距離で行う。</p>
       <table class="styled-table">
         <thead><tr><th>No.</th><th>ドリル名</th><th>強度</th><th>ポイント</th></tr></thead>
         <tbody>
-          <tr><td>18.20</td><td>スキップ</td><td><span class="int-low">低</span></td><td>片足踏み込みとジャンプの組み合わせ</td></tr>
-          <tr><td>18.21</td><td>パワースキップ</td><td><span class="int-mid">中</span></td><td>最大高さと距離を狙うスキップ</td></tr>
-          <tr><td>18.22</td><td>バックワードスキップ</td><td><span class="int-mid">中</span></td><td>後ろ方向へのスキップ</td></tr>
-          <tr><td>18.23</td><td>サイドスキップ</td><td><span class="int-mid">中</span></td><td>側方へのスキップ。横方向のパワー強化</td></tr>
-          <tr><td>18.24</td><td>シングルアーム交互バウンド</td><td><span class="int-mid">中</span></td><td>片腕のスイングを使って推進力を高める</td></tr>
-          <tr><td>18.25</td><td>ダブルアーム交互バウンド</td><td><span class="int-high">高</span></td><td>両腕スイングで最大の推進力を発揮</td></tr>
+          <tr><td>18.20</td><td>スキップ</td><td><span class="int-low">低</span></td><td>片脚で上・前方へ跳び、同じ脚で着地。腕は脚と逆を交互に</td></tr>
+          <tr><td>18.21</td><td>パワースキップ</td><td><span class="int-low">低</span></td><td>空中で反対脚の股・膝をさらに大きく引き上げる。スキップの効率を重視</td></tr>
+          <tr><td>18.22</td><td>バックワードスキップ</td><td><span class="int-low">低</span></td><td>後方へのスキップ。両腕で動作を補助する</td></tr>
+          <tr><td>18.23</td><td>サイドスキップ</td><td><span class="int-mid">中</span></td><td>上方および側方へのスキップ</td></tr>
+          <tr><td>18.24</td><td>シングルアーム交互バウンド</td><td><span class="int-mid">中</span></td><td>軽いジョギングから踏み切り、反対脚の膝を約90°に引き上げて片腕を前へ。1歩をできるだけ大きく</td></tr>
+          <tr><td>18.25</td><td>ダブルアーム交互バウンド</td><td><span class="int-mid">中</span></td><td>同じ動きで、空中で両腕を前へ伸ばす</td></tr>
         </tbody>
       </table>
     </div>
   </details>
 
   <details class="accordion">
-    <summary>下半身 ─ ボックスドリル（強度：中〜高）</summary>
+    <summary>下半身 ─ ボックスドリル（強度：低〜高）</summary>
     <div class="accordion-body">
+      <p style="font-size:0.88rem;color:var(--gray);margin-bottom:10px;">ボックスを使って連続ホップ＆ジャンプの強度を高める。高さは体の大きさ・着地面・目標で決め、最初は低い高さから。</p>
       <table class="styled-table">
-        <thead><tr><th>No.</th><th>ドリル名</th><th>強度</th><th>ポイント</th></tr></thead>
+        <thead><tr><th>No.</th><th>ドリル名</th><th>強度</th><th>ボックス</th><th>ポイント</th></tr></thead>
         <tbody>
-          <tr><td>18.26</td><td>シングルレッグ・プッシュオフ</td><td><span class="int-mid">中</span></td><td>片足でボックスを踏み切って跳ぶ。最初15cmから</td></tr>
-          <tr><td>18.27</td><td>交互プッシュオフ</td><td><span class="int-mid">中</span></td><td>左右交互にボックスを踏み切る</td></tr>
-          <tr><td>18.28</td><td>ラテラル・プッシュオフ</td><td><span class="int-mid">中</span></td><td>横からボックスを踏み切って跳ぶ</td></tr>
-          <tr><td>18.29</td><td>サイドトゥーサイド・プッシュオフ</td><td><span class="int-mid">中</span></td><td>左右交互にボックスを乗り越える</td></tr>
-          <tr><td>18.30</td><td>ダブルレッグ・ジャンプトゥボックス</td><td><span class="int-mid">中</span></td><td>両足でボックスの上に跳び乗る</td></tr>
-          <tr><td>18.31</td><td>シングルレッグ・ジャンプトゥボックス</td><td><span class="int-high">高</span></td><td>片脚でボックスの上に跳び乗る</td></tr>
-          <tr><td>18.32</td><td>スクワット・ボックスジャンプ</td><td><span class="int-mid">中</span></td><td>スクワットからボックス上へジャンプ</td></tr>
-          <tr><td>18.33</td><td>ラテラル・ボックスジャンプ</td><td><span class="int-mid">中</span></td><td>横方向にボックスの上へジャンプ</td></tr>
+          <tr><td>18.26</td><td>シングルレッグ・プッシュオフ</td><td><span class="int-low">低</span></td><td>15〜46cm</td><td>ボックス上の足で踏み切り、同じ足をボックス上に戻す（反対の足が地面に着く前に）</td></tr>
+          <tr><td>18.27</td><td>交互プッシュオフ</td><td><span class="int-low">低</span></td><td>15〜46cm</td><td>踏み切るたびにボックス上の足を入れ替える</td></tr>
+          <tr><td>18.28</td><td>ラテラル・プッシュオフ</td><td><span class="int-low">低</span></td><td>15〜46cm</td><td>ボックスの横に立って踏み切る</td></tr>
+          <tr><td>18.29</td><td>サイドトゥーサイド・プッシュオフ</td><td><span class="int-mid">中</span></td><td>15〜46cm</td><td>ボックスを横に跳び越え、反対側の足をボックス上に</td></tr>
+          <tr><td>18.30</td><td>ダブルレッグ・ジャンプトゥボックス</td><td><span class="int-low">低</span></td><td>15〜107cm</td><td>両脚で跳び乗り、ハーフスクワットで着地。降りて繰り返す</td></tr>
+          <tr><td>18.31</td><td>シングルレッグ・ジャンプトゥボックス</td><td><span class="int-high">高</span></td><td>15〜107cm</td><td>片脚で跳び乗り、片脚で着地</td></tr>
+          <tr><td>18.32</td><td>スクワット・ボックスジャンプ</td><td><span class="int-mid">中</span></td><td>15〜107cm</td><td>両手を頭の後ろで組んで跳び乗る</td></tr>
+          <tr><td>18.33</td><td>ラテラル・ボックスジャンプ</td><td><span class="int-mid">中</span></td><td>15〜107cm</td><td>ボックスの横から跳び乗り、反対側からも行う</td></tr>
+          <tr><td>18.34</td><td>ドロップフリーズ</td><td><span class="int-mid">中</span></td><td>30〜107cm</td><td>ボックスから踏み出して両足で着地し、衝撃を素早く吸収して止まる。最初は30cm</td></tr>
         </tbody>
       </table>
     </div>
@@ -576,20 +645,19 @@
   <details class="accordion">
     <summary>下半身 ─ デプスジャンプ（強度：高）</summary>
     <div class="accordion-body">
-      <p style="background:#FDEDEC;padding:10px 14px;border-radius:6px;margin-bottom:12px;font-size:0.88rem;color:#C0392B;">
-        ⚠ デプスジャンプは最高強度のドリルです。事前評価・段階的な実施が必須です。
+      <p style="background:#FDEDEC;padding:10px 14px;border-radius:6px;margin-bottom:12px;font-size:0.88rem;color:#C0392B;line-height:1.7;">
+        ⚠ 重力と体重を利用して強度を高めるドリルです。共通ルール：ボックスから<strong>真っ直ぐ踏み出す</strong>（跳び上がったり重心を下げたりしない）／<strong>接地時間は最小限</strong>／ボックスは最初30cmから。
       </p>
       <table class="styled-table">
-        <thead><tr><th>No.</th><th>ドリル名</th><th>ポイント</th></tr></thead>
+        <thead><tr><th>No.</th><th>ドリル名</th><th>強度</th><th>ポイント</th></tr></thead>
         <tbody>
-          <tr><td>18.34</td><td>ドロップフリーズ</td><td>降りて着地で静止。フォームの確認用</td></tr>
-          <tr><td>18.35</td><td>デプスジャンプ</td><td>ボックスから降りて即座に最大高さへ跳ぶ</td></tr>
-          <tr><td>18.36</td><td>デプスジャンプ・トゥ・セカンドボックス</td><td>着地後に第2ボックスへ跳ぶ</td></tr>
-          <tr><td>18.37</td><td>スクワット・デプスジャンプ</td><td>着地後スクワットして最大高さへ</td></tr>
-          <tr><td>18.38</td><td>側方への動作を伴うデプスジャンプ</td><td>パートナーの合図で方向を変えて跳ぶ</td></tr>
-          <tr><td>18.39</td><td>立ち幅跳びを伴うデプスジャンプ</td><td>降りた後に最大距離で前方ジャンプ</td></tr>
-          <tr><td>18.40</td><td>デプスジャンプからの180°ターン</td><td>空中で180°回転。高い協調性が必要</td></tr>
-          <tr><td>18.41</td><td>シングルレッグ・デプスジャンプ</td><td>片脚でのデプスジャンプ。最も高難度</td></tr>
+          <tr><td>18.35</td><td>デプスジャンプ</td><td><span class="int-high">高</span></td><td>着地したらただちにできるだけ高く跳ぶ。前方への流れは最小限に</td></tr>
+          <tr><td>18.36</td><td>デプスジャンプ・トゥ・セカンドボックス</td><td><span class="int-high">高</span></td><td>着地後ただちに2つ目のボックスへ跳び乗る。ボックス間は61cmから（遠いほど強度↑）</td></tr>
+          <tr><td>18.37</td><td>スクワット・デプスジャンプ</td><td><span class="int-high">高</span></td><td>股・膝約90°のスクワット姿勢で着地し、ただちに跳ぶ</td></tr>
+          <tr><td>18.38</td><td>側方への動作を伴うデプスジャンプ</td><td><span class="int-high">高</span></td><td>着地直前にパートナーが左右を指し、着地後ただちにその方向へダッシュ</td></tr>
+          <tr><td>18.39</td><td>立ち幅跳びを伴うデプスジャンプ</td><td><span class="int-high">高</span></td><td>着地後ただちに前方へできるだけ遠く跳ぶ</td></tr>
+          <tr><td>18.40</td><td>デプスジャンプからの180°ターン</td><td><span class="int-high">高</span></td><td>着地後に高く跳び、空中で180°回転して反対向きに着地</td></tr>
+          <tr><td>18.41</td><td>シングルレッグ・デプスジャンプ</td><td><span class="int-high">高</span></td><td>片足で着地してただちに跳ぶ。非常に高度なので、ほかのデプスジャンプの経験と能力が確認できた場合のみ</td></tr>
         </tbody>
       </table>
     </div>
@@ -598,15 +666,16 @@
   <details class="accordion">
     <summary>上半身 ─ スロー（投てき）・プッシュアップ</summary>
     <div class="accordion-body">
+      <p style="font-size:0.88rem;color:var(--gray);margin-bottom:10px;">スローはリバウンド用ネットかパートナーに3m離れて正対して行う。投げる前に腕をわずかに後ろへ引く「コッキング」が反動動作になる。ボールを重くすると強度↑。</p>
       <table class="styled-table">
         <thead><tr><th>No.</th><th>ドリル名</th><th>強度</th><th>用具</th><th>ポイント</th></tr></thead>
         <tbody>
-          <tr><td>18.42</td><td>チェストパス</td><td><span class="int-low">低</span></td><td>メディシンボール 0.9〜3.6kg</td><td>胸からパートナーに素早くパス</td></tr>
-          <tr><td>18.43</td><td>トゥーハンド・オーバーヘッドスロー</td><td><span class="int-low">低</span></td><td>メディシンボール 0.9〜3.6kg</td><td>頭上から両手で前方に投げる</td></tr>
-          <tr><td>18.44</td><td>トゥーハンド・サイドトゥーサイドスロー</td><td><span class="int-mid">中</span></td><td>メディシンボール 0.9〜3.6kg</td><td>体を回旋させながらサイドに投げる</td></tr>
-          <tr><td>18.45</td><td>シングルアーム・スロー</td><td><span class="int-mid">中</span></td><td>メディシンボール 0.5〜1.5kg</td><td>片腕で投げる。体幹回旋も使う</td></tr>
-          <tr><td>18.46</td><td>パワードロップ</td><td><span class="int-high">高</span></td><td>メディシンボール 0.9〜3.6kg</td><td>パートナーが落としたボールを瞬時にキャッチして返す</td></tr>
-          <tr><td>18.47</td><td>デプス・プッシュアップ</td><td><span class="int-mid">中</span></td><td>メディシンボール 2.3〜3.6kg</td><td>腕立てのプライオメトリック版</td></tr>
+          <tr><td>18.42</td><td>チェストパス</td><td><span class="int-low">低</span></td><td>メディシンボール 0.9〜3.6kg</td><td>胸の高さから両腕を伸ばして投げ、キャッチしたらただちに投げ返す。最初は0.9kg</td></tr>
+          <tr><td>18.43</td><td>トゥーハンド・オーバーヘッドスロー</td><td><span class="int-low">低</span></td><td>メディシンボール 0.9〜3.6kg</td><td>頭上から両腕で投げ、頭上でキャッチしてただちに投げ返す</td></tr>
+          <tr><td>18.44</td><td>トゥーハンド・サイドトゥーサイドスロー</td><td><span class="int-low">低</span></td><td>メディシンボール 0.9〜3.6kg</td><td>片側の肩の上から投げ、反対の肩の上でキャッチして投げ返す</td></tr>
+          <tr><td>18.45</td><td>シングルアーム・スロー</td><td><span class="int-mid">中</span></td><td>メディシンボール 0.5〜2.3kg</td><td>肩90°外転・肘90°屈曲の姿勢から片腕で投げる。自然な投球動作で行ってもよい。最初は0.5kg</td></tr>
+          <tr><td>18.46</td><td>パワードロップ</td><td><span class="int-high">高</span></td><td>メディシンボール 0.9〜3.6kg＋ボックス30〜107cm</td><td>仰向けになり、ボックス上のパートナーが落としたボールをキャッチしてただちに投げ返す</td></tr>
+          <tr><td>18.47</td><td>デプス・プッシュアップ</td><td><span class="int-mid">中</span></td><td>メディシンボール 2.3〜3.6kg</td><td>ボールから素早く手を外して床で受け止め、ただちに爆発的に押し返してボール上へ戻る</td></tr>
         </tbody>
       </table>
     </div>
@@ -615,10 +684,11 @@
   <details class="accordion">
     <summary>体幹 ─ プライオメトリクス</summary>
     <div class="accordion-body">
+      <p style="font-size:0.88rem;color:var(--gray);margin-bottom:10px;">体幹の筋で「本当の」プライオメトリクスを行うのは難しいとされる。動作の範囲を小さく、素早く行うほどプライオメトリクスに近づく。</p>
       <table class="styled-table">
         <thead><tr><th>No.</th><th>ドリル名</th><th>強度</th><th>用具</th><th>ポイント</th></tr></thead>
         <tbody>
-          <tr><td>18.48</td><td>45°シットアップ</td><td><span class="int-mid">中</span></td><td>メディシンボール 0.9〜3.6kg</td><td>45°の角度でシットアップしながらボールを投げる。体幹回旋力の爆発的な発揮</td></tr>
+          <tr><td>18.48</td><td>45°シットアップ</td><td><span class="int-mid">中</span></td><td>メディシンボール 0.9〜3.6kg＋パートナー</td><td>体幹を約45°に傾けた姿勢でキャッチし、体幹の伸展をできるだけ抑えてただちに投げ返す（主に腹筋で）</td></tr>
         </tbody>
       </table>
     </div>
@@ -630,30 +700,61 @@
   <p class="sec-title">安全配慮・対象者別ガイド</p>
 
   <div class="info-box">
+    <h3>ケガが起こりやすい原因</h3>
+    <p class="lead" style="margin-bottom:0;">プライオメトリクス自体は本質的に危険なものではありません。ケガは主に、<strong>S&Cの基礎が足りない・ウォームアップ不足・ドリルの進め方が不適切・時期に合わない量や強度・シューズや着地面が悪い・スキル不足</strong>などから起こります。</p>
+  </div>
+
+  <div class="info-box">
     <h3>トレーニング前の選手評価</h3>
     <table class="styled-table">
       <thead><tr><th>評価項目</th><th>基準・内容</th></tr></thead>
       <tbody>
-        <tr><td>テクニック</td><td>スクワット等の基本動作を正しく行えるか</td></tr>
-        <tr><td>筋力（下半身 上級）</td><td>体重×1.5倍のバーベルスクワット（高強度実施前）</td></tr>
-        <tr><td>筋力（上半身 上級）</td><td>体重×60%のパワークリーン</td></tr>
-        <tr><td>バランス（中級）</td><td>スタンディング・クォータースクワットでの片脚バランス</td></tr>
-        <tr><td>バランス（上級）</td><td>ハーフスクワットでの片脚バランス</td></tr>
+        <tr><td><strong>テクニック</strong></td><td>新しいドリルは事前に正しいテクニックを見せる。とくに着地が重要：横から見て<strong>肩と膝がつま先の上</strong>、正面から見て<strong>膝がつま先の上</strong>。足・膝・股関節を曲げて衝撃を吸収する</td></tr>
+        <tr><td><strong>筋力</strong></td><td>下半身プライオの目安：<strong>スクワット1RMが体重の1.5倍以上</strong>。ただし、より重視すべきはテクニックと考えられている</td></tr>
+        <tr><td><strong>バランス</strong></td><td>下のバランステストで確認（各姿勢30秒）</td></tr>
+        <tr><td><strong>身体的特徴</strong></td><td>体重100kg以上の選手はケガのリスクが高まる → 量が多い・高強度のドリルや、46cmを超える高さからのデプスジャンプは避ける</td></tr>
+        <tr><td><strong>既往歴</strong></td><td>脊柱・上肢・下肢のケガや異常、肉離れ、関節の不安定性、椎間板の障害などがある選手は慎重に始める</td></tr>
       </tbody>
     </table>
+    <div class="note"><strong>膝の内側への動き（動的外反）</strong>は、膝蓋大腿関節痛や前十字靭帯（ACL）損傷など、膝のケガの重要なリスク因子です。</div>
+  </div>
+
+  <div class="info-box">
+    <h3>バランステスト（難しい順に下へ）</h3>
+    <table class="styled-table">
+      <thead><tr><th>テスト</th><th>バリエーション</th><th>目安</th></tr></thead>
+      <tbody>
+        <tr><td>スタンディング</td><td>両脚 → 片脚</td><td>初めての選手：<strong>片脚立ちを30秒</strong>倒れずに保てる</td></tr>
+        <tr><td>クォータースクワット</td><td>両脚 → 片脚</td><td>各姿勢を30秒保つ</td></tr>
+        <tr><td>ハーフスクワット</td><td>両脚 → 片脚</td><td>上級プログラムの前：<strong>片脚ハーフスクワットを30秒</strong>保てる</td></tr>
+      </tbody>
+    </table>
+    <div class="key">テストは、実際にドリルを行うのと同じ床面で行います。</div>
   </div>
 
   <div class="info-box">
     <h3>施設・用具の安全基準</h3>
     <table class="styled-table">
-      <thead><tr><th>項目</th><th>推奨内容</th><th>注意事項</th></tr></thead>
+      <thead><tr><th>項目</th><th>推奨</th><th>注意</th></tr></thead>
       <tbody>
-        <tr><td>床面</td><td>芝生、木製フロア、マット、人工芝</td><td>コンクリート・アスファルトは避ける</td></tr>
-        <tr><td>天井高</td><td>4m以上推奨</td><td>屋内では特に重要</td></tr>
-        <tr><td>ボックス高さ（標準）</td><td>最大1.2m（48インチ）</td><td>段階的に高さを上げる（最初は15cm〜）</td></tr>
-        <tr><td>ボックス高さ（100kg超）</td><td>最大46cm（18インチ）から開始</td><td>体重が重い場合は低めから</td></tr>
-        <tr><td>シューズ</td><td>足首サポート・横方向安定性重視</td><td>テニス・バスケット用が適切。ランニング用は不向き</td></tr>
-        <tr><td>監視</td><td>常時指導者が監視</td><td>疲労による動作の崩れを見逃さない</td></tr>
+        <tr><td>着地面</td><td>芝生のフィールド、体育館の懸架式木製フロア、ゴム製マット（適度な衝撃吸収性）</td><td>コンクリート・タイル・固い木の床は不可。厚すぎるマット（15cm以上）やミニトランポリンは償却局面が長くなる</td></tr>
+        <tr><td>スペース</td><td>バウンド・ランニング系：30m以上（ドリルによっては100mの直線）</td><td>スタンディングジャンプ・ボックス・デプスジャンプは狭くてもよいが、天井高は<strong>3〜4m</strong>必要</td></tr>
+        <tr><td>ボックス</td><td>頑丈で上面が滑らない。高さ15〜107cm、上面は46×61cm以上</td><td>滑り止めの溝・砂を混ぜた塗装・ゴム床材など</td></tr>
+        <tr><td>シューズ</td><td>足首とアーチのサポート、横方向の安定性、幅広く滑らないソール</td><td>ソール幅が狭く甲が柔らかすぎる靴（例：ランニングシューズ）は横の動きで足首を痛めやすい</td></tr>
+        <tr><td>監視</td><td>常に正しいテクニックで行えているかを監視する</td><td>テクニックが崩れると不必要なケガにつながる</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="info-box">
+    <h3>デプスジャンプの高さ</h3>
+    <table class="styled-table">
+      <thead><tr><th>項目</th><th>目安</th></tr></thead>
+      <tbody>
+        <tr><td>推奨される高さ</td><td><strong>41〜107cm</strong></td></tr>
+        <tr><td>一般的な基準</td><td><strong>76〜81cm</strong></td></tr>
+        <tr><td>1.2m</td><td>筋への過負荷としては有効だが、多くの選手にとって正しいテクニックを保つには強すぎる（ケガのリスク↑・償却局面が長くなる）</td></tr>
+        <tr><td>体重100kg以上</td><td><strong>46cm以下</strong></td></tr>
       </tbody>
     </table>
   </div>
@@ -661,19 +762,24 @@
   <div class="info-box">
     <h3>対象者別の配慮</h3>
     <table class="styled-table">
-      <thead><tr><th>対象者</th><th>配慮事項</th><th>プログラムの方針</th></tr></thead>
+      <thead><tr><th>対象者</th><th>ポイント</th></tr></thead>
       <tbody>
-        <tr><td><strong>青年期（中高生）</strong></td><td>デプスジャンプ・高強度下半身ドリルは非推奨</td><td>低〜中強度・テクニックを最優先</td></tr>
-        <tr><td><strong>成人</strong></td><td>通常のプログラムを段階的に適用</td><td>ニーズ分析に基づき漸進的に強度を上げる</td></tr>
-        <tr><td><strong>マスターズ（高齢者）</strong></td><td>筋力・骨密度・柔軟性・バランス低下を考慮</td><td>強度・量を下げ、ウォームアップを充実させる</td></tr>
+        <tr><td><strong>思春期前・青年期の子ども</strong></td><td>適切な監視とプログラムがあれば実施できる／骨端線が閉じていない時期は<strong>デプスジャンプと高強度の下半身ドリルは禁忌</strong>／単純なドリルから複雑なドリルへ／動作の質（アライメント・スピード）を重視／外反（膝が内に入る）に注意／ワークアウト間は<strong>少なくとも2〜3日</strong>の回復</td></tr>
+        <tr><td><strong>成人</strong></td><td>ニーズ分析（競技・ポジション・トレーニング状態）にもとづき、漸進的過負荷の原則で段階的に進める</td></tr>
+        <tr><td><strong>マスターズ</strong></td><td>整形外科的な既往（変形性関節症・関節の手術など）を確認／<strong>低〜中強度・最大5種目</strong>／接地回数を通常より減らす／ワークアウト間は<strong>3〜4日</strong>／半月板切除などの手術歴や関節の変性が著しい場合はデプスジャンプと片脚系は禁忌／慢性的な痛みや強い不快感があればプログラムを修正</td></tr>
       </tbody>
     </table>
+  </div>
+
+  <div class="info-box">
+    <h3>まとめ</h3>
+    <p class="lead" style="margin-bottom:0;">プライオメトリックトレーニングの主な目標は、<strong>主働筋に過負荷をかけ、素早く力を発揮する能力を高めること</strong>です。プライオメトリクスはそれだけで完結するものではなく、筋力・スピード・有酸素性・柔軟性のトレーニングや適切な栄養を含む、全体的なプログラムの一部と考えます。</p>
   </div>
 </section>
 
 <!-- ═══════════════════ QUIZ ═══════════════════ -->
 <section id="quiz">
-  <p class="sec-title">理解度クイズ（全15問）</p>
+  <p class="sec-title">理解度クイズ（全18問）</p>
   <p style="margin-bottom:24px;color:var(--gray);font-size:0.92rem;">各問題の選択肢を選んで「答えを確認する」ボタンを押してください。</p>
 
   <div id="quiz-container"></div>
@@ -698,51 +804,60 @@ function showTab(id) {
 
 // ── Quiz data ──
 const questions = [
-  { q: 'プライオメトリクスの語源について正しいものはどれか？',
-    opts: ['ギリシャ語の「より多く」と「測る」が語源', 'ラテン語の「跳躍」と「力」が語源', '英語の「爆発的な動作」が語源', 'フランス語の「バランス」が語源'],
-    ans: 0, exp: 'プライオ（plio：より多く）とメトリック（metric：測る）がギリシャ語の語源です。' },
-  { q: 'ストレッチ・ショートニングサイクル（SSC）の第1段階はどれか？',
-    opts: ['短縮性局面', '伸張性局面', '一般筋放電', '等尺性局面'],
-    ans: 1, exp: 'SSCの第1段階は伸張性局面で、主動筋が引き伸ばされ弾性エネルギーが蓄積されます。' },
-  { q: 'プライオメトリクスで弾性エネルギーを主に蓄える弾性要素はどれか？',
-    opts: ['並列弾性要素（PEC）', '直列弾性要素（SEC）', '筋紡錘', 'ゴルジ腱器官'],
-    ans: 1, exp: '直列弾性要素（SEC）が腱や腱膜に弾性エネルギーを蓄える主役です。' },
-  { q: '伸張反射を起こす感覚受容器はどれか？',
-    opts: ['ゴルジ腱器官', '自由神経終末', '筋紡錘（筋紡錘）', 'パチニ小体'],
-    ans: 2, exp: '筋紡錘が急激な伸張を感知し、脊髄を経由して伸張反射を起こします。' },
-  { q: '初心者が1セッションで実施すべきプライオメトリクスの回数はどれか？',
-    opts: ['60〜80回', '80〜100回', '100〜120回', '120〜140回'],
-    ans: 1, exp: '初心者（経験なし）の目安は80〜100回/セッションです。' },
-  { q: 'プライオメトリクスの実施頻度として正しいものはどれか？',
-    opts: ['週1回', '週2〜3回', '毎日', '2週間に1回'],
-    ans: 1, exp: '一般的に週2〜3回が推奨され、各セッション間に48時間の回復が必要です。' },
-  { q: 'デプスジャンプに使用するボックスの最大高さはどれか？',
-    opts: ['0.6m（24インチ）', '0.9m（36インチ）', '1.2m（48インチ）', '1.5m（60インチ）'],
-    ans: 2, exp: 'デプスジャンプに使用するボックスの最大高さは1.2m（48インチ）です。' },
-  { q: '体重100kg以上の選手がデプスジャンプを始める場合、ボックスの開始高さはどれか？',
-    opts: ['30cm（12インチ）以下', '46cm（18インチ）以下', '61cm（24インチ）以下', '76cm（30インチ）以下'],
-    ans: 1, exp: '体重100kg以上の選手は46cm（18インチ）以下のボックス高さから開始します。' },
-  { q: '最も強度の高いプライオメトリックドリルはどれか？',
-    opts: ['アンクルホップ', 'スクワットジャンプ', 'バーティカルジャンプ', 'デプスジャンプ'],
-    ans: 3, exp: 'デプスジャンプはボックスから降りて即座に跳ぶ、最高強度のドリルです。' },
-  { q: 'プライオメトリクスに適した床面はどれか？',
-    opts: ['コンクリート', 'アスファルト', '芝生・木製フロア・マット', '砂利'],
-    ans: 2, exp: 'クッション性のある芝生、木製フロア、マット、人工芝が適しています。' },
-  { q: '青年期（中高生）のプライオメトリクスについて正しいものはどれか？',
-    opts: ['デプスジャンプを積極的に行うべき', '大人と同じ高強度ドリルが推奨される', 'デプスジャンプや高強度ドリルは推奨されない', 'プライオメトリクスは全く行うべきではない'],
-    ans: 2, exp: '青年期にはデプスジャンプや高強度の下半身プライオメトリクスは推奨されません。低〜中強度でテクニックを最優先します。' },
-  { q: 'プライオメトリクスプログラムの一般的な継続期間はどれか？',
+  { q: 'プライオメトリクス（plyometric）の語源について正しいものはどれか？',
+    opts: ['ギリシャ語で「長さが伸びること」（plio＝さらに、metric＝長さ）', 'ラテン語の「跳躍」と「力」', '英語の「爆発的な動作」', 'フランス語の「バランス」'],
+    ans: 0, exp: 'ギリシャ語で「長さが伸びること」を意味します（plio＝さらに、metric＝長さ）。' },
+  { q: 'ストレッチ・ショートニングサイクル（SSC）の第Ⅰ局面はどれか？',
+    opts: ['短縮性局面', '伸張性局面', '償却局面', '等尺性局面'],
+    ans: 1, exp: '第Ⅰ局面は伸張性局面。主働筋が引き伸ばされ、弾性エネルギーが蓄えられ、筋紡錘が刺激されます。' },
+  { q: 'プライオメトリクスで弾性エネルギーを蓄える働きが特に重要な要素はどれか？',
+    opts: ['並列弾性要素（PEC）', '直列弾性要素（SEC）', '収縮要素（CC）', 'ゴルジ腱器官'],
+    ans: 1, exp: '直列弾性要素（SEC、大部分は腱）が引き伸ばされると弾性エネルギーが蓄えられ、直後の短縮で放出されます。' },
+  { q: '素早い伸張を検出し、伸張反射を引き起こす構造はどれか？',
+    opts: ['ゴルジ腱器官', '自由神経終末', '筋紡錘', 'パチニ小体'],
+    ans: 2, exp: '筋紡錘が伸張の速さと大きさを感知し、Ia線維→脊髄→α運動神経を介して伸張反射を起こします。' },
+  { q: 'プライオメトリクスの経験がない初心者の「開始時の量」（1セッションの接地回数）はどれか？',
+    opts: ['60〜80', '80〜100', '100〜120', '120〜140'],
+    ans: 1, exp: '初心者80〜100、中級者100〜120、上級者120〜140が開始時の目安です。' },
+  { q: 'セッション間に典型的な回復時間（48〜72時間）をとった場合、プライオメトリクスの頻度はどうなるか？',
+    opts: ['毎日', '週2〜3回', '週5回', '2週間に1回'],
+    ans: 1, exp: '48〜72時間の回復をとると週2〜3回になります。頻度は通常週1〜3回で、競技・時期・経験によって変わります。' },
+  { q: 'デプスジャンプの高さとして「一般的な基準」とされるのはどれか？',
+    opts: ['20〜30cm', '76〜81cm', '1.2〜1.5m', '2m以上'],
+    ans: 1, exp: '推奨は41〜107cmで、76〜81cmが一般的な基準です。1.2mは多くの選手にとって強すぎるとされます。' },
+  { q: '体重100kg以上の選手が行うデプスジャンプの高さの上限はどれか？',
+    opts: ['30cm（12インチ）', '46cm（18インチ）', '61cm（24インチ）', '76cm（30インチ）'],
+    ans: 1, exp: '体重100kg以上の選手は、デプスジャンプの高さを46cm（18インチ）以下にします。' },
+  { q: '次のドリルのタイプのうち、一般的に最も強度が高いと考えられるものはどれか？',
+    opts: ['その場ジャンプ', 'バウンド', 'ボックスジャンプ', 'デプスジャンプ'],
+    ans: 3, exp: 'デプスジャンプは重力と体重を利用して強度を高めるため、筋と関節に大きなストレスがかかります。' },
+  { q: '下半身プライオメトリクスの着地面として適切なものはどれか？',
+    opts: ['コンクリート', 'タイル', '芝生・体育館の懸架式木製フロア・ゴム製マット', '厚さ15cm以上のマット'],
+    ans: 2, exp: '適度な衝撃吸収性がある面が適切です。厚すぎるマットは償却局面が長くなり、伸張反射を引き出せません。' },
+  { q: '思春期前の子どものプライオメトリクスについて正しいものはどれか？',
+    opts: ['デプスジャンプを積極的に行うべき', '大人と同じ高強度ドリルが推奨される', 'デプスジャンプや高強度の下半身ドリルは禁忌', 'プライオメトリクスは一切行うべきではない'],
+    ans: 2, exp: '適切な監視とプログラムがあれば実施できますが、骨端線が閉じていない時期のデプスジャンプや高強度の下半身ドリルは禁忌です。' },
+  { q: 'プライオメトリクスのプログラム期間として、多くのプログラムで用いられているのはどれか？',
     opts: ['1〜3週間', '6〜10週間', '15〜20週間', '1年以上'],
-    ans: 1, exp: 'プライオメトリクスプログラムの継続期間は一般的に6〜10週間です。' },
-  { q: 'SSCで第1段階から第3段階への移行時間が短いほど、どうなるか？',
-    opts: ['蓄えたエネルギーの利用が少なくなる', '怪我のリスクが高まる', '蓄えたエネルギーをより多く利用できる', 'トレーニング効果がなくなる'],
-    ans: 2, exp: '移行時間が短いほど、蓄えた弾性エネルギーをより多く力の発揮に利用できます。' },
-  { q: '下半身プライオメトリクスドリルの強度に影響する要因として正しくないものはどれか？',
-    opts: ['選手の体重', 'ドリルの実施スピード', 'ドリルの高さ', '天気（気温）'],
-    ans: 3, exp: '強度に影響する要因は体重・スピード・ドリルの高さです。天気（気温）は直接的な強度要因ではありません。' },
-  { q: '上半身のプライオメトリックドリルとして正しいものはどれか？',
+    ans: 1, exp: '多くのプログラムは6〜10週間で行われています（垂直跳びは4週間ほどで向上することもあります）。' },
+  { q: 'SSCの中で「最も重要」とされ、できるだけ短くすべき局面はどれか？',
+    opts: ['伸張性局面', '償却局面', '短縮性局面', '回復局面'],
+    ans: 1, exp: '償却局面が長引くと、蓄えたエネルギーが熱として失われ、伸張反射による増幅も得られなくなります。' },
+  { q: '下半身プライオメトリクスの強度に影響する要因として正しくないものはどれか？',
+    opts: ['接地点（片脚か両脚か）', 'ドリルのスピード', 'ドリルの高さ', '天気（気温）'],
+    ans: 3, exp: '強度に影響する要因は、接地点・スピード・ドリルの高さ・体重の4つです。' },
+  { q: '上半身のプライオメトリックドリルはどれか？',
     opts: ['デプスジャンプ', 'スキップ', 'チェストパス', 'アンクルホップ'],
-    ans: 2, exp: 'チェストパスはメディシンボールを使った上半身のプライオメトリックドリルです。' },
+    ans: 2, exp: 'チェストパスはメディシンボールを使う上半身のドリルです。' },
+  { q: 'プライオメトリクスのワークアウトにおける運動‐休息比として最も適切なものはどれか？',
+    opts: ['1:5', '1:4', '1:3', '1:2'],
+    ans: 0, exp: '運動‐休息比は1:5〜1:10。プライオメトリクスは心肺系のコンディショニングではなく、パワートレーニングとして扱います。' },
+  { q: 'レジスタンストレーニングと組み合わせるときの考え方として正しいものはどれか？',
+    opts: ['同じ日に同じ部位の高強度レジスタンスと高強度プライオを行う', '下半身のレジスタンスには上半身のプライオを組み合わせる', 'プライオメトリクスは有酸素性トレーニングの後に行う', 'レジスタンストレーニングとは組み合わせない'],
+    ans: 1, exp: '下半身のレジスタンス×上半身のプライオ、上半身のレジスタンス×下半身のプライオのように組み合わせます。高重量のレジスタンスと同じ日に行うのは通常すすめられません。' },
+  { q: '下半身プライオメトリクスを始める前に評価すべき項目の組み合わせとして正しいものはどれか？（Ⅰ バランス　Ⅱ 筋力　Ⅲ トレーニング歴　Ⅳ 除脂肪体重）',
+    opts: ['Ⅰ、Ⅲ', 'Ⅱ、Ⅳ', 'Ⅰ、Ⅱ、Ⅲ', 'Ⅰ、Ⅱ、Ⅲ、Ⅳ'],
+    ans: 2, exp: 'バランス・筋力・トレーニング歴（テクニックを含む）を確認します。除脂肪体重は評価項目ではありません。' },
 ];
 
 // Build quiz HTML
