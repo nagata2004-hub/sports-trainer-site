@@ -31,7 +31,7 @@ const defaultLectures = [
   { id: 'l4', title: 'テーピング理論と実践 基礎編', category: 'taping', date: '2024.11.16', instructor: '佐藤 講師', desc: 'テーピングの目的・種類・適応と禁忌、足首の基本的な巻き方。', isNew: false, num: 4 },
   { id: 'l5', title: 'スポーツ障害とリハビリテーション', category: 'rehab', date: '2024.12.07', instructor: '田中 講師', desc: '代表的なスポーツ外傷・障害の分類と、段階的な復帰プログラム。', isNew: false, num: 5 },
   { id: 'l6', title: 'テーピング実技 応用編', category: 'taping', date: '2025.01.11', instructor: '佐藤 講師', desc: '膝・肩・手首のテーピング技術。スポーツ種目別の応用も紹介。', isNew: false, num: 6 },
-  { id: 'l7', title: 'プライオメトリクス（NSCA 18章）', category: 'sc', date: '2025.05.25', instructor: '', desc: 'SSC（伸張-短縮サイクル）を活用した爆発的パワー向上トレーニング。初級〜上級のプログラム設計、48種類のドリル、理解度クイズまで網羅。', isNew: true, num: 7, url: 'plyometrics/④プライオメトリクス資料一覧.html' },
+  { id: 'l7', title: 'S&C領域 プライオメトリクス', category: 'sc', date: '2025.05.25', instructor: '', desc: 'SSC（伸張-短縮サイクル）を活用した爆発的パワー向上トレーニング。初級〜上級のプログラム設計、48種類のドリル、理解度クイズまで網羅。', isNew: true, num: 7, url: 'plyometrics/④プライオメトリクス資料一覧.html' },
 ];
 const defaultMemory = [
   { id: 'm1', title: '上肢の筋肉・名称', category: 'anatomy', count: '40問', progress: 65, desc: '三角筋・上腕二頭筋・上腕三頭筋など主要筋の起始停止と機能。', isNew: false },
